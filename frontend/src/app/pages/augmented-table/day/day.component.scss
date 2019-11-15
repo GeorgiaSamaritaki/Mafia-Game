@@ -1,0 +1,17 @@
+.background {
+    width: 1560px;
+    height: 1080px;
+    background-color: #E67E22;
+    overflow: hidden;
+}
+
+.wrapper {
+    overflow: hidden;
+    text-align: center;
+    z-index: -1;
+}
+
+#backgroundSVG {
+    height: 110%;
+    width: 92%;
+}

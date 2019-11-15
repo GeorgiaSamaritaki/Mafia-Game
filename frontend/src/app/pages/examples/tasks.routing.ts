@@ -23,7 +23,7 @@ const routes: Routes = [
         component: TasksEditComponent,
         data: { editMode: 'edit' }
       },
-      { path: '', redirectTo: 'list', pathMatch: 'full' },
+      { path: '', redirectTo: 'day', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
