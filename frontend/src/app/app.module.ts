@@ -4,14 +4,16 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
-import { MainComponent } from './pages/SmartTv/main/main.component';
-import { MobileMainComponent } from './pages/Mobile/mobile-main/mobile-main.component';
+import { SmartTvComponent } from './pages/smart-tv/smart-tv.component';
+import { AugmentedTableComponent } from './pages/augmented-table/augmented-table.component';
+import { InteractiveWallComponent } from './pages/interactive-wall/interactive-wall.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainComponent,
-    MobileMainComponent
+    SmartTvComponent,
+    AugmentedTableComponent,
+    InteractiveWallComponent
   ],
   imports: [
     BrowserModule,

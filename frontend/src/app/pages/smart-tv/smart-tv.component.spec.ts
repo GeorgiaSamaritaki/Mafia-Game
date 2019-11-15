@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MobileMainComponent } from './mobile-main.component';
+import { SmartTvComponent } from './smart-tv.component';
 
-describe('MobileMainComponent', () => {
-  let component: MobileMainComponent;
-  let fixture: ComponentFixture<MobileMainComponent>;
+describe('SmartTvComponent', () => {
+  let component: SmartTvComponent;
+  let fixture: ComponentFixture<SmartTvComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MobileMainComponent ]
+      declarations: [ SmartTvComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MobileMainComponent);
+    fixture = TestBed.createComponent(SmartTvComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
