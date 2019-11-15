@@ -1,0 +1,77 @@
+.all {
+    font-family: 'Revalia';
+    font-size: 28px;
+    width: 1920px;
+    height: 1080px;
+    background-color: #E67E22;
+    overflow: hidden;
+}
+
+.wrapper {
+    overflow: hidden;
+    z-index: -1;
+}
+
+#tv-rectangle {
+    position: absolute;
+    width: 1920px;
+    height: 210px;
+    left: 0px;
+    top: 374px;
+}
+
+.day_count{
+    position: absolute;
+    height: 93px;
+    top: 18px;
+    left: 1270px;
+
+    font-weight: normal;
+    font-size: 103px;
+    line-height: 128px;
+    display: flex;
+    align-items: center;
+    text-align: right;
+
+    color: #FFFFFF;
+}
+
+#tv-sun{
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    left: 1641px;
+    top: 21px;
+}
+
+.down_title{
+    position: absolute;
+    width: 806px;
+    height: 227px;
+    left: 557px;
+    top: 854px;
+}
+
+#next_up_text{
+    color: #FFFFFF;
+    position: absolute;
+    width: 191px;
+    height: 33px;
+    left: 1463px;
+    top: 944px;
+
+    font-style: normal;
+    font-weight: normal;
+    font-size: 36px;
+    line-height: 45px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.next_up_img{
+    position: absolute;
+    left: 87.5%;
+    right: 4.06%;
+    top: 82.69%;
+    bottom: 4.63%;
+}
