@@ -3,15 +3,23 @@
     height: 1080px;
     background-color: #E67E22;
     overflow: hidden;
+    text-align: center;
 }
 
 .wrapper {
     overflow: hidden;
-    text-align: center;
-    z-index: -1;
 }
 
 #backgroundSVG {
     height: 110%;
     width: 92%;
+}
+
+.topBar {
+    position: absolute;
+    left: 17%;
+    z-index: 1;
+}
+
+#topVector {
 }
