@@ -36,7 +36,7 @@
     color: #FFFFFF;
 }
 
-#tv-sun{
+.tv_upper_icon_sun{
     position: absolute;
     width: 250px;
     height: 250px;
@@ -44,13 +44,14 @@
     top: 21px;
 }
 
-.down_title{
+.tv_upper_icon_moon{
     position: absolute;
-    width: 806px;
-    height: 227px;
-    left: 557px;
-    top: 854px;
+    width: 231px;
+    height: 231px;
+    left: 1870px;
+    top: 31px;
 }
+
 
 #next_up_text{
     color: #FFFFFF;
@@ -70,8 +71,50 @@
 
 .next_up_img{
     position: absolute;
-    left: 87.5%;
-    right: 4.06%;
+    right: 5.06%;
     top: 82.69%;
     bottom: 4.63%;
+}
+
+.next_up_title{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 25px;
+    text-align: center;
+
+    color: #FFFFFF;
+
+    position: absolute;
+    left: 87.5%;
+    right: 2.06%;
+    width: 169px;
+    height: 50px;
+    bottom: 0px;
+}
+
+.down_title{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 86px;
+
+    display: flex;
+    text-align: center;
+    color: #F5F7FA;
+    position: absolute;
+    width: 806px;
+    height: 119px; 
+    left: 665px;
+    top: 865px;
+    z-index: 10;
+}
+
+
+.down_vector{
+    position: absolute;
+    width: 806px;
+    height: 227px;
+    left: 557px;
+    top: 854px;
+    z-index: 1;
 }
