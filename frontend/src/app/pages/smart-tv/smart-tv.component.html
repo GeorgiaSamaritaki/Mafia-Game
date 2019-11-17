@@ -1,16 +1,18 @@
-<div class="all" [style.background-color] = "isDay() ?  '#E67E22' : '#293949'">
+<div class="all" [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
     <div class="wrapper">
-        <img id="tv-rectangle" [src]="isDay() ? '../../../../assets/tv-rectangle-day.png' :  '../../../../assets/tv-rectangle-night.png'" alt="Background vector">
-        <img [className] = "isDay() ? 'tv_upper_icon_sun' : 'tv_upper_icon_moon'" src="../../../../assets/{{upper_icon_path}}.png" alt="Background icon">
-        <span class="day_count">{{day + count}}</span>
+        <img id="tv-rectangle" [src]="isDay() ? '../../../../assets/tv-rectangle-day.png' :  '../../../../assets/tv-rectangle-night.png'"
+            alt="Background vector">
+        <img [className]="isDay() ? 'tv_upper_icon_sun' : 'tv_upper_icon_moon'" src="../../../../assets/{{upper_icon_path}}.png"
+            alt="Background icon">
+        <span [className]="isDay() ? 'day_count' : 'night_count'">{{day + count}}</span>
         <p id="next_up_text">next up:</p>
         <div>
-            <img class="next_up_img" src="../../../../assets/nu_secret_voting.png" alt="next up secret voting">
+            <img class="next_up_img" src="../../../../assets/{{next_up_icon}}.png"  alt="next up secret voting" (click)="changePhase();">
             <p class="next_up_title">{{next_title}}</p>
         </div>
         <div>
             <p class="down_title">{{phase_title}}</p>
-            <img class="down_vector" src="../../../../assets/open-ballot-day.png" alt="Open Ballot">
+            <img class="down_vector" src="../../../../assets/{{round_title_path}}.png" alt="Title of round">
         </div>
     </div>
 </div>
