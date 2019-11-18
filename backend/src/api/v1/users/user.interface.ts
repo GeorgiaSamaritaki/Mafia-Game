@@ -11,14 +11,14 @@ var users: Array<User> = [
         avatar_path: "player1.png"
     },
     {
-        name: "Maria",
-        role: "",
-        avatar_path: "player3.png"
-    },
-    {
         name: "George",
         role: "",
         avatar_path: "player2.png"
+    },
+    {
+        name: "Maria",
+        role: "",
+        avatar_path: "player3.png"
     },
     {
         name: "Kiki",
@@ -33,7 +33,7 @@ var users: Array<User> = [
     {
         name: "Kosmas",
         role: "",
-        avatar_path: "pleyer6.png"
+        avatar_path: "player6.png"
     },
         {
         name: "Renata",

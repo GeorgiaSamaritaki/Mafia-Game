@@ -1,18 +1,25 @@
 <div class="all" [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
-    <div class="wrapper">
-        <img id="tv-rectangle" src="../../../../assets/{{background_rect}}.png"
-            alt="Background vector">
-        <img [className]="isDay() ? 'tv_upper_icon_sun' : 'tv_upper_icon_moon'" src="../../../../assets/{{upper_icon_path}}.png"
-            alt="Background icon">
-        <span [className]="isDay() ? 'day_count' : 'night_count'">{{day + count}}</span>
-        <p id="next_up_text">next up:</p>
-        <div>
-            <img class="next_up_img" src="../../../../assets/{{next_up_icon}}.png"  alt="next up secret voting" (click)="changeRound();">
-            <p class="next_up_title">{{next_title}}</p>
+  <div class="wrapper">
+    <img [className]="isDay() ? 'tv_upper_icon_sun' : 'tv_upper_icon_moon'"
+      src="../../../../assets/{{upper_icon_path}}.png" alt="Background icon">
+    <span [className]="isDay() ? 'day_count' : 'night_count'">{{day + count}}</span>
+    <div class="middle">
+        <div class="player_container">
+            <div *ngFor="let player of players">
+                <img src="../../../../assets/players/{{player.avatar_path}}" class="player_img">
+            </div>
         </div>
-        <div class="round">
-            <span class="down_title">{{phase_title}}</span>
-            <img class="down_vector" src="../../../../assets/{{round_title_path}}.png" alt="Title of round">
-        </div>
+        <img id="tv-rectangle" src="../../../../assets/{{background_rect}}.png" alt="Background vector">
     </div>
+    <div>
+      <p id="next_up_text">next up:</p>
+      <img class="next_up_img" src="../../../../assets/{{next_up_icon}}.png" alt="next up secret voting"
+        (click)="changeRound();">
+      <p class="next_up_title">{{next_title}}</p>
+    </div>
+    <div class="round">
+      <p class="down_title">{{phase_title}}</p>
+      <img class="down_vector" src="../../../../assets/{{round_title_path}}.png" alt="Title of round">
+    </div>
+  </div>
 </div>

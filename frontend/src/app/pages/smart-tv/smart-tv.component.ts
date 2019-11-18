@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersService } from 'src/app/global/services';
+import { UserModel } from 'src/app/global/models';
 
 @Component({
   selector: 'ami-fullstack-smart-tv',
@@ -11,7 +13,6 @@ export class SmartTvComponent implements OnInit {
   phase_title: string;
   next_title: string;
   day: string;
-  //round_counter = 0;
   count: number;
   dround = ["Open Ballot", "Secret Voting"];
   nround = ["Mafia Voting", "Doctor", "Detective", "Barman"];
@@ -20,8 +21,9 @@ export class SmartTvComponent implements OnInit {
   next_up_icon: string;
   round_title_path: string;
   background_rect: string;
+  players: UserModel[];
 
-  constructor() {
+  constructor(private userService: UsersService) {
     this.phase = Phase.Day;
     this.phase_title = this.dround[0];
     this.next_title = this.dround[1];
@@ -31,8 +33,13 @@ export class SmartTvComponent implements OnInit {
     this.upper_icon_path = "Sun";
     this.next_up_icon = "nu_secret_voting";
     this.background_rect = "tv-rectangle-day";
-    //this.round_counter++;
   }
+
+  private async initializePlayers() {
+    this.players = await this.userService.getAllUsers().toPromise();
+    console.log(this.players);
+  }
+
 
   changePhase() {
     if (this.phase == Phase.Day) {//day->night
@@ -46,7 +53,6 @@ export class SmartTvComponent implements OnInit {
       this.round_title_path = "mafia-voting";
       this.count++;
       this.background_rect = "tv-rectangle-night";
-      //this.round_counter++;
     } else {//night->day
       this.phase = Phase.Day;
       this.phase_title = this.dround[0];
@@ -108,10 +114,6 @@ export class SmartTvComponent implements OnInit {
     }
   }
 
-  setPhase(phase: Phase) {
-    this.phase = phase;
-  }
-
   isDay() {
     if (this.phase == Phase.Day) return true;
     else return false;
@@ -121,8 +123,8 @@ export class SmartTvComponent implements OnInit {
     return this.phase;
   }
 
-  ngOnInit() {
-
+  async ngOnInit() {
+    await this.initializePlayers();
   }
 
 }

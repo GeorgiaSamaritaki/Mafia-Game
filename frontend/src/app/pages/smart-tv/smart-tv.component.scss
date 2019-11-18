@@ -18,6 +18,21 @@
   height: 210px;
   left: 0;
   top: 374px;
+  z-index: 0;
+}
+
+.player_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 20% 0;
+  position: relative;
+  z-index: 1;
+}
+
+.player_img {
+  
 }
 
 .day_count {
