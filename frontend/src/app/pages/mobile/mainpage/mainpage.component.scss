@@ -1,0 +1,28 @@
+
+.navbar {
+  overflow: hidden;
+  background-color: black;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 0;
+  height: 54px;
+}
+
+.navbar a {
+  width: 33.3%;
+  height:54px;
+  padding: 12px;
+}
+
+.navbar a img {
+  display: block;
+  margin: auto;
+}
+
+.active{
+    background: #2F2F2F;
+}
+.inactive img{
+   opacity:0.4; 
+}
