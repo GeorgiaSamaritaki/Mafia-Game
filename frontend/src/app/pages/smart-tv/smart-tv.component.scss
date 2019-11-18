@@ -1,144 +1,153 @@
 .all {
-    font-family: 'Revalia';
-    font-size: 28px;
-    width: 1920px;
-    height: 1080px;
-    background-color: #E67E22;
-    overflow: hidden;
+  font-family: 'Revalia';
+  font-size: 28px;
+  width: 1920px;
+  height: 1080px;
+  background-color: #E67E22;
+  overflow: hidden;
 }
 
 .wrapper {
-    overflow: hidden;
-    z-index: -1;
+  overflow: hidden;
+  z-index: -1;
 }
 
 #tv-rectangle {
-    position: absolute;
-    width: 1920px;
-    height: 210px;
-    left: 0px;
-    top: 374px;
+  position: absolute;
+  width: 1920px;
+  height: 210px;
+  left: 0;
+  top: 374px;
 }
 
-.day_count{
-    position: absolute;
-    height: 93px;
-    top: 20px;
-    left: 1160px;
+.day_count {
+  position: absolute;
+  height: 93px;
+  top: 20px;
+  left: 1160px;
 
-    font-weight: normal;
-    font-size: 103px;
-    line-height: 128px;
-    display: flex;
-    align-items: center;
+  font-weight: normal;
+  font-size: 103px;
+  line-height: 128px;
+  display: flex;
+  align-items: center;
 
-    color: #FFFFFF;
+  color: #FFFFFF;
 }
 
-.night_count{
-    position: absolute;
-    height: 93px;
-    left: 1160px;
-    top: 20px;
+.night_count {
+  position: absolute;
+  height: 93px;
+  left: 1160px;
+  top: 20px;
 
-    font-style: normal;
-    font-weight: normal;
-    font-size: 103px;
-    line-height: 128px;
-    display: flex;
-    align-items: center;
-    
-    color: #FFFFFF;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 103px;
+  line-height: 128px;
+  display: flex;
+  align-items: center;
+
+  color: #FFFFFF;
 }
 
-.tv_upper_icon_sun{
-    position: absolute;
-    width: 250px;
-    height: 250px;
-    left: 1641px;
-    top: 21px;
+.tv_upper_icon_sun {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  left: 1641px;
+  top: 21px;
 }
 
-.tv_upper_icon_moon{
-    position: absolute;
-    width: 231px;
-    height: 231px;
-    left: 1641px;
-    top: 31px;    
+.tv_upper_icon_moon {
+  position: absolute;
+  width: 231px;
+  height: 231px;
+  left: 1641px;
+  top: 31px;
 
-    transform: matrix(-1, 0, 0, 1, 0, 0);
+  transform: matrix(-1, 0, 0, 1, 0, 0);
 }
 
+#next_up_text {
+  color: #FFFFFF;
+  position: absolute;
+  width: 191px;
+  height: 33px;
+  left: 1463px;
+  top: 944px;
 
-#next_up_text{
-    color: #FFFFFF;
-    position: absolute;
-    width: 191px;
-    height: 33px;
-    left: 1463px;
-    top: 944px;
-
-    font-style: normal;
-    font-weight: normal;
-    font-size: 36px;
-    line-height: 45px;
-    display: flex;
-    align-items: flex-end;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 36px;
+  line-height: 45px;
+  display: flex;
+  align-items: flex-end;
 }
 
-.next_up_butt{
-    position: absolute;
-    right: 5.06%;
-    top: 82.69%;
-    bottom: 4.63%;
+.next_up_butt {
+  position: absolute;
+  right: 5.06%;
+  top: 82.69%;
+  bottom: 4.63%;
 }
 
-.next_up_img{
-    position: absolute;
-    right: 5.06%;
-    top: 82.69%;
-    bottom: 4.63%;
+.next_up_img {
+  position: absolute;
+  right: 5.06%;
+  top: 82.69%;
+  bottom: 4.63%;
 }
 
-.next_up_title{
-    font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 25px;
-    text-align: center;
+.next_up_title {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 25px;
+  text-align: center;
 
-    color: #FFFFFF;
+  color: #FFFFFF;
 
-    position: absolute;
-    left: 87.5%;
-    right: 2.06%;
-    width: 169px;
-    height: 50px;
-    bottom: 0px;
+  position: absolute;
+  left: 87.5%;
+  right: 2.06%;
+  width: 169px;
+  height: 50px;
+  bottom: 0;
 }
 
-.down_title{
-    font-style: normal;
-    font-weight: normal;
-    font-size: 86px;
+.round {
+  width: 100%;
+  bottom: 0;
+  margin-left: -200px;
+  display: flex;
 
-    display: flex;
-    text-align: center;
-    color: #F5F7FA;
-    position: absolute;
-    width: 806px;
-    height: 119px; 
-    left: 665px;
-    top: 865px;
-    z-index: 10;
 }
 
+.down_title {
+  // position: absolute;
+  width: 680px;
+  height: 119px;
+  // left: 684px;
+  // top: 854px;
 
-.down_vector{
-    position: absolute;
-    width: 806px;
-    height: 227px;
-    left: 557px;
-    top: 854px;
-    z-index: 1;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 95px;
+  line-height: 119px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+
+  color: #F5F7FA;
+  z-index: 10;
+}
+
+.down_vector {
+  position: absolute;
+  // bottom: 0px;
+  // left:50%;
+  z-index: 1;
+  margin-right: -93px;
 }
