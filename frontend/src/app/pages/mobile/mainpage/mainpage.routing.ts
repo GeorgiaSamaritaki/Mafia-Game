@@ -9,15 +9,15 @@ const routes: Routes = [
     {
         path: '',
         component: MainpageComponent,
-        // loadChildren: () => import('./pages/smart-tv/smart-tv.module').then(m => m.SmartTvModule)
-        children:[
+        // // loadChildren: () => import('./pages/smart-tv/smart-tv.module').then(m => m.SmartTvModule)
+        children: [
             { path: 'home', component: HomeComponent },
             { path: 'info', component: InfoComponent },
             { path: 'voting', component: VotingComponent },
             { path: '', redirectTo: 'home', pathMatch: 'full' },
         ]
-        },
-] ;
+    },
+];
 
 @NgModule({
     imports: [
