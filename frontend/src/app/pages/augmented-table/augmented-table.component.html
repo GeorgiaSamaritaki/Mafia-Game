@@ -1,3 +1,12 @@
 <div>
-    <router-outlet></router-outlet>
+    <div class=all [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
+        <div class=topBar>
+            <img id=topVector src="../../../../assets/augmented_table/Vector.png" alt="Vector">
+        </div>
+    
+        <div class=wrapper>
+            <img id=backgroundSVG src="../../../../assets/augmented_table/{{backgroundSVG}}.svg" alt="Background vector">
+        </div>
+    </div>
+    
 </div>
