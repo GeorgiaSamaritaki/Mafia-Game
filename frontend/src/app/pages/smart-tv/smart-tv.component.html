@@ -4,22 +4,34 @@
       src="../../../../assets/{{upper_icon_path}}.png" alt="Background icon">
     <span [className]="isDay() ? 'day_count' : 'night_count'">{{day + count}}</span>
     <div class="middle">
-        <div class="player_container">
-            <div *ngFor="let player of players">
-                <img src="../../../../assets/players/{{player.avatar_path}}" class="player_img">
-            </div>
+      <div [className]="isSecretVoting() ? 'player_container_upper' : 'player_container'">
+        <div *ngFor="let player of players; let i=index">
+          <div [class.hidePlayers]="isSecretVoting() && isSuspect(i)" [style.margin]="!isSuspect(i) && isSecretVoting() ? '0px 25px' : '0px 0px'">
+            <div class="name_text">{{player.name}}</div>
+            <img src="../../../../assets/players/{{player.avatar_path}}">
+          </div>
         </div>
-        <img id="tv-rectangle" src="../../../../assets/{{background_rect}}.png" alt="Background vector">
-    </div>
-    <div>
-      <p id="next_up_text">next up:</p>
-      <img class="next_up_img" src="../../../../assets/{{next_up_icon}}.png" alt="next up secret voting"
-        (click)="changeRound();">
-      <p class="next_up_title">{{next_title}}</p>
-    </div>
-    <div class="round">
-      <p class="down_title">{{phase_title}}</p>
-      <img class="down_vector" src="../../../../assets/{{round_title_path}}.png" alt="Title of round">
+      </div>
+      <img id="tv-rectangle" [style.height]="isSecretVoting() ? '374px' : '210px'"
+        src="../../../../assets/{{background_rect}}.png" alt="Background vector">
+      <p id="final_words" [style.display]="isSecretVoting() ? 'inline' : 'none'">Who will say
+        their final words?</p>
+      <div id="suspect_container" *ngIf="isSecretVoting()">
+        <div *ngFor="let player of players; let i=index">
+          <div [class.hidePlayers]="isSecretVoting() && !isSuspect(i)" [style.margin]="isSuspect(i) ? '0px 100px' : '0px 0px'">
+            <div [className]="isSuspect(i) ? 'name_text_down' : 'name_text'">{{player.name}}</div>
+            <img src="../../../../assets/players/{{player.avatar_path}}">
+          </div>
+        </div>
+      </div>
+      <div>
+        <p id="next_up_text">next up:</p>
+        <img class="next_up_img" src="../../../../assets/{{next_up_icon}}.png" alt="next up" (click)="changeRound();">
+        <p class="next_up_title">{{next_title}}</p>
+      </div>
+      <div class="round">
+        <p class="down_title">{{phase_title}}</p>
+        <img class="down_vector" src="../../../../assets/{{round_title_path}}.png" alt="Title of round">
+      </div>
     </div>
   </div>
-</div>

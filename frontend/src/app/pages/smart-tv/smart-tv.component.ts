@@ -22,6 +22,8 @@ export class SmartTvComponent implements OnInit {
   round_title_path: string;
   background_rect: string;
   players: UserModel[];
+  in_players: UserModel[];
+  sus_players: UserModel[];
 
   constructor(private userService: UsersService) {
     this.phase = Phase.Day;
@@ -65,6 +67,15 @@ export class SmartTvComponent implements OnInit {
       this.next_up_icon = "nu_secret_voting";
       //this.round_counter++;
     }
+  }
+
+  isSuspect(i: number) {
+    if (i == 1 || i == 2) return true;
+    return false;
+  }
+
+  isSecretVoting() {
+    return (this.round_title_path == 'secret-voting');
   }
 
   changeRound() {
