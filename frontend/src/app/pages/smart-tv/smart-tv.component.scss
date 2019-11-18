@@ -117,37 +117,30 @@
 }
 
 .round {
-  width: 100%;
-  bottom: 0;
-  margin-left: -200px;
-  display: flex;
-
+    width: 100%;
+    height: 1080px;
+    display: flex;
+    justify-content:center;
+    align-items: flex-end;
 }
 
+.round  *{
+    margin-left: 93px;
+}
 .down_title {
-  // position: absolute;
-  width: 680px;
-  height: 119px;
-  // left: 684px;
-  // top: 854px;
-
-  font-style: normal;
-  font-weight: normal;
-  font-size: 95px;
-  line-height: 119px;
-  /* identical to box height */
-
-  display: flex;
-  align-items: center;
-
-  color: #F5F7FA;
-  z-index: 10;
+    padding-bottom:100px;
+    padding-left:135px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 95px;
+    align-items: center;
+    color: #F5F7FA;
+    z-index: 10;
 }
 
 .down_vector {
-  position: absolute;
-  // bottom: 0px;
-  // left:50%;
-  z-index: 1;
-  margin-right: -93px;
+    position: absolute;
+    // bottom: 0px;
+    // left:50%;
+    z-index: 1;
 }
