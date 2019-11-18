@@ -1,18 +1,32 @@
 <div>
     <div class=all [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
-        <div class=topBar>
-            <div>
-                <span>
-                    <img id=topVector src="../../../../assets/augmented_table/Vector.png" alt="Vector">
-                </span>
-                <div class=phases>
-                    <img class=icon src="../../../../assets/augmented_table/Open Ballot.png" alt="Ballot">
+        <div class=phases>
+            <div class=f (click)="changeRound()">
+                <div [className]="isSelected('Open Ballot') ? 'selectedPhase' : 'phase' ">
+                    <div [className]="isSelected('Open Ballot') ? 'selectedPhaseWrapper' : 'phaseWrapper'">
+                        <img [className]="isSelected('Open Ballot') ? 'selectedIcon' : 'icon' "
+                            src="../../../../assets/augmented_table/Open Ballot.png" alt="Ballot">
+                    </div>
+                    <div [className]="isSelected('Open Ballot') ? 'selectedPhaseText' : 'phaseText'">
+                        Open Ballot
+                    </div>
+                </div>
+                <div [className]="isSelected('Secret Voting') ? 'selectedPhase' : 'phase' ">
+                    <div [className]="isSelected('Secret Voting') ? 'selectedPhaseWrapper' : 'phaseWrapper'">
+                        <img [className]="isSelected('Secret Voting') ? 'selectedIcon' : 'icon' "
+                            src="../../../../assets/augmented_table/Secret Voting.png" alt="Ballot">
+                    </div>
+                    <div [className]="isSelected('Secret Voting') ? 'selectedPhaseText' : 'phaseText'">
+                        Secret Voting
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class=wrapper>
-            <img id=backgroundSVG src="../../../../assets/augmented_table/{{backgroundSVG}}.svg" alt="Background vector">
+            <img id=backgroundSVG src="../../../../assets/augmented_table/{{backgroundSVG}}.svg"
+                alt="Background vector">
         </div>
     </div>
-    
+
 </div>
