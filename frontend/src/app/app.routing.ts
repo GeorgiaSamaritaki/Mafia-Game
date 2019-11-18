@@ -17,5 +17,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-s
 //{ path: 'home', loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule) },
