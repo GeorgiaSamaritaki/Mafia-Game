@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'mobile', loadChildren: () => import('./pages/mobile/mobile.module').then(m => m.MobileModule) },
   { path: 'mobile/mainpage', loadChildren: () => import('./pages/mobile/mainpage/mainpage.module').then(m => m.MainpageModule) },
   { path: 'smart-tv', loadChildren: () => import('./pages/smart-tv/smart-tv.module').then(m => m.SmartTvModule) },
-  { path: '', redirectTo: 'mobile', pathMatch: 'full' },
+  { path: '**', redirectTo: 'mobile', pathMatch: 'full' },
   
 ];
 
