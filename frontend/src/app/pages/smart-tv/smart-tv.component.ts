@@ -22,8 +22,6 @@ export class SmartTvComponent implements OnInit {
   round_title_path: string;
   background_rect: string;
   players: UserModel[];
-  in_players: UserModel[];
-  sus_players: UserModel[];
 
   constructor(private userService: UsersService) {
     this.phase = Phase.Day;
@@ -42,6 +40,23 @@ export class SmartTvComponent implements OnInit {
     console.log(this.players);
   }
 
+  array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  };
+
+  async aPlayerWasKilled() {
+    this.array_move(this.players, 2, 6); //Maria is killed
+    console.log(this.players);
+    await this.userService.changePathOfUser("Maria", "killed_player1.png").toPromise();
+    // this.players[6] = await this.userService.changePathOfUser("Maria", "killed_player1.png").toPromise(); maybe like this??
+    console.log(this.players);
+  }
 
   changePhase() {
     if (this.phase == Phase.Day) {//day->night
@@ -78,7 +93,7 @@ export class SmartTvComponent implements OnInit {
     return (this.round_title_path == 'secret-voting');
   }
 
-  changeRound() {
+  async changeRound() {
     if (this.phase == Phase.Day) {
       switch (this.phase_title) {
         case this.dround[0]: //Open Ballot -> Secret Voting
@@ -90,6 +105,7 @@ export class SmartTvComponent implements OnInit {
           break;
         case this.dround[1]: //Secret Voting -> Mafia Voting
           this.changePhase();
+          await this.aPlayerWasKilled();
           break;
       }
     } else {

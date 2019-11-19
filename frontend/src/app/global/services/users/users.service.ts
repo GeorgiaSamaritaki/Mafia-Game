@@ -34,5 +34,11 @@ export class UsersService {
         .post<UserModel>(`${this.hostURl}/api/users/addUser`, {name, role, avatar_path})
         .pipe(map(result => new UserModel(result)));
     }
+
+    public changePathOfUser(name: string, avatar_path: string): Observable<UserModel> {
+      return this.http
+        .post<UserModel>(`${this.hostURl}/api/users/changePathOfUser`, {name, avatar_path})
+        .pipe(map(result => new UserModel(result)));
+    }
   
 }
