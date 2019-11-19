@@ -53,8 +53,8 @@ export class SmartTvComponent implements OnInit {
   async aPlayerWasKilled() {
     this.array_move(this.players, 2, 6); //Maria is killed
     console.log(this.players);
-    await this.userService.changePathOfUser("Maria", "killed_player1.png").toPromise();
-    // this.players[6] = await this.userService.changePathOfUser("Maria", "killed_player1.png").toPromise(); maybe like this??
+    // await this.userService.changePathOfUser("Maria", "killed_player1.png").toPromise();
+    this.players[6] = await this.userService.changePathOfUser("Maria", "killed_player1.png").toPromise();// maybe like this??
     console.log(this.players);
   }
 

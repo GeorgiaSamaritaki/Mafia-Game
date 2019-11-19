@@ -57,14 +57,14 @@ export class UsersController {
                 if (user.name === req.body.name) {
                     user.avatar_path = req.body.avatar_path;
                     found = true;
-                    res.send("Path Changed");
+                    res.send(user);
                 }
             })
             if(!found)
                 res.json({ "error": "User doesn't exist" })
             
         } catch (e) {
-            console.log('aaaaa')  
+            console.log(e)  
             res.json(e)
         }
         
