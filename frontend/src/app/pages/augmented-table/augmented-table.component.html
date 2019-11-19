@@ -2,7 +2,7 @@
     <div class=all [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
         <div class=phases>
             <div class=f (click)="changeRound()">
-                <div [className]="isSelected('Open Ballot') ? 'selectedPhase' : 'phase' ">
+                <div *ngIf="isDay()" [className]="isSelected('Open Ballot') ? 'selectedPhase' : 'phase' ">
                     <div [className]="isSelected('Open Ballot') ? 'selectedPhaseWrapper' : 'phaseWrapper'">
                         <img [className]="isSelected('Open Ballot') ? 'selectedIcon' : 'icon' "
                             src="../../../../assets/augmented_table/Open Ballot.png" alt="Ballot">
@@ -11,13 +11,49 @@
                         Open Ballot
                     </div>
                 </div>
-                <div [className]="isSelected('Secret Voting') ? 'selectedPhase' : 'phase' ">
+                <div *ngIf="isDay()" [className]="isSelected('Secret Voting') ? 'selectedPhase' : 'phase' ">
                     <div [className]="isSelected('Secret Voting') ? 'selectedPhaseWrapper' : 'phaseWrapper'">
                         <img [className]="isSelected('Secret Voting') ? 'selectedIcon' : 'icon' "
-                            src="../../../../assets/augmented_table/Secret Voting.png" alt="Ballot">
+                            src="../../../../assets/augmented_table/Secret Voting.png" alt="Secret Voting">
                     </div>
                     <div [className]="isSelected('Secret Voting') ? 'selectedPhaseText' : 'phaseText'">
                         Secret Voting
+                    </div>
+                </div>
+                <div *ngIf="!isDay()" [className]="isSelected('Mafia Voting') ? 'selectedPhaseNight' : 'phaseNight' ">
+                    <div [className]="isSelected('Mafia Voting') ? 'selectedPhaseWrapperNight' : 'phaseWrapperNight'">
+                        <img [className]="isSelected('Mafia Voting') ? 'selectedIcon' : 'icon' "
+                            src="../../../../assets/augmented_table/Mafia.png" alt="Mafia">
+                    </div>
+                    <div [className]="isSelected('Mafia Voting') ? 'selectedPhaseText' : 'phaseText'">
+                        Mafia
+                    </div>
+                </div>
+                <div *ngIf="!isDay()" [className]="isSelected('Doctor') ? 'selectedPhaseNight' : 'phaseNight' ">
+                    <div [className]="isSelected('Doctor') ? 'selectedPhaseWrapperNight' : 'phaseWrapperNight'">
+                        <img [className]="isSelected('Doctor') ? 'selectedIcon' : 'icon' "
+                            src="../../../../assets/augmented_table/Doctor.png" alt="Doctor">
+                    </div>
+                    <div [className]="isSelected('Doctor') ? 'selectedPhaseText' : 'phaseText'">
+                        Doctor
+                    </div>
+                </div>
+                <div *ngIf="!isDay()" [className]="isSelected('Detective') ? 'selectedPhaseNight' : 'phaseNight' ">
+                    <div [className]="isSelected('Detective') ? 'selectedPhaseWrapperNight' : 'phaseWrapperNight'">
+                        <img [className]="isSelected('Detective') ? 'selectedIcon' : 'icon' "
+                            src="../../../../assets/augmented_table/Detective.png" alt="Detective">
+                    </div>
+                    <div [className]="isSelected('Detective') ? 'selectedPhaseText' : 'phaseText'">
+                        Detective
+                    </div>
+                </div>
+                <div *ngIf="!isDay()" [className]="isSelected('Barman') ? 'selectedPhaseNight' : 'phaseNight' ">
+                    <div [className]="isSelected('Barman') ? 'selectedPhaseWrapperNight' : 'phaseWrapperNight'">
+                        <img [className]="isSelected('Barman') ? 'selectedIcon' : 'icon' "
+                            src="../../../../assets/augmented_table/Barman.png" alt="Barman">
+                    </div>
+                    <div [className]="isSelected('Barman') ? 'selectedPhaseText' : 'phaseText'">
+                        Barman
                     </div>
                 </div>
             </div>

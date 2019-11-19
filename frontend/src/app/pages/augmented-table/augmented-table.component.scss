@@ -36,7 +36,7 @@
   margin: 0 auto
 }
 
-.phase {
+.phase, .phaseNight {
   margin-top: 28px;
   margin-right: -9.5px;
   margin-left: -9.5px;
@@ -49,6 +49,16 @@
   margin: 0 auto;
   border: #f39c12;
   background-color: #f39c12;
+  border-radius: 50%;
+  height: 110px;
+  width: 113px;
+}
+
+.phaseWrapperNight {
+  position: relative;
+  margin: 0 auto;
+  border: #929292;
+  background-color: #929292;
   border-radius: 50%;
   height: 110px;
   width: 113px;
@@ -75,7 +85,7 @@
   text-shadow: -1px -2px rgba(0, 0, 0, 0.33);
 }
 
-.selectedPhase {
+.selectedPhase, .selectedPhaseNight {
   margin-top: 9px;
   margin-right: -14px;
   margin-left: -14px;
@@ -99,6 +109,16 @@
   margin: 0 auto;
   border: 7px solid #D35400;
   background-color: #f39c12;
+  border-radius: 50%;
+  height: 139.71px;
+  width: 143.69px;
+}
+
+.selectedPhaseWrapperNight {
+  position: relative;
+  margin: 0 auto;
+  border: 7px solid #E74C3C;
+  background-color: #929292;
   border-radius: 50%;
   height: 139.71px;
   width: 143.69px;
