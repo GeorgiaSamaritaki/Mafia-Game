@@ -14,7 +14,7 @@ const routes: Routes = [
             { path: 'home', component: HomeComponent },
             { path: 'info', component: InfoComponent },
             { path: 'voting', component: VotingComponent },
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', redirectTo: '', pathMatch: 'full' },
         ]
     },
 ];
