@@ -17,6 +17,7 @@ export class UsersController {
         const router = Router();
         
         router
+            .post('/changePathOfUser', this.changePathOfUser)
             .post('/addUser', this.addUser)
             .post('/getUser', this.getUser)
             .get('/getAllUsers', this.getAllUsers);
@@ -46,6 +47,26 @@ export class UsersController {
         }
 
         res.send("User added");
+    }
+
+    public async changePathOfUser(req: Request, res: Response) {
+        
+        try {
+            
+            // Check if the user exists
+            users.forEach((user: User) => {
+                if (user.name === req.body.name)
+                   user.avatar_path = req.body.avatar_path;
+                else
+                    res.json({ "error": "User doesn't exist" })
+            })
+
+        } catch (e) {
+            console.log(e)
+            res.json(e)
+        }
+
+        res.send("Path Changed");
     }
 
     public getUser(req: Request, res: Response) {

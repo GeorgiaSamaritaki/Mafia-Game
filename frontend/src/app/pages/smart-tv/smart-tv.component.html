@@ -1,7 +1,7 @@
 <div class="all" [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
   <div class="wrapper">
     <img [className]="isDay() ? 'tv_upper_icon_sun' : 'tv_upper_icon_moon'"
-      src="../../../../assets/{{upper_icon_path}}.png" alt="Background icon">
+      src="../../../../assets/smart_tv/{{upper_icon_path}}.png" alt="Background icon">
     <span [className]="isDay() ? 'day_count' : 'night_count'">{{day + count}}</span>
     <div class="middle">
       <div [className]="isSecretVoting() ? 'player_container_upper' : 'player_container'">
@@ -13,7 +13,7 @@
         </div>
       </div>
       <img id="tv-rectangle" [style.height]="isSecretVoting() ? '374px' : '210px'"
-        src="../../../../assets/{{background_rect}}.png" alt="Background vector">
+        src="../../../../assets/smart_tv/{{background_rect}}.png" alt="Background vector">
       <p id="final_words" [style.display]="isSecretVoting() ? 'inline' : 'none'">Who will say
         their final words?</p>
       <div id="suspect_container" *ngIf="isSecretVoting()">
@@ -26,12 +26,12 @@
       </div>
       <div>
         <p id="next_up_text">next up:</p>
-        <img class="next_up_img" src="../../../../assets/{{next_up_icon}}.png" alt="next up" (click)="changeRound();">
+        <img class="next_up_img" src="../../../../assets/smart_tv/{{next_up_icon}}.png" alt="next up" (click)="changeRound();">
         <p class="next_up_title">{{next_title}}</p>
       </div>
       <div class="round">
         <p class="down_title">{{phase_title}}</p>
-        <img class="down_vector" src="../../../../assets/{{round_title_path}}.png" alt="Title of round">
+        <img class="down_vector" src="../../../../assets/smart_tv/{{round_title_path}}.png" alt="Title of round">
       </div>
     </div>
   </div>
