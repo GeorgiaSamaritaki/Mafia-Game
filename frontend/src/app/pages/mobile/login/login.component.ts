@@ -6,10 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-
+  public selectedavatarindex:number;
   constructor() { }
 
   ngOnInit() {
+    this.selectedavatarindex = 0;
   }
-
+  selectedavatar(index:number){
+    this.selectedavatarindex = index;
+  }
+  getuser(){
+    return [(<HTMLInputElement>document.getElementById("inputname")).value,
+            this.selectedavatar]; 
+  }
 }
