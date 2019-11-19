@@ -41,17 +41,16 @@
 
 .avatar {
   width: 97px;
-  height: 93px;
+  height: 100px;
   cursor: pointer;
   filter:drop-shadow( 1px 3px 0px rgba(0, 0, 0, 0.31));
 }
 
 .avatar > img {
-    width: 88px;
-    height: 86px;
+    width: 89px;
     display: block;
     margin: auto;
-    margin-top: 6px;
+    margin-top: 4px;
 }
 
 #confirm {
@@ -65,8 +64,8 @@
 }
 
 .selected{
-    
     filter:none;
-    background: no-repeat top url("../../../../assets/players/avatar_selected.png");
+    background:  no-repeat url("../../../../assets/players/avatar_selected.png");
+    background-size: contain;
     background-origin: padding-box;;
 }
