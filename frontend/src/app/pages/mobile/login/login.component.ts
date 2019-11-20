@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.selectedavatarindex = 1;
+    this.selectedavatarindex = 0;
   }
   selectedavatar(index: number) {
     this.selectedavatarindex = index;

@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { MobileComponent } from './mobile.component';
 import { LoginComponent } from './login/login.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
-import { HomeComponent } from './mainpage/home/home.component';
 
 const routes: Routes = [
   {
@@ -15,14 +14,8 @@ const routes: Routes = [
         component: LoginComponent
       },
       // {
-      //   path: 'mainpage',
-      //   component: MainpageComponent
-      //   // loadChildren: () => import('./mainpage/mainpage.module').then(m => m.MainpageModule)
-      // },
-      // {
-      //   path: 'mainpage/home',
-      //   component: HomeComponent
-      //   // loadChildren: () => import('./mainpage/mainpage.module').then(m => m.MainpageModule)
+      //   path: 'mainpage'
+      //   , component: MainpageComponent
       // },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
