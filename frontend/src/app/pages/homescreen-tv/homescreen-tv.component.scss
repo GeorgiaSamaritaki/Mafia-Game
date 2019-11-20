@@ -1,0 +1,115 @@
+#background {
+  background: url("/assets/homescreen/SmartTv.png");
+  width: 100%;
+  height: 1080px;
+
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+  display: flex;
+  flex-direction: column;
+  color: #000000;
+}
+
+#bats {
+  background: url("/assets/homescreen/bats3.gif") top;
+  position: absolute;
+  width: 102px;
+  height: 113px;
+  left: 1115px;
+  top: 632px;
+  z-index: 1000;
+
+}
+
+#playersjoined {
+
+  position: absolute;
+  width: 600px;
+  height: 45px;
+  right: 30px;
+  top: 27px;
+  text-align: right;
+  font-size: 36px;
+  line-height: 45px;
+  /* identical to box height */
+}
+
+#title {
+  margin-top: 268px;
+  height: 115px;
+  width: 1466px;
+  align-self: center;
+  font-size: 144px;
+  line-height: 179px;
+}
+
+#jointocontinue {
+  align-self: center;
+  margin-top: 111px;
+  height: 42px;
+  width: 787px;
+  top: 491px;
+  color: #ECF0F1;
+  font-size: 48px;
+  line-height: 60px;
+  text-shadow: 0 4px 4px #2C3E50;
+}
+
+#houses {
+  position: absolute;
+  width: 1920px;
+  height: 478px;
+  left: 0;
+  top: 602px;
+}
+
+#qr {
+  position: absolute;
+  width: 1776px;
+  height: 48px;
+  left: 80px;
+  top: 980px;
+  animation: blink 3s linear infinite;
+}
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes blink2 {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+#jointocontinue span {
+  animation-name: blink2;
+  animation-duration: 4.5s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+#jointocontinue span:nth-child(2) {
+  animation-delay: 1.5s;
+}
+
+#jointocontinue span:nth-child(3) {
+  animation-delay: 2.5s;
+}
