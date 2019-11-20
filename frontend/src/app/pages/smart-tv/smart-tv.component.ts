@@ -44,8 +44,8 @@ export class SmartTvComponent implements OnInit {
 
   private async initializePlayers() {
     this.players = await this.userService.getAllUsers().toPromise();
-    this.players[2] = await this.userService.changePathOfUser("Maria", "player3.png").toPromise();
     this.players[1] = await this.userService.changePathOfUser("George", "player2.png").toPromise();
+    this.players[2] = await this.userService.changePathOfUser("Maria", "player3.png").toPromise();
     this.players[6] = await this.userService.changePathOfUser("Renata", "player7.png").toPromise();
     console.log(this.players);
   }
@@ -61,12 +61,15 @@ export class SmartTvComponent implements OnInit {
   };
 
   async aPlayerWasKilled() {
-    
-    console.log("index"+this.index_of_killed);
+    console.log("index" + this.index_of_killed);
     console.log(this.votesOfPlayers);
     console.log(this.players);
-    this.players[this.index_of_killed] = await this.userService.changePathOfUser(this.votesOfPlayers[this.index_of_killed].name, "killed_player" +  this.deaths + ".png").toPromise();
-    
+    this.players[this.index_of_killed] = await this.userService.changePathOfUser(this.votesOfPlayers[this.index_of_killed].name, "killed_player" + this.deaths + ".png").toPromise();
+    this.players[this.index_of_killed].role = "Mason";
+
+    if (this.nround[3] == "Barman" && this.deaths > 1) {
+      this.players[this.index_of_killed].role = "night";
+    }
   }
 
   changePhase() {
@@ -105,7 +108,7 @@ export class SmartTvComponent implements OnInit {
         key = k;
       }
     });
-    console.log("key "+key);
+    console.log("key " + key);
     this.shouldDie = this.players[key];
     this.array_move(this.votesOfPlayers, key, 6); //make the player go last
     this.array_move(this.players, key, 6); //a player is killed
@@ -117,9 +120,9 @@ export class SmartTvComponent implements OnInit {
       this.dead_indexes.push(this.index_of_killed - 1);
     }
     this.votesOfPlayers[this.index_of_killed].votes = 0
-    console.log(this.shouldDie);
-    console.log(this.players);
-    console.log(this.index_of_killed);
+    // console.log(this.shouldDie);
+    // console.log(this.players);
+    // console.log(this.index_of_killed);
   }
 
   isSuspect(i: number) {
@@ -129,8 +132,13 @@ export class SmartTvComponent implements OnInit {
 
   isDead(i: number) {
     for (var j: number = 0; j < this.dead_indexes.length; j++) {
-      if (i == this.dead_indexes[j]) return true;
+      if (i == this.dead_indexes[j]) {
+        //console.log("role " + this.players[i].role);
+        return true;
+
+      }
     }
+
     return false;
   }
 
@@ -140,6 +148,10 @@ export class SmartTvComponent implements OnInit {
 
   isSecretVoting() {
     return (this.round_title_path == 'secret-voting');
+  }
+
+  isOpenBallot() {
+    return (this.round_title_path == 'open-ballot');
   }
 
   async changeRound() {
@@ -186,6 +198,8 @@ export class SmartTvComponent implements OnInit {
           break;
         case this.nround[3]: //Barman -> Open Ballot
           this.changePhase();
+          this.whoShouldDie();
+          await this.aPlayerWasKilled();
           break;
       }
     }
@@ -196,12 +210,27 @@ export class SmartTvComponent implements OnInit {
     else return false;
   }
 
-  getPhase() {
-    return this.phase;
+  assign_roles() {
+    this.players[0].role = "Detective";
+    this.players[1].role = "Civilian";
+    this.players[2].role = "Mason";
+    this.players[3].role = "Doctor";
+    this.players[4].role = "Mason";
+    this.players[5].role = "Godfather";
+    this.players[6].role = "Barman";
+  }
+
+  showVotes(i: number) {
+    if (this.votesOfPlayers[i].votes > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async ngOnInit() {
     await this.initializePlayers();
+    this.assign_roles();
   }
 
 }

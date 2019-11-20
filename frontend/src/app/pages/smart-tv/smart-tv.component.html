@@ -11,8 +11,12 @@
             <div class="name_text">{{player.name}}</div>
             <img src="../../../../assets/players/{{player.avatar_path}}">
           </div>
+          <div class="votes" *ngIf="isOpenBallot()" [style.height]="showVotes(i) ? '70px' : '0px'"
+          [style.margin-top]="showVotes(i) ? '-6%' : '0%'">
+              <div [class.hidePlayers]="!showVotes(i)" class="vote">{{votesOfPlayers[i].votes}}</div>
+          </div>
           <div *ngIf="!isSecretVoting() && isDead(i)" class="card" >
-            <img src="../../../../assets/smart_tv/card{{deaths}}.png" alt="card icon">
+            <img src="../../../../assets/smart_tv/card_{{players[i].role}}.png"  alt="card icon">
           </div>
         </div>
       </div>

@@ -16,6 +16,35 @@
   text-align: center;
 }
 
+.votes {
+  font-family: Sanchez;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 40px;
+  line-height: 65px;
+  display: flex;
+  justify-content: space-around;
+  color: #656D78;
+  
+  width: 70px;
+  height: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -6%;
+  position: relative;
+}
+
+.vote{
+  background: #F5F7FA;
+  border-radius: 56px;
+  width: 70px;
+  height: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -6%;
+  position: relative;
+}
+
 .card {
   display: flex;
   justify-content: space-around;

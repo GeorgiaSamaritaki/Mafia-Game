@@ -33,7 +33,7 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   private async getPlayers() {
-    this.players = await this.usersService.getAllUsers().toPromise();
+    this.players = await this.usersService.getAllUsers().toPromise(); 
   }
 
   public isDay() {
