@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersService } from 'src/app/global/services';
+import { UserModel } from 'src/app/global/models';
 
 @Component({
   selector: 'ami-fullstack-login',
@@ -6,17 +8,27 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  public selectedavatarindex:number;
-  constructor() { }
+  public selectedavatarindex: number;
+  constructor(
+    private usersService: UsersService
+  ) { }
 
   ngOnInit() {
-    this.selectedavatarindex = 0;
+    this.selectedavatarindex = 1;
   }
-  selectedavatar(index:number){
+  selectedavatar(index: number) {
     this.selectedavatarindex = index;
   }
-  getuser(){
-    return [(<HTMLInputElement>document.getElementById("inputname")).value,
-            this.selectedavatar]; 
+
+  async addUser() {
+    console.log(
+      await this.usersService.addUser(
+        (<HTMLInputElement>document.getElementById("inputname")).value,
+        ""
+        , "player" + this.selectedavatarindex + ".png"
+      ).toPromise()
+
+    );
+
   }
 }
