@@ -1,4 +1,27 @@
 <div class="background">
+    //TODO: is waiting is reversed 
+    <img *ngIf="isWaiting()" id="waiting" src="/assets/mobile/hourglass.png" alt="waitingscreen">
+    <div *ngIf="!isWaiting()">
+        <div id="cards">
+            <div class="flip-card" *ngFor="let player of players; let i = index;">
+                <div class="flip-card-inner" (click)="toggleflip(i)" [ngClass]="flips[i] ? 'flip' : ''">
+                    <div class="flip-card-front">
+                        <img class="avatar" src="/assets/players/mobile_{{player.avatar_path}}">
+                        <div class="playername">{{player.name}}</div>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="myrow">
+                            <img class="avatar" src="/assets/players/mobile_{{player.avatar_path}}">
+                            <div class="playername">{{player.name}}</div>
+                        </div>
 
-    <img id="waiting" src="../../../../assets/hourglass.png" alt="waitingscreen">
+                        <img src="/assets/roles/{{player.role}}.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="flipbutton" (click)="flipall()">
+            <img src="/assets/mobile/flipbutton.png">
+        </button>
+    </div>
 </div>

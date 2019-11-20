@@ -1,28 +1,39 @@
-
-.navbar {
-  overflow: hidden;
+.background {
   background-color: black;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 0;
-  height: 54px;
+  min-height: calc(100vh - 48px);
+  height: auto;
+  margin: 0;
+}
+@media (max-width :600px) {
+  .mat-tab-label {
+    min-width: 33.3% !important;
+    background-color: black;
+    opacity: 1 !important;
+  }
+
 }
 
-.navbar a {
-  width: 33.3%;
-  height:54px;
-  padding: 12px;
+.mat-tab-label img {
+  opacity: .7;
 }
 
-.navbar a img {
-  display: block;
-  margin: auto;
+.mat-tab-label .mat-tab {
+  background-color: black;
 }
 
-.active{
-    background: #2F2F2F;
+.mat-tab-label-active img {
+  opacity: 1;
 }
-.inactive img{
-   opacity:0.4; 
+
+.mat-tab-label-active {
+  background: #2F2F2F;
+}
+
+.mat-tab-group {
+  height: 100vh;
+}
+
+.mat-tab-disabled {
+  opacity: .3 !important;
+
 }

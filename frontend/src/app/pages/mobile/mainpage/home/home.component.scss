@@ -1,12 +1,131 @@
+.background {
+  background-color: #34495e;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+}
 
 #waiting {
-    position: absolute;
-    left: 34px;
-    top: 115px;
-  
-  }
-  .background {
-    background-color: #34495e;
-    width: 360px; height: 740px;
-  }
-  
+  width: 80%;
+  height: auto;
+}
+
+#cards {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.myrow {
+  height: 55px;
+  // width:130px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flip-card {
+  background-color: transparent;
+  border: none;
+  width: 130px;
+  height: 136.45px;
+  perspective: 1000px; //3d
+  margin: 5px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform .8s;
+  transform-style: preserve-3d;
+}
+
+.playername {
+
+  font-size: 14px;
+  line-height: 17px;
+
+  color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.flip-card-front .playername {
+  margin-top: 5px;
+  width: 120px;
+  height: 33px;
+}
+
+.flip-card-back .playername {
+  width: 81px;
+  font-size: 16px;
+
+  color: #000000;
+}
+
+.flip-card-front .avatar {
+  width: 80px;
+  height: 83px;
+}
+
+.flip-card-back .avatar {
+  width: 40px;
+  height: 42px;
+  margin: auto 3px auto 7px;
+
+}
+
+.flip-card-inner > * {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  background: #F5F7FA;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.33);
+  border-radius: 26px;
+}
+
+.flip-card-back {
+  background: #F5F7FA;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.33);
+  border-radius: 26px;
+  transform: rotateY(180deg);
+}
+
+#flipbutton {
+  position:absolute;
+  width: 81px;
+  height: 83.7px;
+  right: 0px;
+  top: 67%;
+  filter:drop-shadow( 0px 4px 0px rgba(0, 0, 0, 0.39));
+  border:none;
+  background: none;
+  padding:0;
+}
+#flipbutton:active {
+  filter:none;
+}
+

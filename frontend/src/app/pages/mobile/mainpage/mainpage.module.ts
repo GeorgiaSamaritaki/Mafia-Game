@@ -5,7 +5,7 @@ import { MainpageRoutingModule } from './mainpage.routing';
 import { InfoComponent } from './info/info.component';
 import { HomeComponent } from './home/home.component';
 import { VotingComponent } from './voting/voting.component';
-
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -16,7 +16,8 @@ import { VotingComponent } from './voting/voting.component';
   ],
   imports: [
     CommonModule,
-    MainpageRoutingModule
+    MainpageRoutingModule,
+    MatTabsModule
   ]
 })
 export class MainpageModule { }

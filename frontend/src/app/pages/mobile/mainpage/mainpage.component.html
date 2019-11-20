@@ -1,13 +1,24 @@
 <div class="background">
-    <ami-fullstack-home></ami-fullstack-home>
-    <ami-fullstack-info></ami-fullstack-info>
-    <ami-fullstack-voting></ami-fullstack-voting>
-    <div class="navbar">
-        <a href="#info"> <img src="/assets/mobile/infonavbar.png" alt="Info">
-        </a>
-        <a href="#home" class="active"> <img src="/assets/mobile/homenavbar.png" alt="Home">
-        </a>
-        <a href="#voting" class="inactive"> <img src="/assets/mobile/votingnavbar.png" alt="Voting"> </a>
-    </div>
+    
+    <mat-tab-group headerPosition="below" [disableRipple]=true [selectedIndex]="1">
+        <mat-tab >
+            <ng-template mat-tab-label>
+                <img src="/assets/mobile/infonavbar.png" alt="Info">
+            </ng-template>
+            <ami-fullstack-info></ami-fullstack-info>
+        </mat-tab>
+        <mat-tab >
+            <ng-template mat-tab-label>
+                <img src="/assets/mobile/homenavbar.png" alt="Home">
+            </ng-template>
+            <ami-fullstack-home></ami-fullstack-home>
+        </mat-tab>
+        <mat-tab  [disabled]= "!isVoting()">
+            <ng-template mat-tab-label>
+                <img src="/assets/mobile/votingnavbar.png" alt="Voting">
+            </ng-template>
+            <ami-fullstack-voting></ami-fullstack-voting>
+        </mat-tab>
+    </mat-tab-group>
     <router-outlet></router-outlet>
 </div>
