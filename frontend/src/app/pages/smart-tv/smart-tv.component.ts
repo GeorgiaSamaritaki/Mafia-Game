@@ -22,6 +22,13 @@ export class SmartTvComponent implements OnInit {
   round_title_path: string;
   background_rect: string;
   players: UserModel[];
+  votesOfPlayers = [{ name: "Alice", votes: 0 }, { name: "George", votes: 2 }, { name: "Maria", votes: 4 }, { name: "Kiki", votes: 0 },
+  { name: "Manolis", votes: 0 }, { name: "Kosmas", votes: 0 }, { name: "Renata", votes: 1 }];
+  suspects_indexes: number[] = [1, 2]; //can change
+  index_of_killed: number;
+  shouldDie: UserModel;
+  deaths: number = 0;
+  dead_indexes: number[] = [];
 
   constructor(private userService: UsersService) {
     this.phase = Phase.Day;
@@ -37,6 +44,9 @@ export class SmartTvComponent implements OnInit {
 
   private async initializePlayers() {
     this.players = await this.userService.getAllUsers().toPromise();
+    this.players[2] = await this.userService.changePathOfUser("Maria", "player3.png").toPromise();
+    this.players[1] = await this.userService.changePathOfUser("George", "player2.png").toPromise();
+    this.players[6] = await this.userService.changePathOfUser("Renata", "player7.png").toPromise();
     console.log(this.players);
   }
 
@@ -51,11 +61,12 @@ export class SmartTvComponent implements OnInit {
   };
 
   async aPlayerWasKilled() {
-    this.array_move(this.players, 2, 6); //Maria is killed
+    
+    console.log("index"+this.index_of_killed);
+    console.log(this.votesOfPlayers);
     console.log(this.players);
-    // await this.userService.changePathOfUser("Maria", "killed_player1.png").toPromise();
-    this.players[6] = await this.userService.changePathOfUser("Maria", "killed_player1.png").toPromise();// maybe like this??
-    console.log(this.players);
+    this.players[this.index_of_killed] = await this.userService.changePathOfUser(this.votesOfPlayers[this.index_of_killed].name, "killed_player" +  this.deaths + ".png").toPromise();
+    
   }
 
   changePhase() {
@@ -84,9 +95,47 @@ export class SmartTvComponent implements OnInit {
     }
   }
 
+  whoShouldDie() {
+    this.deaths++;
+    var max: number = -Infinity, key: number;
+
+    this.votesOfPlayers.forEach(function (v, k) { //find the index of player who should die
+      if (max < +v.votes) {
+        max = +v.votes;
+        key = k;
+      }
+    });
+    console.log("key "+key);
+    this.shouldDie = this.players[key];
+    this.array_move(this.votesOfPlayers, key, 6); //make the player go last
+    this.array_move(this.players, key, 6); //a player is killed
+    this.index_of_killed = 6;
+    if (this.deaths == 1) {
+      this.dead_indexes.push(this.index_of_killed);
+    }
+    else {
+      this.dead_indexes.push(this.index_of_killed - 1);
+    }
+    this.votesOfPlayers[this.index_of_killed].votes = 0
+    console.log(this.shouldDie);
+    console.log(this.players);
+    console.log(this.index_of_killed);
+  }
+
   isSuspect(i: number) {
-    if (i == 1 || i == 2) return true;
+    if (i == this.suspects_indexes[0] || i == this.suspects_indexes[1]) return true;
     return false;
+  }
+
+  isDead(i: number) {
+    for (var j: number = 0; j < this.dead_indexes.length; j++) {
+      if (i == this.dead_indexes[j]) return true;
+    }
+    return false;
+  }
+
+  isMafiaVoting() {
+    return (this.round_title_path == 'mafia-voting');
   }
 
   isSecretVoting() {
@@ -105,6 +154,7 @@ export class SmartTvComponent implements OnInit {
           break;
         case this.dround[1]: //Secret Voting -> Mafia Voting
           this.changePhase();
+          this.whoShouldDie();
           await this.aPlayerWasKilled();
           break;
       }
