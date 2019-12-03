@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UsersService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
 
@@ -16,12 +16,10 @@ export class SmartTvComponent implements OnInit {
   count: number;
   dround = ["Open Ballot", "Secret Voting"];
   nround = ["Mafia Voting", "Doctor", "Detective", "Barman"];
-  upper_icon_path: string;
-  background_color: string;
   next_up_icon: string;
   round_title_path: string;
   background_rect: string;
-  players: UserModel[];
+  players: UserModel[] = [];
   votesOfPlayers: Map<string, number>;
   // = [{ name: "Alice", votes: 0 }, { name: "George", votes: 2 }, { name: "Maria", votes: 4 }, { name: "Kiki", votes: 0 },
   // { name: "Manolis", votes: 0 }, { name: "Kosmas", votes: 0 }, { name: "Renata", votes: 1 }];
@@ -30,6 +28,7 @@ export class SmartTvComponent implements OnInit {
   shouldDie: UserModel;
   deaths: string[];
   dead_indexes: number[] = [];
+  @Input() player_count: number;
 
   constructor(private userService: UsersService) {
     this.phase = Phase.Day;
@@ -38,7 +37,6 @@ export class SmartTvComponent implements OnInit {
     this.round_title_path = "open-ballot";
     this.day = "Day ";
     this.count = 1;
-    this.upper_icon_path = "Sun";
     this.next_up_icon = "nu_secret_voting";
     this.background_rect = "tv-rectangle-day";
     this.votesOfPlayers = new Map();
@@ -50,10 +48,14 @@ export class SmartTvComponent implements OnInit {
     for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
     console.log("Initialize Players1:"); console.log(this.votesOfPlayers);
     this.deaths = [];
-
+    this.player_count = this.players.length;
+    await this.userService.changePathOfUser(
+      "Maria", "player3.png").toPromise();
+    await this.userService.changePathOfUser(
+      "Alice", "player1.png").toPromise();
     this.votesOfPlayers.set("George", 6);
     this.votesOfPlayers.set("Maria", 7);
-    this.votesOfPlayers.set("Alice", 9);
+    this.votesOfPlayers.set("Alice", 3);
   }
 
   array_move(arr, old_index, new_index) {
@@ -69,18 +71,19 @@ export class SmartTvComponent implements OnInit {
   sendToEnd(name: string) {
     let from: number = -1;
     this.players.forEach((user: UserModel, index: number) => { if (user.name === name) from = index; });
-    console.log("move from"+from+"to end");
+    console.log("move from" + from + "to end");
     if (from == -1) return;
     let cutOut = this.players.splice(from, 1)[0]; // cut the element at index 'from'
     this.players.splice(this.players.length, 0, cutOut);
   }
 
-  async aPlayerWasKilled() {
-    var playertokil = this.players[this.index_of_killed];
+  async aPlayerWasKilled() { //find index or name
+    var playertokil = this.players[this.suspects_indexes[0]];
+    this.deaths.push(playertokil.name);
     this.sendToEnd(playertokil.name);
-    console.log("Dying player"+playertokil.name+" avatar "+playertokil.avatar);
-      await this.userService.changePathOfUser(
-        playertokil.name, "killed_" + playertokil.avatar).toPromise();
+    this.players[this.players.length-1] = await this.userService.changePathOfUser(
+      playertokil.name, "killed_" + playertokil.avatar_path).toPromise();
+
   }
 
   getPlayer(player_name: string) {
@@ -120,27 +123,18 @@ export class SmartTvComponent implements OnInit {
     }
     this.votesOfPlayers.set(player_name, 0);
     this.votesOfPlayers.set(player_name1, 0);
-    // this.sendToEnd(player_name);
-    // this.deaths.push(player_name);
-    // console.log("WhoshouldDie:" + this.shouldDie);
-    // console.log("WhoshouldDie:" + this.players);
-    // console.log("WhoshouldDie:" + this.index_of_killed);
   }
 
   isSuspect(i: number) {
     if (i == this.suspects_indexes[0] || i == this.suspects_indexes[1]) return true;
     return false;
   }
+  
 
   isDead(i: number) {
-    for (var j: number = 0; j < this.dead_indexes.length; j++) {
-      if (i == this.dead_indexes[j]) {
-        //console.log("role " + this.players[i].role);
-        return true;
-
-      }
-    }
-
+    for(var player_name of this.deaths)
+      if(this.players[i].name == player_name) return true;
+    
     return false;
   }
 
@@ -162,8 +156,6 @@ export class SmartTvComponent implements OnInit {
       this.phase_title = this.nround[0];
       this.next_title = this.nround[1];
       this.day = "Night ";
-      this.upper_icon_path = "moon";
-      this.background_color = "#34495E";
       this.next_up_icon = "nu_doctor";
       this.round_title_path = "mafia-voting";
       this.count++;
@@ -173,8 +165,6 @@ export class SmartTvComponent implements OnInit {
       this.phase_title = this.dround[0];
       this.next_title = this.dround[1];
       this.day = "Day ";
-      this.upper_icon_path = "Sun";
-      this.background_color = "#E67E22";
       this.round_title_path = "open-ballot";
       this.background_rect = "tv-rectangle-day";
       this.next_up_icon = "nu_secret_voting";
@@ -195,11 +185,6 @@ export class SmartTvComponent implements OnInit {
           break;
         case this.dround[1]: //Secret Voting -> Mafia Voting
           this.changePhase();
-          console.log("kill 0");
-          this.deaths.push(this.players[0].name);
-          this.index_of_killed = 0;
-          this.players[0].avatar="player1.png"
-          // this.players[this.index_of_killed].role="night";
           await this.aPlayerWasKilled();
           break;
       }
