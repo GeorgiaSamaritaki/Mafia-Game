@@ -19,16 +19,24 @@ export class LoginComponent implements OnInit {
   selectedavatar(index: number) {
     this.selectedavatarindex = index;
   }
-
+  usernameExists(username:string){
+    //TODO:
+    return false;
+  }
   async addUser() {
+    var username:string = (<HTMLInputElement>document.getElementById("inputname")).value;
+    if(username == "" || this.usernameExists(username)){
+      alert("Username Invalid");
+      return;
+    }
     console.log(
       await this.usersService.addUser(
-        (<HTMLInputElement>document.getElementById("inputname")).value,
-        ""
-        , "player" + this.selectedavatarindex + ".png"
-      ).toPromise()
+        username,
+          ""
+          , "player" + this.selectedavatarindex + ".png"
+        ).toPromise()
 
-    );
+      );
 
   }
 }
