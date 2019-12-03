@@ -25,24 +25,15 @@
   display: flex;
   justify-content: space-around;
   color: #656D78;
-  
+  line-height: 71px;
   width: 70px;
   height: 70px;
   margin-left: auto;
   margin-right: auto;
   margin-top: -6%;
   position: relative;
-}
-
-.vote{
   background: #F5F7FA;
   border-radius: 56px;
-  width: 70px;
-  height: 70px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: -6%;
-  position: relative;
 }
 
 .card {
@@ -148,11 +139,13 @@
   color: #656D78;
   background: #F5F7FA;
   border-radius: 28px;
-  width: 206px;
+  width: fit-content;
+  padding: 0px 30px;
   right: -148px;
   bottom: -146px;
-  height: 46px;
+  line-height: 40px;
   z-index: 5;
+  margin: 0 100px;
   position: relative;
 }
 
@@ -283,4 +276,7 @@
   // bottom: 0px;
   // left:50%;
   z-index: 1;
+}
+.hide{
+  display:none;
 }
