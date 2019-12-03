@@ -20,6 +20,8 @@ export class UsersController {
             .post('/changePathOfUser', this.changePathOfUser)
             .post('/addUser', this.addUser)
             .post('/getUser', this.getUser)
+            .post('/checkUsername', this.checkUsername)
+            .post('/test', this.test) 
             .get('/getAllUsers', this.getAllUsers);
         return router;
     }
@@ -81,4 +83,26 @@ export class UsersController {
         res.json(users);
     }
 
+    public async checkUsername(req: Request, res:Response) {
+        var found=false;
+        try {
+            users.forEach((user: User) => {
+                if (user.name === req.body.name) {
+                    found = true;
+                } 
+            }) 
+            res.send(found);
+        } catch(e) {
+            console.log(e);
+            res.send(e);
+        }
+    }
+
+    public test(req:Request, res: Response) {
+        const message: string = req.body.message;
+        const event: string = req.body.event;
+
+        const socketsService = DIContainer.get(SocketsService);
+        socketsService.broadcast(event, message);
+    }
 }
