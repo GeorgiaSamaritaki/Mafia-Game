@@ -49,6 +49,7 @@ export class SmartTvComponent implements OnInit {
     console.log("Initialize Players0:"); console.log(this.players);
     for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
     console.log("Initialize Players1:"); console.log(this.votesOfPlayers);
+    this.deaths = [];
 
     this.votesOfPlayers.set("George", 6);
     this.votesOfPlayers.set("Maria", 7);
@@ -68,23 +69,18 @@ export class SmartTvComponent implements OnInit {
   sendToEnd(name: string) {
     let from: number = -1;
     this.players.forEach((user: UserModel, index: number) => { if (user.name === name) from = index; });
+    console.log("move from"+from+"to end");
     if (from == -1) return;
     let cutOut = this.players.splice(from, 1)[0]; // cut the element at index 'from'
-    this.players.splice(this.players.length - 1, 0, cutOut);
+    this.players.splice(this.players.length, 0, cutOut);
   }
 
   async aPlayerWasKilled() {
-    console.log("index" + this.index_of_killed);
-    console.log(this.votesOfPlayers);
-    console.log(this.players);
-    this.players[this.index_of_killed] =
+    var playertokil = this.players[this.index_of_killed];
+    this.sendToEnd(playertokil.name);
+    console.log("Dying player"+playertokil.name+" avatar "+playertokil.avatar);
       await this.userService.changePathOfUser(
-        this.deaths[this.deaths.length - 1], "killed_" + this.getPlayer(this.deaths[this.deaths.length - 1]).avatar).toPromise();
-    this.players[this.index_of_killed].role = "Mason";
-
-    if (this.nround[3] == "Barman" && this.deaths.length > 1) {
-      this.players[this.index_of_killed].role = "night";
-    }
+        playertokil.name, "killed_" + playertokil.avatar).toPromise();
   }
 
   getPlayer(player_name: string) {
@@ -199,6 +195,11 @@ export class SmartTvComponent implements OnInit {
           break;
         case this.dround[1]: //Secret Voting -> Mafia Voting
           this.changePhase();
+          console.log("kill 0");
+          this.deaths.push(this.players[0].name);
+          this.index_of_killed = 0;
+          this.players[0].avatar="player1.png"
+          // this.players[this.index_of_killed].role="night";
           await this.aPlayerWasKilled();
           break;
       }
@@ -230,7 +231,7 @@ export class SmartTvComponent implements OnInit {
           break;
         case this.nround[3]: //Barman -> Open Ballot
           this.changePhase();
-          await this.aPlayerWasKilled();
+          // await this.aPlayerWasKilled();
           break;
       }
     }
