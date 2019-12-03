@@ -22,12 +22,13 @@ export class SmartTvComponent implements OnInit {
   round_title_path: string;
   background_rect: string;
   players: UserModel[];
-  votesOfPlayers = [{ name: "Alice", votes: 0 }, { name: "George", votes: 2 }, { name: "Maria", votes: 4 }, { name: "Kiki", votes: 0 },
-  { name: "Manolis", votes: 0 }, { name: "Kosmas", votes: 0 }, { name: "Renata", votes: 1 }];
+  votesOfPlayers: Map<string, number>;
+  // = [{ name: "Alice", votes: 0 }, { name: "George", votes: 2 }, { name: "Maria", votes: 4 }, { name: "Kiki", votes: 0 },
+  // { name: "Manolis", votes: 0 }, { name: "Kosmas", votes: 0 }, { name: "Renata", votes: 1 }];
   suspects_indexes: number[] = [1, 2]; //can change
   index_of_killed: number;
   shouldDie: UserModel;
-  deaths: number = 0;
+  deaths: string[];
   dead_indexes: number[] = [];
 
   constructor(private userService: UsersService) {
@@ -40,14 +41,18 @@ export class SmartTvComponent implements OnInit {
     this.upper_icon_path = "Sun";
     this.next_up_icon = "nu_secret_voting";
     this.background_rect = "tv-rectangle-day";
+    this.votesOfPlayers = new Map();
   }
 
   private async initializePlayers() {
     this.players = await this.userService.getAllUsers().toPromise();
-    this.players[1] = await this.userService.changePathOfUser("George", "player2.png").toPromise();
-    this.players[2] = await this.userService.changePathOfUser("Maria", "player3.png").toPromise();
-    this.players[6] = await this.userService.changePathOfUser("Renata", "player7.png").toPromise();
-    console.log(this.players);
+    console.log("Initialize Players0:"); console.log(this.players);
+    for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
+    console.log("Initialize Players1:"); console.log(this.votesOfPlayers);
+
+    this.votesOfPlayers.set("George", 6);
+    this.votesOfPlayers.set("Maria", 7);
+    this.votesOfPlayers.set("Alice", 9);
   }
 
   array_move(arr, old_index, new_index) {
@@ -60,69 +65,70 @@ export class SmartTvComponent implements OnInit {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
   };
 
+  sendToEnd(name: string) {
+    let from: number = -1;
+    this.players.forEach((user: UserModel, index: number) => { if (user.name === name) from = index; });
+    if (from == -1) return;
+    let cutOut = this.players.splice(from, 1)[0]; // cut the element at index 'from'
+    this.players.splice(this.players.length - 1, 0, cutOut);
+  }
+
   async aPlayerWasKilled() {
     console.log("index" + this.index_of_killed);
     console.log(this.votesOfPlayers);
     console.log(this.players);
-    this.players[this.index_of_killed] = await this.userService.changePathOfUser(this.votesOfPlayers[this.index_of_killed].name, "killed_player" + this.deaths + ".png").toPromise();
+    this.players[this.index_of_killed] =
+      await this.userService.changePathOfUser(
+        this.deaths[this.deaths.length - 1], "killed_" + this.getPlayer(this.deaths[this.deaths.length - 1]).avatar).toPromise();
     this.players[this.index_of_killed].role = "Mason";
 
-    if (this.nround[3] == "Barman" && this.deaths > 1) {
+    if (this.nround[3] == "Barman" && this.deaths.length > 1) {
       this.players[this.index_of_killed].role = "night";
     }
   }
 
-  changePhase() {
-    if (this.phase == Phase.Day) {//day->night
-      this.phase = Phase.Night;
-      this.phase_title = this.nround[0];
-      this.next_title = this.nround[1];
-      this.day = "Night ";
-      this.upper_icon_path = "moon";
-      this.background_color = "#34495E";
-      this.next_up_icon = "nu_doctor";
-      this.round_title_path = "mafia-voting";
-      this.count++;
-      this.background_rect = "tv-rectangle-night";
-    } else {//night->day
-      this.phase = Phase.Day;
-      this.phase_title = this.dround[0];
-      this.next_title = this.dround[1];
-      this.day = "Day ";
-      this.upper_icon_path = "Sun";
-      this.background_color = "#E67E22";
-      this.round_title_path = "open-ballot";
-      this.background_rect = "tv-rectangle-day";
-      this.next_up_icon = "nu_secret_voting";
-      //this.round_counter++;
-    }
+  getPlayer(player_name: string) {
+    for (var user of this.players)
+      if (user.name === name) return user;
   }
 
-  whoShouldDie() {
-    this.deaths++;
-    var max: number = -Infinity, key: number;
+  getVotes(player) {
+    if (typeof player === "number") {
+      return this.votesOfPlayers.get(this.players[player].name);
+    } else if (typeof player == "string")
+      return this.votesOfPlayers.get(player);
+  }
 
-    this.votesOfPlayers.forEach(function (v, k) { //find the index of player who should die
-      if (max < +v.votes) {
-        max = +v.votes;
-        key = k;
+
+  whoShouldDie() { //get suspects in the middle
+    var max: number = -Infinity, max1: number = max, player_name: string, player_name1: string;
+    this.votesOfPlayers.forEach((votes: number, name: string) => {
+      if (max1 < votes) {
+        if (max < votes) {
+          max1 = max;
+          player_name1 = player_name;
+          max = votes;
+          player_name = name;
+        } else {
+          max1 = votes;
+          player_name1 = name;
+        }
       }
     });
-    console.log("key " + key);
-    this.shouldDie = this.players[key];
-    this.array_move(this.votesOfPlayers, key, 6); //make the player go last
-    this.array_move(this.players, key, 6); //a player is killed
-    this.index_of_killed = 6;
-    if (this.deaths == 1) {
-      this.dead_indexes.push(this.index_of_killed);
+    console.log("WhoshouldDie-> player: " + player_name + " player2:" + player_name1);
+    this.suspects_indexes[0] = -1;
+    this.suspects_indexes[1] = -1;
+    for (var i = 0; i < this.players.length; i++) {
+      if (this.players[i].name == player_name) this.suspects_indexes[0] = i;
+      if (this.players[i].name == player_name1) this.suspects_indexes[1] = i;
     }
-    else {
-      this.dead_indexes.push(this.index_of_killed - 1);
-    }
-    this.votesOfPlayers[this.index_of_killed].votes = 0
-    // console.log(this.shouldDie);
-    // console.log(this.players);
-    // console.log(this.index_of_killed);
+    this.votesOfPlayers.set(player_name, 0);
+    this.votesOfPlayers.set(player_name1, 0);
+    // this.sendToEnd(player_name);
+    // this.deaths.push(player_name);
+    // console.log("WhoshouldDie:" + this.shouldDie);
+    // console.log("WhoshouldDie:" + this.players);
+    // console.log("WhoshouldDie:" + this.index_of_killed);
   }
 
   isSuspect(i: number) {
@@ -154,6 +160,32 @@ export class SmartTvComponent implements OnInit {
     return (this.round_title_path == 'open-ballot');
   }
 
+  changePhase() {
+    if (this.phase == Phase.Day) {//day->night
+      this.phase = Phase.Night;
+      this.phase_title = this.nround[0];
+      this.next_title = this.nround[1];
+      this.day = "Night ";
+      this.upper_icon_path = "moon";
+      this.background_color = "#34495E";
+      this.next_up_icon = "nu_doctor";
+      this.round_title_path = "mafia-voting";
+      this.count++;
+      this.background_rect = "tv-rectangle-night";
+    } else {//night->day
+      this.phase = Phase.Day;
+      this.phase_title = this.dround[0];
+      this.next_title = this.dround[1];
+      this.day = "Day ";
+      this.upper_icon_path = "Sun";
+      this.background_color = "#E67E22";
+      this.round_title_path = "open-ballot";
+      this.background_rect = "tv-rectangle-day";
+      this.next_up_icon = "nu_secret_voting";
+      //this.round_counter++;
+    }
+  }
+
   async changeRound() {
     if (this.phase == Phase.Day) {
       switch (this.phase_title) {
@@ -163,10 +195,10 @@ export class SmartTvComponent implements OnInit {
           this.phase_title = this.dround[1];
           this.next_title = this.nround[0];
           this.next_up_icon = "nu_mafia";
+          this.whoShouldDie();
           break;
         case this.dround[1]: //Secret Voting -> Mafia Voting
           this.changePhase();
-          this.whoShouldDie();
           await this.aPlayerWasKilled();
           break;
       }
@@ -198,7 +230,6 @@ export class SmartTvComponent implements OnInit {
           break;
         case this.nround[3]: //Barman -> Open Ballot
           this.changePhase();
-          this.whoShouldDie();
           await this.aPlayerWasKilled();
           break;
       }
@@ -210,18 +241,9 @@ export class SmartTvComponent implements OnInit {
     else return false;
   }
 
-  assign_roles() {
-    this.players[0].role = "Detective";
-    this.players[1].role = "Civilian";
-    this.players[2].role = "Mason";
-    this.players[3].role = "Doctor";
-    this.players[4].role = "Mason";
-    this.players[5].role = "Godfather";
-    this.players[6].role = "Barman";
-  }
 
   showVotes(i: number) {
-    if (this.votesOfPlayers[i].votes > 0) {
+    if (this.votesOfPlayers.get(this.players[i].name) > 0) {
       return true;
     } else {
       return false;
@@ -230,7 +252,7 @@ export class SmartTvComponent implements OnInit {
 
   async ngOnInit() {
     await this.initializePlayers();
-    this.assign_roles();
+    // this.assign_roles();
   }
 
 }

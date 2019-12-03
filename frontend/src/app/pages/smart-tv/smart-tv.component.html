@@ -6,30 +6,30 @@
     <div class="middle">
       <div [className]="isSecretVoting() ? 'player_container_upper' : 'player_container'">
         <div *ngFor="let player of players; let i=index">
-          <div [class.hidePlayers]="isSecretVoting() && isSuspect(i)"  [class.hidePlayers]="isSecretVoting() && isDead(i)"
+          <div [class.hidePlayers]="isSecretVoting() && isSuspect(i)"
+            [class.hidePlayers]="isSecretVoting() && isDead(i)"
             [style.margin]="!isSuspect(i) && isSecretVoting() ? '0px 25px' : '0px 0px'">
             <div class="name_text">{{player.name}}</div>
             <img src="../../../../assets/players/{{player.avatar_path}}">
           </div>
-          <div class="votes" *ngIf="isOpenBallot()" [style.height]="showVotes(i) ? '70px' : '0px'"
-          [style.margin-top]="showVotes(i) ? '-6%' : '0%'">
-              <div [class.hidePlayers]="!showVotes(i)" class="vote">{{votesOfPlayers[i].votes}}</div>
+          <div class="votes" [ngClass]="{hide: !showVotes(i) || !isOpenBallot()}">
+            {{this.votesOfPlayers.get(this.players[i].name)}}
           </div>
-          <div *ngIf="!isSecretVoting() && isDead(i)" class="card" >
-            <img src="../../../../assets/smart_tv/card_{{players[i].role}}.png"  alt="card icon">
+          <div *ngIf="!isSecretVoting() && isDead(i)" class="card">
+            <img src="../../../../assets/smart_tv/card_{{players[i].role}}.png" alt="card icon">
           </div>
         </div>
       </div>
-      <img id="tv-rectangle" [style.height]="isSecretVoting() ? '374px' : '210px'"
-        src="../../../../assets/smart_tv/{{background_rect}}.png" alt="Background vector">
-      <p id="final_words" [style.display]="isSecretVoting() ? 'inline' : 'none'">Who will say
-        their final words?</p>
-      <div id="suspect_container" *ngIf="isSecretVoting()">
-        <div *ngFor="let player of players; let i=index">
-          <div [class.hidePlayers]="isSecretVoting() && !isSuspect(i)"
-            [style.margin]="isSuspect(i) ? '0px 100px' : '0px 0px'">
-            <div [className]="isSuspect(i) ? 'name_text_down' : 'name_text'">{{player.name}}</div>
-            <img src="../../../../assets/players/{{player.avatar_path}}">
+      <img [style.height]="!isSecretVoting()? '210px':'375px'" id="tv-rectangle" src="/assets/smart_tv/{{background_rect}}.png"
+        alt="Background vector">
+      <div [ngClass]="{hide: !isSecretVoting()}">
+        <p id="final_words">Who will saytheir final words?</p>
+        <div id="suspect_container">
+          <div *ngFor="let player of players; let i=index">
+            <div [ngClass]="{hide: !isSuspect(i)}">
+              <div [className]="isSuspect(i) ? 'name_text_down' : 'name_text'">{{player.name}}</div>
+              <img src="../../../../assets/players/{{player.avatar_path}}">
+            </div>
           </div>
         </div>
       </div>
