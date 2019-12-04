@@ -9,10 +9,12 @@ import { Component, OnInit,ViewEncapsulation } from '@angular/core';
 export class MainpageComponent implements OnInit {
    waitingphase:boolean;
    votingphase:boolean;
+   dayphase:boolean;
 
   constructor() { 
     this.votingphase = false;
     this.waitingphase = false;
+    this.dayphase = false;
   }
 
   ngOnInit() {
@@ -23,5 +25,8 @@ export class MainpageComponent implements OnInit {
   }
   public isWaiting(){
     return this.waitingphase;
+  }
+  public isDay(){
+    return this.dayphase;
   }
 }

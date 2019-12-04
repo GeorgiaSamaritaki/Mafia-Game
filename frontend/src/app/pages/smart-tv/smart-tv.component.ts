@@ -53,9 +53,9 @@ export class SmartTvComponent implements OnInit {
       "Maria", "player3.png").toPromise();
     await this.userService.changePathOfUser(
       "Alice", "player1.png").toPromise();
-    this.votesOfPlayers.set("George", 6);
-    this.votesOfPlayers.set("Maria", 7);
-    this.votesOfPlayers.set("Alice", 3);
+    this.votesOfPlayers.set("George", 2);
+    this.votesOfPlayers.set("Maria", 4);
+    this.votesOfPlayers.set("Renata", 1);
   }
 
   array_move(arr, old_index, new_index) {
@@ -81,9 +81,9 @@ export class SmartTvComponent implements OnInit {
     var playertokil = this.players[this.suspects_indexes[0]];
     this.deaths.push(playertokil.name);
     this.sendToEnd(playertokil.name);
-    this.players[this.players.length-1] = await this.userService.changePathOfUser(
+    this.players[this.players.length - 1] = await this.userService.changePathOfUser(
       playertokil.name, "killed_" + playertokil.avatar_path).toPromise();
-
+    this.players[this.players.length - 1].role = "night"; //check if we can show the card or not
   }
 
   getPlayer(player_name: string) {
@@ -129,12 +129,12 @@ export class SmartTvComponent implements OnInit {
     if (i == this.suspects_indexes[0] || i == this.suspects_indexes[1]) return true;
     return false;
   }
-  
+
 
   isDead(i: number) {
-    for(var player_name of this.deaths)
-      if(this.players[i].name == player_name) return true;
-    
+    for (var player_name of this.deaths)
+      if (this.players[i].name == player_name) return true;
+
     return false;
   }
 
@@ -181,11 +181,11 @@ export class SmartTvComponent implements OnInit {
           this.phase_title = this.dround[1];
           this.next_title = this.nround[0];
           this.next_up_icon = "nu_mafia";
-          this.whoShouldDie();
+          this.whoShouldDie(); //counts votes and gets player in the middle
           break;
         case this.dround[1]: //Secret Voting -> Mafia Voting
           this.changePhase();
-          await this.aPlayerWasKilled();
+          await this.aPlayerWasKilled(); //this needs an index to be know or a name
           break;
       }
     } else {

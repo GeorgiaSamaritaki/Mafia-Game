@@ -27,8 +27,9 @@
   border: none;
   margin-bottom: 20px;
 }
-::placeholder{
-    color:rgb(229, 232, 235);
+
+::placeholder {
+  color: rgb(229, 232, 235);
 }
 
 #avatars {
@@ -49,26 +50,26 @@
 }
 
 .avatar > img {
-    width: 89px;
-    display: block;
-    margin: auto;
-    margin-top: 4px;
+  width: 89px;
+  display: block;
+  margin: 4px auto auto;
 }
 
 #confirm {
-    cursor: pointer;
-    position: absolute;
-    width: 85px;
-    height: 86px;
-    margin: 6% 0;
-    border: none;
-    background: url("../../../../assets/checkbutton.png");
-    text-decoration: none;;
+  cursor: pointer;
+  position: absolute;
+  width: 85px;
+  height: 86px;
+  margin: 6% 0;
+  border: none;
+  background: url("/assets/checkbutton.png");
+  text-decoration: none;
+  right: 10%;
 }
 
-.selected{
-    filter:none;
-    background:  no-repeat url("../../../../assets/players/avatar_selected.png");
-    background-size: contain;
-    background-origin: padding-box;;
+.selected {
+  filter:none;
+  background: no-repeat url("/assets/players/avatar_selected.png");
+  background-size: contain;
+  background-origin: padding-box;
 }

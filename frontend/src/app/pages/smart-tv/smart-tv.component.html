@@ -11,7 +11,7 @@
             [ngClass]="(isSecretVoting() && (isSuspect(i)||isDead(i))) ? 'hide': '' ">
             <!-- 'width': 'calc(50% / ' + player_count + '-2)': 'width': 'calc(100% / ' + player_count + ')' } }" -->
           <div class="name_text">{{player.name}}</div>
-          <img style="width: 95%;" src="/assets/players/{{player.avatar_path}}">
+          <img style="width: 90%;" src="/assets/players/{{player.avatar_path}}">
           <div class="votes" [ngClass]="{hide: !showVotes(i) || !isOpenBallot()}">
             {{this.votesOfPlayers.get(this.players[i].name)}}
           </div>

@@ -1,4 +1,81 @@
-.background {
-    background-color: #34495e;
-    width: 360px; height: 740px;
-  }
+#container {
+  font-family: Revalia;
+  position: relative;
+  width: 100%;
+  min-height: 100em;
+  height: auto;
+  line-height: 45px;
+  font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  color: #FFFFFF;
+
+}
+
+#avatars {
+  position: relative;
+  height: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 97px;
+  cursor: pointer;
+  filter:drop-shadow( 1px 3px 0px rgba(0, 0, 0, 0.31));
+  margin: 15px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.avatar > img {
+  width: 89px;
+  height: 94px;
+  display: block;
+  margin: 4px auto auto;
+}
+
+.selected {
+  filter:none;
+  background: no-repeat url("/assets/players/avatar_selected.png");
+  background-size: contain;
+  background-origin: padding-box;
+}
+
+.selected .name {
+  color: #2ECC71;
+}
+
+.name {
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 25px;
+}
+
+#prompt {
+  align-self: center;
+  width: 90%;
+  margin-top: 10%;
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 37px;
+  text-align: center;
+}
+
+#confirm {
+  cursor: pointer;
+  position: absolute;
+  width: 85px;
+  height: 86px;
+  margin: 6%;
+  border: none;
+  background: url("/assets/checkbutton.png");
+  text-decoration: none;
+  right: 0;
+}

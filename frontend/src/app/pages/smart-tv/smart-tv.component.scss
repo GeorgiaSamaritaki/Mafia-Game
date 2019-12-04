@@ -18,18 +18,12 @@
 
 .votes {
   font-family: Sanchez;
-  font-style: normal;
-  font-weight: normal;
   font-size: 40px;
-  line-height: 65px;
-  display: flex;
-  justify-content: space-around;
+  line-height: 70px;
+  justify-content: center;
   color: #656D78;
-  line-height: 71px;
   width: 70px;
   height: 70px;
-  margin-left: auto;
-  margin-right: auto;
   margin-top: -6%;
   position: relative;
   background: #F5F7FA;
@@ -37,14 +31,11 @@
 }
 
 .card {
-  display: flex;
-  justify-content: space-around;
-  width: 118px;
-  height: 151px;
-  margin-top: 4px;
-  border-radius: 12%;
-  margin-left: auto;
-  margin-right: auto;
+    align-self: center;
+    width: 118px;
+    height: 151px;
+    border-radius: 12%;
+    margin-top: -20px;
 }
 
 #tv-rectangle {
@@ -63,6 +54,7 @@
   position: relative;
   margin-top: -112px;
 }
+
 
 .suspects {
   zoom: 1.1;
@@ -122,6 +114,7 @@
     border-radius: 28px;
     margin: 0;
     margin-bottom: 5%;
+    padding: 0 15px;
 }
 
 .name_text_down {
@@ -203,7 +196,6 @@
   font-size: 20px;
   line-height: 25px;
   text-align: center;
-
   color: #FFFFFF;
 
   position: absolute;
@@ -245,6 +237,7 @@
   // left:50%;
   z-index: 1;
 }
+
 .hide{
   display:none !important;
 }
@@ -253,6 +246,9 @@
   display:flex;
   margin: 0 30px;
   flex-direction: column;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
   // width: 'calc(100% / ' + player_count + ')';
 }
 

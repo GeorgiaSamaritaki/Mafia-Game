@@ -1,20 +1,22 @@
 .background {
-  background-color: black;
   min-height: calc(100vh - 48px);
   height: auto;
   margin: 0;
 }
+
 @media (max-width :600px) {
   .mat-tab-label {
     min-width: 33.3% !important;
     background-color: black;
     opacity: 1 !important;
   }
-
+  .mat-tab-disabled img {
+    opacity: .3 !important;
+  }
 }
 
 .mat-tab-label img {
-  opacity: .7;
+  opacity: .8;
 }
 
 .mat-tab-label .mat-tab {
@@ -33,7 +35,6 @@
   height: 100vh;
 }
 
-.mat-tab-disabled {
+.mat-tab-disabled img {
   opacity: .3 !important;
-
 }
