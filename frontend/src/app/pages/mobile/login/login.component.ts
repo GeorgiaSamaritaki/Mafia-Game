@@ -23,16 +23,18 @@ export class LoginComponent implements OnInit {
     return await this.usersService.checkUsername(username).toPromise();
   }
   async addUser() {
+    (<HTMLElement>document.getElementById("alert")).innerHTML = "";
     var username: string = (<HTMLInputElement>document.getElementById("inputname")).value;
     if (username == "" || await this.usernameExists(username)) {
-      alert("Username Invalid");
+      (<HTMLElement>document.getElementById("alert")).innerHTML = "Invalid Username";
       return;
     }
+    var index= 1 + this.selectedavatarindex;
     console.log(
       await this.usersService.addUser(
         username,
         ""
-        , "player" + this.selectedavatarindex + ".png"
+        , "player" + index + ".png"
       ).toPromise()
     );
 
