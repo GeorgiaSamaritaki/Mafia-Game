@@ -7,7 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InteractiveWallComponent implements OnInit {
 
-  constructor() { }
+  phase_counter: number;
+  constructor() {
+    this.phase_counter = 0;
+  }
+
+  nextPhase(){
+    if(this.phase_counter == 0){
+      this.phase_counter++;
+    }
+  }
 
   ngOnInit() {
   }

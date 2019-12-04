@@ -1,4 +1,16 @@
-<p>interactive-wall works!</p>
-<div>
-    <router-outlet></router-outlet>
+<div class="all">
+  <div class="wrapper">
+    <div id="narrator_title" [ngStyle]="{display:(phase_counter == 0)?'block':'none'}">Select Narrator:</div>
+  </div>
+  <div class="button_container row">
+    <div class="butt plyr_butt" [ngStyle]="{display:(phase_counter == 0)?'block':'none'}">
+      <img id="player_icon" src="/assets/interactive-wall/player_icon.png" alt="player icon">
+      <p>Player</p>
+    </div>
+    <div class="butt spkr_butt" (click)="nextPhase();" [ngStyle]="{'margin-top':(phase_counter != 0)?'6%':'0%'}" [ngStyle]="{opacity:(phase_counter != 0)?'1':'0.6'}">
+      <img id="speaker" src="/assets/interactive-wall/speaker.png" alt="speaker icon">
+      <p>Speaker</p>
+    </div>
+  </div>
+  <div id="narr_txt" [ngStyle]="{display:(phase_counter != 0)?'block':'none'}">Smart Speaker will guide you through your game</div>
 </div>

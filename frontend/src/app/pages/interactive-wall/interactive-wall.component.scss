@@ -1,0 +1,69 @@
+.all {
+  font-family: 'Revalia';
+  font-size: 28px;
+  width: 1780px;
+  height: 800px;
+  background-color: #E74C3C;
+  overflow: hidden;
+}
+
+.wrapper {
+  overflow: hidden;
+  z-index: -1;
+
+}
+
+#narrator_title {
+  font-size: 140px;
+  color: black;
+  text-align: center;
+  margin-top: 4%;
+  margin-bottom: 2%;
+}
+
+.butt {
+  background-color: #AD392D;
+  border-radius: 26px;
+  width: 543px;
+  height: 344px;
+  opacity: 0.6;
+}
+
+.butt:hover {
+  opacity: 1;
+}
+
+.button_container {
+  justify-content: space-evenly;
+  color: white;
+  text-align: center;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 63px;
+  line-height: 78px;
+  align-items: center;
+}
+
+#player_icon {
+  width: 182.41px;
+  height: 182.41px;
+  margin-top: 8%;
+  opacity: 1;
+}
+
+#speaker {
+  width: 217px;
+  height: 188px;
+  margin-top: 8%;
+  opacity: 1;
+}
+
+#narr_txt {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 75px;
+  line-height: 105px;
+  color: black;
+  text-align: center;
+  margin-top: 1%;
+}
