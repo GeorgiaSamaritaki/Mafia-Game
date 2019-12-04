@@ -1,18 +1,18 @@
 <div id="container">
-    <div>Enter Your Name</div>
-    <form onsubmit="return false"> 
+    <div class="title">Enter Your Name</div>
+    <div id="alert" ></div>
+    <form onsubmit="return false">
 
-        <input id="inputname" type="text" name="LoginName" placeholder="12 char max" required><br>
-        
-        <div>Select Your Avatar</div>
-        <div id="avatars" >
-            <div *ngFor="let number of [1,2,3,4,5,6,7,8,9]; let i = index;" 
-            [ngClass]="(i==selectedavatarindex)?'selected':''"
-            (click)="selectedavatar(i)"
-            class="avatar"> <img  src="/assets/players/mobile_player{{number}}.png" alt="Avatar{{number}}"></div>
+        <input id="inputname" name="LoginName" placeholder="12 char max" required><br>
+
+        <div class="title">Select Your Avatar</div>
+        <div id="avatars">
+            <div *ngFor="let number of [1,2,3,4,5,6,7,8,9]; let i = index;"
+                [ngClass]="(i==selectedavatarindex)?'selected':''" (click)="selectedavatar(i)" class="avatar"> <img
+                    src="/assets/players/mobile_player{{number}}.png" alt="Avatar{{number}}"></div>
         </div>
         <div style="display:flex;justify-content: center;">
-            <button id="confirm"  (click) = "addUser()" type="button" value="" ></button>
+            <button id="confirm" (click)="addUser()" type="button" value=""></button>
         </div>
     </form>
 </div>
