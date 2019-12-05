@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from 'src/app/global/services';
+import { UsersService, StateMachineService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
 
 @Component({
@@ -11,25 +11,25 @@ export class AugmentedTableComponent implements OnInit {
 
   private phase: Phase = Phase.Day;
   phase_title: string;
-  private day: string;
-  private count: number;
+  private day: boolean;
   private dround = ['Open Ballot', 'Secret Voting'];
   private nround = ['Mafia Voting', 'Doctor', 'Detective', 'Barman'];
   private players: UserModel[];
   private backgroundSVG: string;
 
   constructor(
-    private usersService: UsersService
+    private usersService: UsersService,
+    private stateMachine: StateMachineService
   ) {
     this.phase = Phase.Day;
     this.phase_title = this.dround[0];
-    this.day = 'Day ';
-    this.count = 1;
+    this.day = true;
     this.backgroundSVG = 'backgroundDay'
   }
 
   async ngOnInit() {
     await this.getPlayers();
+    console.log(this.stateMachine.getPhase());
   }
 
   private async getPlayers() {
@@ -37,7 +37,7 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   public isDay() {
-    return this.phase == Phase.Day;
+    return this.day;
   }
 
   public isSelected(phase: string) {

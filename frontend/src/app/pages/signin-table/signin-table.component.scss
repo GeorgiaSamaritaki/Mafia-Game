@@ -1,85 +1,18 @@
 .all {
   width: 1560px;
   height: 1080px;
-}
-
-.background {
-  display: flex;
-  z-index: -10;
-}
-
-#backgroundDay {
-  position: relative;
-  width: 780px;
-  height: 1080px;
-  background-color: #e67e22;
-  overflow: hidden;
-}
-
-#dayV {
-  margin-left: 61px;
-  z-index: -1;
-}
-
-#mafiaDay {
-  position: absolute;
-  width: 182px;
-  height: 64px;
-  left: 583px;
-  top: 37px;
-
-  font-family: Revalia;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 52px;
-  line-height: 64px;
-
-  color: #000000;
-
-  transform: rotate(-179.54deg);
-}
-
-#mafiaNight {
-  position: absolute;
-  width: 182px;
-  height: 64px;
-  left: 16px;
-  top: 972px;
-
-  font-family: Revalia;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 52px;
-  line-height: 64px;
-
-  color: #ffffff;
-  z-index: 1;
-}
-
-#backgroundNight {
-  position: relative;
-  width: 780px;
-  height: 1080px;
-  background-color: #34495e;
-  overflow: hidden;
-}
-
-#nigthV {
-  position: absolute;
-  margin-left: -719px;
-  margin-right: 61px;
-  width: 1447px;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
+  background-image: url("/assets/augmented_table/signin/background.png");
 }
 
 .center {
   position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
   width: 1145px;
   height: 799px;
-  left: 230px;
-  top: 131px;
   text-align: center;
   z-index: 0;
 }
@@ -91,10 +24,13 @@
 
 .qrCodes {
   position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 1em;
+  margin: auto;
   width: 703px;
   height: 690px;
-  left: 208px;
-  top: 57px;
 }
 
 .addPlayer {
@@ -106,65 +42,86 @@
 }
 
 .qr {
-  width: 138px;
-  height: 138px;
+  height: 114px;
+  width: 114px;
+  background: #F5F7FA;
+  border-radius: 13px;
 }
 
-#qr1 {
-  position: absolute;
-  bottom: 507px;
-  transform: rotate(142.58deg);
-}
-
-#qr2 {
-  position: absolute;
-  bottom: 303px;
-  right: 582px;
-}
-
-#qr3 {
-  position: absolute;
-  bottom: 60px;
-  transform: rotate(36.19deg);
-}
-
-#qr4 {
-  position: absolute;
-  bottom: 0;
-  right: 293px;
-}
-
-#qr5 {
-  position: absolute;
-  bottom: 65.5px;
-  right: 85.73px;
-  transform: rotate(-34.84deg);
-}
-
-#qr6 {
-  position: absolute;
-  bottom: 303px;
-  right: 0;
-}
-
-#qr7 {
-  position: absolute;
-  bottom: 507px;
-  right: 71px;
-  transform: rotate(-144.06deg);
+#add {
+  height: 114px;
+  width: 114px;
 }
 
 #confirm {
   position: absolute;
-  display: inline-block;
   width: 165px;
   height: 165px;
-  left: 470px;
-  top: 282px;
-  text-align: center;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
   border: #aaaaaa;
   background-color: #aaaaaa;
   border-radius: 50%;
+  // background: #2ECC71;
+  box-shadow: 0 0 0;
+}
+.joinedPlayers {
+  position: absolute;
+  width: 331px;
+  height: 331px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+@font-face {
+  font-family: "Chango";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Chango Regular"), local("Chango-Regular"),
+    url(http://themes.googleusercontent.com/static/fonts/chango/v2/tZuFZQQSznzm1NJDMY53Gg.ttf) format("truetype");
+}
+
+.joinedPlayers p {
+  font-family: "Chango";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 49px;
+  line-height: 59px;
+  color: #ffffff;
+}
+
+#p1 {
+  transform: rotate(180deg);
+}
+
+#p2 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -47%;
+  transform: rotate(90deg);
+}
+
+#p3 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+#p4 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -47%;
+  transform: rotate(270deg);
 }
 
 #tick {
@@ -178,7 +135,6 @@
 }
 
 .photos {
-  position: absolute;
   height: 100%;
   width: 1472px;
   top: 0;
@@ -237,16 +193,16 @@
 /// [2] - Allows the mixin to be used on a list
 /// [3] - In case box-sizing: border-box has been enabled
 /// [4] - Allows any type of direct children to be targeted
-/// 
+///
 /// @param {Integer} $nb-items - Number or items
 /// @param {Length} $circle-size - Container size
 /// @param {Length} $item-size - Item size
 /// @param {String | false} $class-for-IE - Base class name for old IE
-@mixin distribute-on-circle( $nb-items, $circle-size, $item-size, $class-for-IE: false ) {
+@mixin distribute-on-circle($nb-items, $circle-size, $item-size, $class-for-IE: false) {
   $half-item: ($item-size / 2);
   $half-parent: ($circle-size / 2);
 
-  position: relative;
+  // position: relative;
   /* 1 */
   width: $circle-size;
   height: $circle-size;
@@ -271,12 +227,11 @@
   $angle: (360 / $nb-items);
   $rot: 0;
   @for $i from 1 through $nb-items {
-     @if not $class-for-IE{
+    @if not $class-for-IE {
       > :nth-of-type(#{$i}) {
         transform: rotate($rot * 1deg) translate($half-parent) rotate($rot * -1deg);
       }
-    }
-    @else {
+    } @else {
       > .#{$class-for-IE}#{$i} {
         // If CSS transforms are not supported
         $mt: sin($rot * pi() / 180) * $half-parent - $half-item;
@@ -290,7 +245,7 @@
 }
 
 .circle-container {
-  @include distribute-on-circle(8, 32em, 8em, false);
+  @include distribute-on-circle(8, 32em, 6em, false);
 }
 
 ul {
@@ -298,6 +253,9 @@ ul {
 }
 
 .circle-container img {
+  position: absolute;
+  top: 9%;
+  left: 9%;
   display: block;
   width: 100%;
   filter: grayscale(100%);

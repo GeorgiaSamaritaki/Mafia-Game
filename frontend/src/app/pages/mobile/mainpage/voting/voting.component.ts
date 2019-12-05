@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserModel } from 'src/app/global/models';
-import { UsersService } from 'src/app/global/services';
+import { UsersService, StateMachineService } from 'src/app/global/services';
 
 @Component({
   selector: 'ami-fullstack-voting',
@@ -10,7 +10,10 @@ import { UsersService } from 'src/app/global/services';
 export class VotingComponent implements OnInit {
   suspects: UserModel[];
   selectedavatarindex: number;
-  constructor(private userService: UsersService) { }
+  constructor(
+    private userService: UsersService,
+    private stateMachineService: StateMachineService
+  ) { }
 
   public async unlockVoting() {
     this.suspects = await this.userService.getAllUsers().toPromise();

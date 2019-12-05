@@ -125,7 +125,7 @@ export class SmartTvComponent implements OnInit {
     }
     this.votesOfPlayers.set(player_name, 0);
     this.votesOfPlayers.set(player_name1, 0);
-    this.suspect_count = this.player_count - 2;
+    // this.suspect_count = this.player_count - 2;
   }
 
   isSuspect(i: number) {
