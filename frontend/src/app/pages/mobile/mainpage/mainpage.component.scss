@@ -3,6 +3,12 @@
   height: auto;
   margin: 0;
 }
+.mat-tab-body-wrapper{
+  height: calc(100% - 48px);
+  width:100%;
+    position: fixed !important;
+    top: 0;
+}
 
 @media (max-width :600px) {
   .mat-tab-label {
@@ -13,6 +19,11 @@
   .mat-tab-disabled img {
     opacity: .3 !important;
   }
+}
+.mat-tab-label {
+  min-width: 33.3% !important;
+  background-color: black;
+  opacity: 1 !important;
 }
 
 .mat-tab-label img {
@@ -37,4 +48,15 @@
 
 .mat-tab-disabled img {
   opacity: .3 !important;
+}
+
+.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+  display: none !important; 
+}
+
+.mat-tab-header{
+  position: fixed !important;
+  bottom:-1px;
+  width:100%;
+  z-index: 1000;
 }

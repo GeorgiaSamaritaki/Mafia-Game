@@ -1,9 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
-.hide{
-    display:none;
+.hide {
+  display: none;
 }
-body{
-    height:100%;
-    width:100%;
+
+body {
+  width: 100vw;
+  min-height: 100vh;
+  height: auto;
+//   position:fixed;
+}
+
+button {
+  outline: none !important;
 }

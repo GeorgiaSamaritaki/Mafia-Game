@@ -1,20 +1,17 @@
 #container {
   font-family: Revalia;
   position: relative;
-  width: 100%;
-  min-height: 100em;
-  height: auto;
-  line-height: 45px;
-  font-size: 24px;
   display: flex;
   flex-direction: column;
   color: #FFFFFF;
-
+  height: fit-content;
+  align-items: center;
+  align-self: center;
+  min-height: 400px;
 }
 
 #avatars {
   position: relative;
-  height: 50%;
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
@@ -24,10 +21,11 @@
   width: 97px;
   cursor: pointer;
   filter:drop-shadow( 1px 3px 0px rgba(0, 0, 0, 0.31));
-  margin: 15px;
+  margin: 5px;
   display: flex;
   align-items: center;
   flex-direction: column;
+  height: fit-content;
 }
 
 .avatar > img {
@@ -59,7 +57,7 @@
 #prompt {
   align-self: center;
   width: 90%;
-  margin-top: 10%;
+  margin-top: 5%;
   font-family: Revalia;
   font-style: normal;
   font-weight: normal;
@@ -70,12 +68,18 @@
 
 #confirm {
   cursor: pointer;
-  position: absolute;
   width: 85px;
   height: 86px;
-  margin: 6%;
   border: none;
-  background: url("/assets/checkbutton.png");
+  background: no-repeat url("/assets/checkbutton.png");
+  filter:drop-shadow(2px 3px 0px #259A56);
   text-decoration: none;
-  right: 0;
+  margin: 4%;
+  align-self: flex-end;
+  outline: none;
+}
+
+#confirm:active {
+  filter:none;
+  transform:translate(2px,3px);
 }

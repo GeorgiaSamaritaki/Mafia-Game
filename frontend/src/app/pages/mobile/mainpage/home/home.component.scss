@@ -20,6 +20,7 @@
   height: 100%;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  max-width: 695px;
 }
 
 .myrow {
@@ -69,7 +70,6 @@
 .flip-card-back .playername {
   width: 81px;
   font-size: 16px;
-
   color: #000000;
 }
 
@@ -127,5 +127,6 @@
 }
 #flipbutton:active {
   filter:none;
+  transform: translate(0,4px);
 }
 

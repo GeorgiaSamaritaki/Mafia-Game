@@ -1,18 +1,19 @@
-<div id="container">
-    <p id="prompt">
-        <span *ngIf="isOpenBallot()">Who is your main suspect?</span>
-        <span *ngIf="isSecretVoting()">Who do you want to kill?</span>
-        <span *ngIf="isMafiaVoting()">Who will die tonight?</span>
-    </p>
+<div style="height:100%; display:flex;">
 
-    <div id="avatars">
-        <div *ngFor="let player of suspects; let i = index;" [ngClass]="(i==selectedavatarindex)?'selected':''"
+    <div id="container">
+        <p id="prompt">
+            <span *ngIf="isOpenBallot()">Who is your main suspect?</span>
+            <span *ngIf="isSecretVoting()">Who do you want to kill?</span>
+            <span *ngIf="isMafiaVoting()">Who will die tonight?</span>
+        </p>
+        
+        <div id="avatars">
+            <div *ngFor="let player of suspects; let i = index;" [ngClass]="(i==selectedavatarindex)?'selected':''"
             (click)="selectedavatar(i)" class="avatar">
             <img src="/assets/players/mobile_{{player.avatar_path}}" alt="Avatar{{number}}">
             <span class="name">{{player.name}}</span>
         </div>
     </div>
-    <div style="display:flex;justify-content: center;">
-        <button id="confirm" (click)="submitVote()" type="button" value=""></button>
-    </div>
+    <button id="confirm" (click)="submitVote()" type="button" value=""></button>
+</div>
 </div>

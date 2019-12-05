@@ -1,22 +1,19 @@
 <div class="background" [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
-
-    <mat-tab-group headerPosition="below" [disableRipple]=true [selectedIndex]="2">
-        <!-- FIXME:selected indes -->
+    <mat-tab-group *ngIf="players" headerPosition="below" [disableRipple]=true [selectedIndex]="1">
         <mat-tab>
             <ng-template mat-tab-label>
                 <img src="/assets/mobile/infonavbar.png" alt="Info">
             </ng-template>
             <ami-fullstack-info></ami-fullstack-info>
         </mat-tab>
-        <mat-tab>
+        <mat-tab >
             <ng-template mat-tab-label>
                 <img src="/assets/mobile/homenavbar.png" alt="Home">
             </ng-template>
             <ami-fullstack-home></ami-fullstack-home>
         </mat-tab>
-        <mat-tab>
-                <!-- FIXME: -->
-            <!--  [disabled]="!isVoting()"> -->
+        <mat-tab
+          [disabled]="!isVoting()"> 
             <ng-template mat-tab-label>
                 <img src="/assets/mobile/votingnavbar.png" alt="Voting">
             </ng-template>
