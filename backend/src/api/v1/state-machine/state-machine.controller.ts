@@ -11,19 +11,19 @@ enum Phase {
 }
 
 enum Round {
-    'Open Ballot' = 'Open Ballot',
-    'Secret Voting' = 'Secret Voting' ,
-    'Mafia Voting' = 'Mafia Voting',
+    Waiting = 'Waiting',
+    Open_Ballot = 'Open Ballot',
+    Secret_Voting = 'Secret Voting',
+    Mafia_Voting = 'Mafia Voting',
     Doctor = 'Doctor',
-    Detective ='Detective',
+    Detective = 'Detective',
     Barman = 'Barman'
 }
 
 var phase = Phase.Day;
-var round = Round["Open Ballot"]; 
+var round: string = Round.Waiting;
 
 export class StateMachineController {
-
 
     /**
      * Apply all routes for example
@@ -32,42 +32,46 @@ export class StateMachineController {
      */
     public applyRoutes(): Router {
         const router = Router();
-        
+
         router
             .get('/getRound', this.getRound)
             .get('/getPhase', this.getPhase)
             .get('/changePhase', this.changePhase)
             .get('/changeRound', this.changeRound)
-            .get('/isDay', this.isDay);
+            .get('/isDay', this.isDay)
+            .post('/treatsb', this.treatsb);
         return router;
     }
 
     public getPhase(req: Request, res: Response) {
         console.log(phase);
-        res.send(phase);
+        res.json(phase);
     }
-    
+
     public getRound(req: Request, res: Response) {
-        res.send(round);
+        res.json(round);
     }
-    
-    public changePhase(req: Request, res: Response){
-        if( phase == Phase.Day)
+
+    public changePhase(req: Request, res: Response) {
+        if (phase == Phase.Day)
             phase = Phase.Night;
-        else 
+        else
             phase = Phase.Day;
-        res.send(phase);
+        res.json(phase);
     }
 
     public changeRound(req: Request, res: Response) {
-        switch(round){
-            case Round["Open Ballot"]:
-                round = Round["Secret Voting"];
+        switch (round) {
+            case Round.Waiting:
+                round = Round.Open_Ballot;
                 break;
-            case Round["Secret Voting"]:
-                round = Round["Mafia Voting"];
+            case Round.Open_Ballot:
+                round = Round.Secret_Voting;
                 break;
-            case Round["Mafia Voting"]:
+            case Round.Secret_Voting:
+                round = Round.Mafia_Voting;
+                break;
+            case Round.Mafia_Voting:
                 round = Round.Doctor;
                 break;
             case Round.Doctor:
@@ -77,13 +81,22 @@ export class StateMachineController {
                 round = Round.Barman;
                 break;
             case Round.Barman:
-                round = Round["Open Ballot"]
+                round = Round.Open_Ballot
                 break;
         }
-        res.send(round);
+        res.json(round);
     }
 
+
     public isDay(req: Request, res: Response) {
-        res.send(phase == Phase.Day);
+        res.json(phase == Phase.Day); 
+    }
+
+    public treatsb(req: Request) {
+        const message: string = req.body.message;
+        const event: string = req.body.event;
+
+        const SocketService = DIContainer.get(SocketsService);
+        SocketService.broadcast(event, message);
     }
 }

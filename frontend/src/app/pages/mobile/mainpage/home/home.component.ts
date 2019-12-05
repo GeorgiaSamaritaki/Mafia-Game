@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Optional } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { UsersService } from 'src/app/global/services';
+
 import { UserModel } from 'src/app/global/models';
+import { MainpageComponent } from '../mainpage.component';
 
 @Component({
   selector: 'ami-fullstack-home',
@@ -9,23 +10,11 @@ import { UserModel } from 'src/app/global/models';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  waitingphase: boolean;
-  public flips: boolean[] = [];
-  players: UserModel[];
-  public player = {
-    name: "Julia",
-    avatar_path: "/assets/players/mobile_player1.png",
-    role: "mafia"
 
-  };
-  private async initializePlayers() {
-    this.players = await this.userService.getAllUsers().toPromise(); //FIXME: this should be somewhere else
-    this.players.forEach((item, index) => {
-      this.flips[index] = false;
-    });;
-  }
+  public flips: boolean[] = [];
+
+
   public toggleflip(index: number) {
-    console.log("hot")
     this.flips[index] = !this.flips[index];
   }
   public flipall() {
@@ -35,16 +24,15 @@ export class HomeComponent implements OnInit {
     this.flips.forEach((item, index) => { this.flips[index] = tmp; });
   }
 
-  public isWaiting() {
-    return this.waitingphase;
-  }
-
-  constructor(private userService: UsersService) {
-    this.waitingphase = false;
+  constructor(
+    @Optional() private parent: MainpageComponent) {
   }
 
   async ngOnInit() {
-    await this.initializePlayers();
+    await this.parent.ngOnInit;
+    this.parent.players.forEach((item, index) => {
+      this.flips[index] = false;
+    });;
   }
 
 }
