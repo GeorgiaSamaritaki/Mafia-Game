@@ -49,6 +49,7 @@ export class SmartTvComponent implements OnInit {
     console.log("Initialize Players1:"); console.log(this.votesOfPlayers);
     this.deaths = [];
     this.player_count = this.players.length;
+
     await this.userService.changePathOfUser(
       "Maria", "player3.png").toPromise();
     await this.userService.changePathOfUser(
@@ -84,6 +85,7 @@ export class SmartTvComponent implements OnInit {
     this.players[this.players.length - 1] = await this.userService.changePathOfUser(
       playertokil.name, "killed_" + playertokil.avatar_path).toPromise();
     this.players[this.players.length - 1].role = "night"; //check if we can show the card or not
+    for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
   }
 
   getPlayer(player_name: string) {
@@ -99,7 +101,7 @@ export class SmartTvComponent implements OnInit {
   }
 
 
-  whoShouldDie() { //get suspects in the middle
+  whoShouldDie() { //get suspects in the middle TODO: maybe some with same votes and we have more
     var max: number = -Infinity, max1: number = max, player_name: string, player_name1: string;
     this.votesOfPlayers.forEach((votes: number, name: string) => {
       if (max1 < votes) {
@@ -123,6 +125,7 @@ export class SmartTvComponent implements OnInit {
     }
     this.votesOfPlayers.set(player_name, 0);
     this.votesOfPlayers.set(player_name1, 0);
+    this.suspect_count = this.player_count - 2;
   }
 
   isSuspect(i: number) {
