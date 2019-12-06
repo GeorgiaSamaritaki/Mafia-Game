@@ -1,7 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { UserModel } from 'src/app/global/models';
-import { UsersService } from 'src/app/global/services';
-import { MainpageComponent } from '../mainpage.component';
+import { UsersService, StateMachineService } from 'src/app/global/services';
 
 @Component({
   selector: 'ami-fullstack-voting',
