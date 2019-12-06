@@ -3,8 +3,8 @@
   font-size: 28px;
   width: 1780px;
   height: 800px;
-  background-color: #E74C3C;
   overflow: hidden;
+  height: 100vh;
 }
 
 .wrapper {
@@ -66,4 +66,75 @@
   color: black;
   text-align: center;
   margin-top: 1%;
+}
+
+#bar {
+  position: absolute;
+  width: 800px;
+  height: 0px;
+  top: 394px;
+  background-color: #F5F7FA;
+  border: 6px solid #F5F7FA;
+  transform: rotate(90deg);
+  left: -174px;
+  z-index: 1;
+}
+
+.background_icon_day {
+  position: absolute;
+  width: 966px;
+  height: 424px;
+  left: 786px;
+  top: 377px;
+}
+
+.timeline {
+  position: relative;
+  left: 155px;
+  z-index: 2;
+  width: 900px;
+  overflow: auto;
+  height: auto;
+
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+  /* make scrollbar transparent */
+}
+
+#day_txt {
+  width: 142px;
+  padding: 0px 22px;
+  top: -142px;
+  z-index: 3;
+  position: relative;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 31px;
+  text-align: center;
+  color: #F5F7FA;
+}
+
+.game_start {
+  width: 147px;
+  height: 143px;
+  margin-top: 25px;
+
+}
+
+.circle {
+  width: 147px;
+  height: 143px;
+  top: 173px;
+  margin: 25px 0px;
+}
+
+.background_icon_night {
+  position: absolute;
+  width: 610px;
+  height: 497.33px;
+  left: 1144px;
+  top: 303px;
 }
