@@ -60,4 +60,28 @@
     <div class=wrapper>
         <img id=backgroundSVG src="../../../../assets/augmented_table/{{backgroundSVG}}.svg" alt="Background vector">
     </div>
+    <div class="leftPlayers">
+        <div class="player_container">
+            <div class="player" *ngFor="let player of left_players; let i=index">
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
+            </div>
+        </div>
+    </div>
+    <div class="rightPlayers">
+        <div class="player_container">
+            <div class="player" *ngFor="let player of right_players; let i=index">
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
+            </div>
+        </div>
+    </div>
+    <div class="middlePlayers">
+        <div class="player_container">
+            <div class="player" *ngFor="let player of middle_players; let i=index">
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
+            </div>
+        </div>
+    </div>
 </div>

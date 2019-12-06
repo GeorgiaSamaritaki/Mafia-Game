@@ -61,7 +61,7 @@ export class StateMachineController {
     }
 
     public changeRound(req: Request, res: Response) {
-        switch (round) {
+        switch (round) { 
             case Round.Waiting:
                 round = Round.Open_Ballot;
                 break;

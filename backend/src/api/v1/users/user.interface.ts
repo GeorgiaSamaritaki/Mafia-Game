@@ -11,49 +11,49 @@ var users: Array<User> = [
         name: "Alice",
         role: "undefined",
         avatar_path: "player1.png",
-        position: -1,
+        position: 5,
         dead: "alive"
     },
     {
         name: "George",
         role: "undefined",
         avatar_path: "player2.png",
-        position: -1,
+        position: 6,
         dead: "alive"
     },
     {
         name: "Maria",
         role: "undefined",
         avatar_path: "player3.png",
-        position: -1,
+        position: 4,
         dead: "alive"
     },
     {
         name: "Kiki",
         role: "undefined",
         avatar_path: "player4.png",
-        position: -1,
+        position: 3,
         dead: "alive"
     },
     {
         name: "Manolis",
         role: "undefined",
         avatar_path: "player5.png",
-        position: -1,
+        position: 2,
         dead: "alive"
     },
     {
         name: "Kosmas",
         role: "undefined",
         avatar_path: "player6.png",
-        position: -1,
+        position: 1,
         dead: "alive"
     },
     {
         name: "Renata",
         role: "undefined",
         avatar_path: "player7.png",
-        position: -1,
+        position: 0,
         dead: "alive"
     }
 ]

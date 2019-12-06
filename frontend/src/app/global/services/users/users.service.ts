@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 
 @Injectable({
     providedIn: 'root'
-})
+})   
 export class UsersService {
 
     private hostURl: string;

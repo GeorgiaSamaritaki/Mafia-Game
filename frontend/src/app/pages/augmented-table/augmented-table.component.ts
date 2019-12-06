@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService, StateMachineService } from 'src/app/global/services';
+import { UsersService, StateMachineService, SocketsService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
 
 @Component({
@@ -9,73 +9,94 @@ import { UserModel } from 'src/app/global/models';
 })
 export class AugmentedTableComponent implements OnInit {
 
-  private phase: Phase = Phase.Day;
-  phase_title: string;
-  private day: boolean;
-  private dround = ['Open Ballot', 'Secret Voting'];
-  private nround = ['Mafia Voting', 'Doctor', 'Detective', 'Barman'];
+  round: string;
   private players: UserModel[];
+  private left_players: UserModel[];
+  private right_players: UserModel[];
+  private middle_players: UserModel[];
   private backgroundSVG: string;
 
   constructor(
     private usersService: UsersService,
-    private stateMachine: StateMachineService
+    private statemachineService: StateMachineService,
+    private socketService: SocketsService
   ) {
-    this.phase = Phase.Day;
-    this.phase_title = this.dround[0];
-    this.day = true;
     this.backgroundSVG = 'backgroundDay'
   }
 
   async ngOnInit() {
-    await this.getPlayers();
-    console.log(this.stateMachine.getPhase());
+    await this.initializePlayers();
+
+    this.round = <string>await this.statemachineService.getRound().toPromise();
+    console.log("Round was set to: " + this.round);
+    this.round = "Open Ballot";
+    console.log("Round was set to: " + this.round);
+    this.changeRound();
+
+    this.socketService.syncMessages("roundChange").subscribe(msg => {
+      console.log("Round is Changing");
+      this.round = msg.message;
+      this.changeRound();
+    });
   }
 
-  private async getPlayers() {
-    this.players = await this.usersService.getAllUsers().toPromise(); 
+  private async initializePlayers() {
+    this.players = await this.usersService.getAllUsers().toPromise();
+    this.arrangePlayers();
+  }
+
+  private arrangePlayers() {
+    this.left_players = [];
+    this.right_players = [];
+    this.middle_players = [];
+
+    this.players.forEach(player => {
+      if ( player.position < (this.players.length / 3)-1) {
+        this.left_players.push(player);
+      } else if ( player.position > (2*this.players.length/3)) {
+        this.right_players.push(player);
+      } else {
+        this.middle_players.push(player);
+      }
+    });
+    this.left_players.sort(function(a,b){return a.position - b.position } );
+    this.middle_players.sort(function(a,b){return a.position - b.position } );
+    this.right_players.sort(function(a,b){return a.position - b.position } );
   }
 
   public isDay() {
-    return this.day;
+    return (this.round === 'Open Ballot' || this.round === 'Secret Voting');
   }
 
   public isSelected(phase: string) {
-    return phase === this.phase_title;
+    return phase === this.round;
   }
 
   public changeRound() {
-    switch (this.phase_title) {
+    switch (this.round) {
       case 'Open Ballot':
-        this.phase_title = 'Secret Voting';
+        this.round = 'Open Ballot';
+        this.backgroundSVG = 'backgroundDay';
         break;
       case 'Secret Voting':
-        this.phase_title = 'Mafia Voting';
-        this.phase = Phase.Night;
-        this.backgroundSVG = 'backgroundNight';
+        this.round = 'Secret Voting';
         break;
       case 'Mafia Voting':
-        this.phase_title = 'Doctor';
+        this.round = 'Mafia Voting';
+        this.backgroundSVG = 'backgroundNight';
         break;
       case 'Doctor':
-        this.phase_title = 'Detective';
+        this.round = 'Doctor';
         break;
       case 'Detective':
-        this.phase_title = 'Barman';
+        this.round = 'Detective';
         break;
       case 'Barman':
-        this.phase_title = 'Open Ballot';
-        this.phase = Phase.Day;
-        this.backgroundSVG = 'backgroundDay';
+        this.round = 'Barman';
         break;
       default:
         console.log('Something went very wrong');
     }
   }
 
-}
-
-enum Phase {
-  Day,
-  Night
 }

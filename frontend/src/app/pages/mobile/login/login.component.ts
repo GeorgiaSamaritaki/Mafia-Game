@@ -86,16 +86,16 @@ export class LoginComponent implements OnInit {
       var index = 1 + this.selectedavatarindex;
       console.log(
         await this.usersService.addUser(
-          this.myUserID,
-          "",
-          "player" + index + ".png",
-          1,
-          "alive"
+          this.myUserID, //username
+          "", //role
+          "player" + index + ".png", //path
+          this.position, //position
+          "alive" //dead
         ).toPromise()
       );
       localStorage.setItem("username", this.myUserID);
       this.goHome();
-
     }
   }
+
 }

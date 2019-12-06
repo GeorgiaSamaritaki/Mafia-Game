@@ -37,8 +37,8 @@ export class UsersController {
                 "name": req.body.name,
                 "role": req.body.role,
                 "avatar_path": req.body.avatar_path,
-                "position": -1,
-                "dead": "alive"
+                "position": req.body.position,
+                "dead": req.body.dead
             }
             users.push(newUser);
             const SocketService = DIContainer.get(SocketsService);
