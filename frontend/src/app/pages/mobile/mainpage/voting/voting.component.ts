@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { UserModel } from 'src/app/global/models';
 import { UsersService } from 'src/app/global/services';
+import { MainpageComponent } from '../mainpage.component';
 
 @Component({
   selector: 'ami-fullstack-voting',
@@ -10,31 +11,21 @@ import { UsersService } from 'src/app/global/services';
 export class VotingComponent implements OnInit {
   suspects: UserModel[];
   selectedavatarindex: number;
-  constructor(private userService: UsersService) { }
+  constructor( @Optional() private parent: MainpageComponent) { }
 
-  public async unlockVoting() {
-    this.suspects = await this.userService.getAllUsers().toPromise();
-  }
   selectedavatar(index: number) {
     this.selectedavatarindex = index;
   }
-  isOpenBallot() {
-    return false;
-  }
-  isMafiaVoting() {
-    return false;
-  }
-  isSecretVoting() {
-    return true;
-  }
-  submitVote() {
+  
+  submitVote() { //FIXME: submitvote(from, to)
     // return true;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.parent.ngOnInit;
     this.selectedavatarindex = 0;
 
-    this.unlockVoting();
+    // this.unlockVoting();
   }
 
 }

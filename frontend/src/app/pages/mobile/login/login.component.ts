@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService, SocketsService } from 'src/app/global/services';
+import { UsersService, SocketsService, StateMachineService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
-import { StateMachineService } from 'src/app/global/services';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,10 +10,9 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   public selectedavatarindex: number;
-  public myUserID;
-  public userIDToTreat;
-  public foodToTreat;
-  public socketEvents: { event: string, message: any }[];
+  public myUserID; //FIXME: this doesnt need to exist
+  round: string;
+  public socketEvents: { event: string, message: any }[]; //FIXME: this doesnt need to exist
 
   constructor(private statemachineService: StateMachineService,
     private socketService: SocketsService,
@@ -24,32 +22,26 @@ export class LoginComponent implements OnInit {
     this.socketEvents = [];
   }
 
-  async isWaiting() {
-    console.log("ok");
-    return (await this.statemachineService.getPhase().toPromise() === "Waiting");
-  }
-
-  ngOnInit() {
+  async ngOnInit() {
     this.myUserID = localStorage.getItem("username");
-    console.log("User id: "+this.myUserID);
-    // if (this.myUserID != null) this.goHome();
-
+    if (this.myUserID != null && await this.usernameExists(this.myUserID)) this.goHome();
+    this.round = <string> await this.statemachineService.getRound().toPromise();
+    console.log(this.round);
     this.selectedavatarindex = 0;
-    if (!this.isWaiting()) this.goHome();
 
-    this.userIDToTreat = "trix";
-    this.socketService.syncMessages("treating").subscribe(msg => {
+    this.socketService.syncMessages("treating").subscribe(msg => { //FIXME:
       if (msg.message.userID == this.myUserID) {
         this.treated(msg.message.food);
         this.socketEvents.push(msg);
       }
     });
+
   }
 
-  public treatsb() {
+  public treatsb() { // this is to broadcast
     this.myUserID = (<HTMLInputElement>document.getElementById("inputname")).value;
-    this.foodToTreat = "i treat you this from " + this.myUserID;
-    this.statemachineService.treatsb(this.foodToTreat, this.userIDToTreat).subscribe();
+    var foodToTreat = "i treat you this from " + this.myUserID;
+    this.statemachineService.treatsb(foodToTreat, "trix").subscribe();
   }
 
   goHome() {
@@ -66,7 +58,14 @@ export class LoginComponent implements OnInit {
   async usernameExists(username: string) {
     return await this.usersService.checkUsername(username).toPromise();
   }
+
   async addUser() {
+
+    if (this.round != "Waiting") { //a game has started and you're not logged in
+      (<HTMLElement>document.getElementById("alert")).innerHTML = "Game is in Session";
+      return;
+    }
+
     (<HTMLElement>document.getElementById("alert")).innerHTML = "";
     this.myUserID = (<HTMLInputElement>document.getElementById("inputname")).value;
     if (this.myUserID == "") {
@@ -81,7 +80,7 @@ export class LoginComponent implements OnInit {
       console.log(
         await this.usersService.addUser(
           this.myUserID,
-          ""
+          "night"
           , "player" + index + ".png"
         ).toPromise()
       );

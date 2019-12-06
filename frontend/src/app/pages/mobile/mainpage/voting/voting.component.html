@@ -2,9 +2,9 @@
 
     <div id="container">
         <p id="prompt">
-            <span *ngIf="isOpenBallot()">Who is your main suspect?</span>
-            <span *ngIf="isSecretVoting()">Who do you want to kill?</span>
-            <span *ngIf="isMafiaVoting()">Who will die tonight?</span>
+            <span *ngIf="parent.isOpenBallot()">Who is your main suspect?</span>
+            <span *ngIf="parent.isSecretVoting()">Who do you want to kill?</span>
+            <span *ngIf="parent.isMafiaVoting()">Who will die tonight?</span>
         </p>
         
         <div id="avatars">
