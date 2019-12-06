@@ -1,15 +1,17 @@
-<div class="all" [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
+<div *ngIf="initialized" class="all" [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
   <div class="wrapper">
     <img class="tv_upper_icon" [attr.src]="isDay()? '/assets/smart_tv/Sun.png' : '/assets/smart_tv/moon.png'"
       alt="Background icon">
 
-    <span class="count">{{day + count}}</span>
+    <span *ngIf="isDay" class="count">Day {{count}}</span>
+    <span *ngIf="!isDay" class="count">Night {{count}}</span>
+
     <img [style.height]="!isSecretVoting()? '210px':'375px'" id="tv-rectangle"
       src="/assets/smart_tv/{{background_rect}}.png" alt="Background vector">
     <div class="middle">
       <div [className]="isSecretVoting() ? 'player_container_upper' : 'player_container'">
-        <div class="player" *ngFor="let player of players; let i=index" [ngStyle]="isSecretVoting()? { 'width': 'calc(75% / (' + suspect_count + '-2))' } :
-                     {'width': 'calc(95% / ' + player_count + ')' }"
+        <div class="player" *ngFor="let player of players; let i=index" [ngStyle]="isSecretVoting()? { 'width': 'calc(75% / (' + this.players.length -2 + '))' } :
+                     {'width': 'calc(95% / ' + this.players.length + ')' }"
           [ngClass]="(isSecretVoting() && (isSuspect(i)||isDead(i))) ? 'hide': '' ">
           <div class="name_text">{{player.name}}</div>
           <img style="width: 90%;" src="/assets/players/{{player.avatar_path}}">
@@ -33,12 +35,12 @@
     </div>
     <div>
       <p id="next_up_text">next up:</p>
-      <img class="next_up_img" src="../../../../assets/smart_tv/{{next_up_icon}}.png" alt="next up"
-        (click)="changeRound();">
+      <img class="next_up_img" src="/assets/smart_tv/{{next_up_icon}}.png" alt="next up" (click)="manualChange();">
       <p class="next_up_title">{{next_title}}</p>
     </div>
     <div class="round">
       <p class="down_title">{{phase_title}}</p>
-      <img class="down_vector" src="../../../../assets/smart_tv/{{round_title_path}}.png" alt="Title of round">
+      <img class="down_vector" src="/assets/smart_tv/{{round_title_path}}.png" alt="Title of round">
     </div>
   </div>
+</div>

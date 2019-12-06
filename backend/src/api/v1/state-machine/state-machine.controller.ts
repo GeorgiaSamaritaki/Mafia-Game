@@ -84,7 +84,8 @@ export class StateMachineController {
                 round = Round.Open_Ballot
                 break;
         }
-        res.json(round);
+        const SocketService = DIContainer.get(SocketsService);
+        SocketService.broadcast("roundChange", round);
     }
 
 
