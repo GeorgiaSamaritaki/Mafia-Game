@@ -21,7 +21,7 @@ export class UsersController {
             .post('/addUser', this.addUser)
             .post('/getUser', this.getUser)
             .post('/checkUsername', this.checkUsername)
-            .post('/test', this.test) 
+            .get('/joinedPlayers', this.joinedPlayers)
             .get('/getAllUsers', this.getAllUsers);
         return router;
     }
@@ -36,9 +36,13 @@ export class UsersController {
             var newUser = {
                 "name": req.body.name,
                 "role": req.body.role,
-                "avatar_path": req.body.avatar_path
+                "avatar_path": req.body.avatar_path,
+                "position": -1,
+                "dead": "alive"
             }
             users.push(newUser);
+            const SocketService = DIContainer.get(SocketsService);
+            SocketService.broadcast("playerJoined", newUser); 
             res.json("User added");
         } catch (e) {
             console.log(e)
@@ -98,11 +102,7 @@ export class UsersController {
         }
     }
 
-    public test(req:Request, res: Response) {
-        const message: string = req.body.message;
-        const event: string = req.body.event;
-
-        const socketsService = DIContainer.get(SocketsService);
-        socketsService.broadcast(event, message);
+    public joinedPlayers(req: Request, res: Response){
+        res.json(users.length);
     }
 }

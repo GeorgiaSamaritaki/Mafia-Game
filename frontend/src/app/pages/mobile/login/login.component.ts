@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ami-fullstack-login',
@@ -12,12 +12,14 @@ export class LoginComponent implements OnInit {
   public selectedavatarindex: number;
   public myUserID; //FIXME: this doesnt need to exist
   round: string;
+  position: number;
   public socketEvents: { event: string, message: any }[]; //FIXME: this doesnt need to exist
 
   constructor(private statemachineService: StateMachineService,
     private socketService: SocketsService,
     private usersService: UsersService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.socketEvents = [];
   }
@@ -25,9 +27,14 @@ export class LoginComponent implements OnInit {
   async ngOnInit() {
     this.myUserID = localStorage.getItem("username");
     if (this.myUserID != null && await this.usernameExists(this.myUserID)) this.goHome();
-    this.round = <string> await this.statemachineService.getRound().toPromise();
+    this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log(this.round);
     this.selectedavatarindex = 0;
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.position = params['position'];
+      console.log(this.position); // Print the parameter to the console. 
+    });
 
     this.socketService.syncMessages("treating").subscribe(msg => { //FIXME:
       if (msg.message.userID == this.myUserID) {
@@ -80,8 +87,10 @@ export class LoginComponent implements OnInit {
       console.log(
         await this.usersService.addUser(
           this.myUserID,
-          "night"
-          , "player" + index + ".png"
+          "",
+          "player" + index + ".png",
+          1,
+          "alive"
         ).toPromise()
       );
       localStorage.setItem("username", this.myUserID);
