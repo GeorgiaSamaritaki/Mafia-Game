@@ -25,8 +25,7 @@
                     <div class="qr"> <img class="qrImg" src='{{qrs[1]}}'></div>
                 </li>
             </ul>
-            <div id="confirm" [style.background-color]="readyToPlay() ? '#2ECC71' : '#aaaaa'"
-                [style.boxShadow]="readyToPlay() ? '9px 8px 0px #259A56' : '0 0 0'">
+            <div id="confirm" [ngClass]="{'shadow': readyToPlay()}">
                 <img id="tick" src="/assets/augmented_table/signin/tick.png" alt="">
             </div>
             <div class="joinedPlayers" *ngIf="!readyToPlay()">

@@ -53,21 +53,6 @@
   width: 114px;
 }
 
-#confirm {
-  position: absolute;
-  width: 165px;
-  height: 165px;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  border: #aaaaaa;
-  background-color: #aaaaaa;
-  border-radius: 50%;
-  // background: #2ECC71;
-  box-shadow: 0 0 0;
-}
 .joinedPlayers {
   position: absolute;
   width: 331px;
@@ -78,13 +63,11 @@
   bottom: 0;
   margin: auto;
 }
-
 @font-face {
   font-family: "Chango";
   font-style: normal;
   font-weight: 400;
-  src: local("Chango Regular"), local("Chango-Regular"),
-    url(http://themes.googleusercontent.com/static/fonts/chango/v2/tZuFZQQSznzm1NJDMY53Gg.ttf) format("truetype");
+  src: local("Chango Regular"), local("Chango-Regular"), url("http://themes.googleusercontent.com/static/fonts/chango/v2/tZuFZQQSznzm1NJDMY53Gg.ttf") format("truetype");
 }
 
 .joinedPlayers p {
@@ -198,7 +181,7 @@
 .middlePlayers {
   width: 1080px;
   position: absolute;
-  bottom: 0%;
+  bottom: 0;
   left: 15.5%;
 }
 
@@ -297,11 +280,16 @@
   $angle: (360 / $nb-items);
   $rot: 0;
   @for $i from 1 through $nb-items {
-    @if not $class-for-IE {
+     @if not $class-for-IE{
       > :nth-of-type(#{$i}) {
         transform: rotate($rot * 1deg) translate($half-parent) rotate($rot * -1deg);
+
+        > div {
+          transform: rotate(($rot - 180) * 1deg);
+        }
       }
-    } @else {
+    }
+    @else {
       > .#{$class-for-IE}#{$i} {
         // If CSS transforms are not supported
         $mt: sin($rot * pi() / 180) * $half-parent - $half-item;
@@ -324,13 +312,41 @@ ul {
 
 .circle-container img {
   position: absolute;
-  top: 9%;
-  left: 9%;
+  top: 10%;
+  left: 10%;
   display: block;
-  width: 100%;
+  width: 80%;
+  height: 80%;
   filter: grayscale(100%);
 
   &:hover {
     filter: grayscale(0);
   }
+}
+
+#confirm {
+  position: absolute;
+  width: 165px;
+  height: 165px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: #aaaaaa;
+  background-color: #aaaaaa;
+  border-radius: 50%;
+  // background: #2ECC71;
+  box-shadow: 0 0 0;
+  cursor: pointer;
+}
+
+.shadow {
+  filter:drop-shadow(9px 8px 0px #259A56);
+  background-color: #2ECC71 !important;
+}
+
+#confirm:active {
+  filter:none !important;
+  transform: translate(9px,8px);
 }
