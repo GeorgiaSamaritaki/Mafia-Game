@@ -4,7 +4,6 @@ import { DIContainer, MinioService, SocketsService } from '@app/services';
 import { logger } from '../../../utils/logger';
 import { json } from 'body-parser';
 
-
 enum Phase {
     Day = 'Day',
     Night = 'Night'
@@ -35,29 +34,14 @@ export class StateMachineController {
 
         router
             .get('/getRound', this.getRound)
-            .get('/getPhase', this.getPhase)
-            .get('/changePhase', this.changePhase)
             .get('/changeRound', this.changeRound)
             .get('/isDay', this.isDay)
             .post('/treatsb', this.treatsb);
         return router;
     }
-
-    public getPhase(req: Request, res: Response) {
-        console.log(phase);
-        res.json(phase);
-    }
-
+    
     public getRound(req: Request, res: Response) {
         res.json(round);
-    }
-
-    public changePhase(req: Request, res: Response) {
-        if (phase == Phase.Day)
-            phase = Phase.Night;
-        else
-            phase = Phase.Day;
-        res.json(phase);
     }
 
     public changeRound(req: Request, res: Response) {

@@ -57,11 +57,13 @@ export class SmartTvComponent implements OnInit {
 
     this.initializePlayers().then(() =>this.initialized = true);
 
-    this.socketService.syncMessages("roundChange").subscribe(msg => {
+    this.socketService.syncMessages("roundChange").subscribe(async msg => {
       console.log("Round is Changing");
+      this.initialized = false;
       this.round = msg.message;
-      this.changeRound();
-    });
+      await this.changeRound();
+        this.initialized = true;
+      });
   }
 
   array_move(arr, old_index, new_index) {
