@@ -2,20 +2,34 @@
     <div class="center">
         <div class="qrCodes">
             <ul class='circle-container'>
-                <li><div class="qr"> <img class="qrImg" src='{{qr}}'></div></li>
-                <li><div class="qr"> <img class="qrImg" src='{{qr}}'></div></li>
-                <li><div class="qr"> <img class="qrImg" src='{{qr}}'></div></li>
-                <li><div class="qr"> <img class="qrImg" src='{{qr}}'></div></li>
-                <li><div class="qr"> <img class="qrImg" src='{{qr}}'></div></li>
-                <li><div class="qr"> <img class="qrImg" src='{{qr}}'></div></li>
+                <li>
+                    <div class="qr"> <img class="qrImg" src='{{qrs[2]}}'></div>
+                </li>
+                <li>
+                    <div class="qr"> <img class="qrImg" src='{{qrs[3]}}'></div>
+                </li>
+                <li>
+                    <div class="qr"> <img class="qrImg" src='{{qrs[4]}}'></div>
+                </li>
+                <li>
+                    <div class="qr"> <img class="qrImg" src='{{qrs[5]}}'></div>
+                </li>
+                <li>
+                    <div class="qr"> <img class="qrImg" src='{{qrs[6]}}'></div>
+                </li>
+                <li>
+                    <div class="qr"> <img class="qrImg" src='{{qrs[0]}}'></div>
+                </li>
                 <li><img id=add src='/assets/augmented_table/signin/add.png'></li>
-                <li><div class="qr"> <img class="qrImg" src='{{qr}}'></div></li>
+                <li>
+                    <div class="qr"> <img class="qrImg" src='{{qrs[1]}}'></div>
+                </li>
             </ul>
             <div id="confirm" [style.background-color]="readyToPlay() ? '#2ECC71' : '#aaaaa'"
                 [style.boxShadow]="readyToPlay() ? '9px 8px 0px #259A56' : '0 0 0'">
                 <img id="tick" src="/assets/augmented_table/signin/tick.png" alt="">
             </div>
-            <div class="joinedPlayers" *ngIf="!readyToPlay()" >
+            <div class="joinedPlayers" *ngIf="!readyToPlay()">
                 <p id=p1>{{joined_players}}/7</p>
                 <p id=p2>{{joined_players}}/7</p>
                 <p id=p3>{{joined_players}}/7</p>
@@ -28,5 +42,29 @@
         <img id="gun" src="assets/augmented_table/signin/gun.png" alt="">
         <img id="rightBandit" src="assets/augmented_table/signin/rightBandit.png" alt="">
         <img id="hands" src="assets/augmented_table/signin/hands.png" alt="">
+    </div>
+    <div class="leftPlayers">
+        <div class="player_container">     
+            <div class="player" *ngFor="let player of players; let i=index" >
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
+            </div>
+        </div>
+    </div>
+    <div class="rightPlayers">
+        <div class="player_container">     
+            <div class="player" *ngFor="let player of players; let i=index" >
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
+            </div>
+        </div>
+    </div>
+    <div class="middlePlayers">
+        <div class="player_container">     
+            <div class="player" *ngFor="let player of players; let i=index" >
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
+            </div>
+        </div>
     </div>
 </div>

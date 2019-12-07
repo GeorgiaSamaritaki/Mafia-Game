@@ -1,16 +1,31 @@
-<div class="all">
+<div class="all" [style.background-color]="backgroundColor">
   <div class="wrapper">
-    <div id="narrator_title" [ngStyle]="{display:(phase_counter == 0)?'block':'none'}">Select Narrator:</div>
+    <div id="bar" [ngStyle]="{display:(lap > 1)?'block':'none'}">
+    </div>
+    <div class="column timeline" [ngStyle]="{display:(lap > 1)?'block':'none'}">
+      <img class="game_start" src="/assets/interactive-wall/game_start.png" alt="game start">
+      <div *ngFor="let phase of phases; let i=index" style="height: 175px;">
+        <img class="circle"
+          [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+          alt="circle">
+        <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">{{phases[i]}} {{phases_num}}</div>
+      </div>
+    </div>
+    <div id="narrator_title" [ngStyle]="{display:(lap == 0)?'block':'none'}">Select Narrator:</div>
   </div>
   <div class="button_container row">
-    <div class="butt plyr_butt" [ngStyle]="{display:(phase_counter == 0)?'block':'none'}">
+    <div class="butt plyr_butt" [ngStyle]="{display:(lap == 0)?'block':'none'}">
       <img id="player_icon" src="/assets/interactive-wall/player_icon.png" alt="player icon">
       <p>Player</p>
     </div>
-    <div class="butt spkr_butt" (click)="nextPhase();" [ngStyle]="{'margin-top':(phase_counter != 0)?'6%':'0%'}" [ngStyle]="{opacity:(phase_counter != 0)?'1':'0.6'}">
+    <div class="butt spkr_butt" (click)="manualChange();" [ngStyle]="{'margin-top':(lap != 0)?'6%':'0%'}"
+      [ngStyle]="{opacity:(lap != 0)?'1':'0.6'}">
       <img id="speaker" src="/assets/interactive-wall/speaker.png" alt="speaker icon">
       <p>Speaker</p>
     </div>
   </div>
-  <div id="narr_txt" [ngStyle]="{display:(phase_counter != 0)?'block':'none'}">Smart Speaker will guide you through your game</div>
+  <div id="narr_txt" [ngStyle]="{display:(lap == 1)?'block':'none'}">Smart Speaker will guide you through your
+    game</div>
+  <img class="{{background_icon}}" src="/assets/interactive-wall/{{background_icon}}.png"
+    [ngStyle]="{display:(lap > 1)?'block':'none'}" alt="background icon">
 </div>

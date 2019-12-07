@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 
 @Injectable({
     providedIn: 'root'
-})
+})   
 export class UsersService {
 
     private hostURl: string;
@@ -29,9 +29,9 @@ export class UsersService {
         .pipe(map(result => new UserModel(result)));
     }
 
-    public addUser(name: string, role: string, avatar_path: string): Observable<UserModel> {
+    public addUser(name: string, role: string, avatar_path: string, position: number, dead:string): Observable<UserModel> {
       return this.http
-        .post<UserModel>(`${this.hostURl}/api/users/addUser`, {name, role, avatar_path})
+        .post<UserModel>(`${this.hostURl}/api/users/addUser`, {name, role, avatar_path, position, dead})
     }
 
     public changePathOfUser(name: string, avatar_path: string): Observable<UserModel> {
@@ -43,5 +43,10 @@ export class UsersService {
     public checkUsername(name: string) {
       return this.http
         .post(`${this.hostURl}/api/users/checkUsername`, {name});
+    }
+
+    public joinedPlayers(){
+      return this.http
+        .get(`${this.hostURl}/api/users/joinedPlayers`);
     }
 }
