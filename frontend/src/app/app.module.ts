@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SmartSpeakerService } from 'src/app/smart-speaker.service';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [SmartSpeakerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
