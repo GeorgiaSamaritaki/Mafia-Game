@@ -6,6 +6,7 @@ import { SocketEventsController } from './socket-events/socket-events.controller
 import { ExampleController } from './example/example.controller';
 import { UsersController } from './users/users.controller';
 import { StateMachineController } from './state-machine/state-machine.controller';
+import { VotingController } from './voting/voting.controller';
 
 const apiV1Router = express.Router();
 
@@ -43,8 +44,12 @@ apiV1Router
   .use(
     '/stateMachine',
     new StateMachineController().applyRoutes()
-  );
+  )
   
+  .use(
+    '/votes',
+    new VotingController().applyRoutes()
+  );
 
 export { apiV1Router };
 

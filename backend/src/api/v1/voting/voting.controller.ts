@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { NotFound, BadRequest } from 'http-errors';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
-import { logger } from '../../../utils/logger';
-import { json } from 'body-parser';
+import {Vote, roundSum, roundVotes, voteHistory} from './voting.interface'
 
 export class VotingController {
 
@@ -16,93 +14,76 @@ export class VotingController {
         const router = Router();
 
         router
-            // .post('/changePathOfUser', this.changePathOfUser)
-            // .post('/addUser', this.addUser)
-            // .post('/getUser', this.getUser)
-            // .post('/checkUsername', this.checkUsername)
-            // .post('/test', this.test) 
-            // .get('/getAllUsers', this.getAllUsers);
+        .post('/vote', this.vote)
+        .post('/playerVotes', this.calculateVotesOfPlayer)
+        .post('/votesOfRound', this.votesOfRound)
+        .post('/addToHistory', this.addToHistory);
         return router;
     }
 
-    
-    // public async addUser(req: Request, res: Response) {
-    //     try {
-    //         // Check if the user exists
-    //         users.forEach((user: User) => {
-    //             if (user.name === req.body.name)
-    //                 res.json({ "error": "User already exists" })
-    //         })
-    //         var newUser = {
-    //             "name": req.body.name,
-    //             "role": req.body.role,
-    //             "avatar_path": req.body.avatar_path
-    //         }
-    //         users.push(newUser);
-    //         res.json("User added");
-    //     } catch (e) {
-    //         console.log(e)
-    //         res.json(e)
-    //     }
-    // }
+    /**
+     *  Vote somebody 
+     *  
+     * @param req.body.from the player that gave the vote 
+     * @param req.body.to the player that got the vote 
+     */
+    public vote(req: Request, res: Response) {
+        //Check if player has already voted ??
+        var newVote: Vote = {
+            fromWho: req.body.from,
+            toWho: req.body.to,
+            round: ''
+        };
+        roundVotes.push(newVote);
+        res.json(newVote);
+    }
 
-    // public async changePathOfUser(req: Request, res: Response) {
-    //     var found = false;
-    //     try {
-    //         // Check if the user exists
-    //         users.forEach((user: User) => {
-    //             if (user.name === req.body.name) {
-    //                 user.avatar_path = req.body.avatar_path;
-    //                 found = true;
-    //                 res.send(user);
-    //             }
-    //         })
-    //         if (!found)
-    //             res.json({ "error": "User doesn't exist" })
-    //     } catch (e) {
-    //         console.log(e)
-    //         res.json(e)
-    //     }
-    // }
+    /**
+     *  Calculate the votes of a player
+     * 
+     * @param req.body.name player to count the votes 
+     * @param res 
+     */
+    public calculateVotesOfPlayer(req: Request, res: Response) {
+        let cnt: number = 0; 
+        roundVotes.forEach(vote => {
+            if( vote.toWho === req.body.name )
+                cnt++
+        });
+        res.json(cnt);
+    }
 
-    // public getUser(req: Request, res: Response) {
-    //     try {
-    //         users.forEach((user: User) => {
-    //             if (user.name === req.body.name)
-    //                 res.json(user);
-    //         })
-    //     } catch (e) {
-    //         console.log(e)
-    //         res.send(e)
-    //     }
+    /**
+     *  Get votes of a round 
+     * 
+     * @param req.body.round the desired round 
+     * @param res 
+     */
+    public votesOfRound(req: Request, res: Response){
+        let found: boolean = false;
+        voteHistory.forEach( roundSum => {
+            if( roundSum.day === req.body.round ){
+                res.json(roundSum);
+                found = true;
+            }
+        });
+        if( !found )   res.json("Round not found");
+    } 
 
-    //     res.json({ "error": 'User does not exist' })
-    // }
 
-    // public getAllUsers(req: Request, res: Response) {
-    //     res.json(users);
-    // }
-
-    // public async checkUsername(req: Request, res:Response) {
-    //     var found=false;
-    //     try {
-    //         users.forEach((user: User) => {
-    //             if (user.name === req.body.name) {
-    //                 found = true;
-    //             } 
-    //         }) 
-    //         res.send(found);
-    //     } catch(e) {
-    //         console.log(e);
-    //         res.send(e);
-    //     }
-    // }
-
-    // public test(req:Request, res: Response) {
-    //     const message: string = req.body.message;
-    //     const event: string = req.body.event;
-
-    //     const socketsService = DIContainer.get(SocketsService);
-    //     socketsService.broadcast(event, message);
-    // }
+    /**
+     * 
+     * @param req.body.day day/round of the voting 
+     * @param req.body.dead who died 
+     * @param res 
+     */
+    public addToHistory(req: Request, res: Response){
+        let roundSum: roundSum = {
+            day: req.body.day, 
+            votes: roundVotes,
+            dead: req.body.dead
+        }
+        voteHistory.push(roundSum);
+        res.json("added to history");
+    }
 }
