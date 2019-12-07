@@ -3,6 +3,7 @@ import { UsersService, SocketsService, StateMachineService } from 'src/app/globa
 import { UserModel } from 'src/app/global/models';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'ami-fullstack-smart-tv',
   templateUrl: './smart-tv.component.html',
@@ -35,6 +36,8 @@ export class SmartTvComponent implements OnInit {
     private router: Router) {
   }
 
+
+
   private async initializePlayers() {
     this.votesOfPlayers = new Map();
     this.players = await this.userService.getAllUsers().toPromise();
@@ -55,7 +58,7 @@ export class SmartTvComponent implements OnInit {
     this.round = "Open Ballot";
     this.changeRound();
 
-    this.initializePlayers().then(() =>this.initialized = true);
+    this.initializePlayers().then(() => this.initialized = true);
 
     this.socketService.syncMessages("roundChange").subscribe(async msg => {
       console.log("Round is Changing");

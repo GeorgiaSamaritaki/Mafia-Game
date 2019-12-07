@@ -2,7 +2,7 @@
  * An angular service for smart speaker based on artyom.js
  * 
  * In order to use it:
- *  - install antyom.js (npm i antyom.js)
+ *  - install artyom.js (npm i artyom.js)
  *  - add this file in src/app
  */
 import { Injectable } from '@angular/core';
