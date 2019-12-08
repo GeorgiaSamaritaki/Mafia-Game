@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UsersService, SocketsService, StateMachineService } from 'src/app/global/services';
+import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
 import { Router } from '@angular/router';
 
@@ -33,6 +33,7 @@ export class SmartTvComponent implements OnInit {
   constructor(private statemachineService: StateMachineService,
     private userService: UsersService,
     private socketService: SocketsService,
+    private votingService: VotingService,
     private router: Router) {
   }
 

@@ -44,7 +44,7 @@
     </div>
     <div class="leftPlayers">
         <div class="player_container">     
-            <div class="player" *ngFor="let player of players; let i=index" >
+            <div class="player" *ngFor="let player of left_players" >
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
             </div>
@@ -52,7 +52,7 @@
     </div>
     <div class="rightPlayers">
         <div class="player_container">     
-            <div class="player" *ngFor="let player of players; let i=index" >
+            <div class="player" *ngFor="let player of right_players" >
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
             </div>
@@ -60,7 +60,7 @@
     </div>
     <div class="middlePlayers">
         <div class="player_container">     
-            <div class="player" *ngFor="let player of players; let i=index" >
+            <div class="player" *ngFor="let player of middle_players" >
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
             </div>
