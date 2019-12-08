@@ -8,9 +8,24 @@ import { UserModel } from 'src/app/global/models';
   styleUrls: ['./signin-table.component.scss']
 })
 export class SigninTableComponent implements OnInit {
+  
+  //For user checking
+  private _bot_left: boolean = false;
+  private _left: boolean = false;
+  private _bot_right: boolean = false;
+  private _right: boolean = false;
+  private _qr0: boolean = false;
+  private _qr1: boolean = false;
+  private _qr2: boolean = false;
+  private _qr3: boolean = false;
+  private _qr4: boolean = false;
+  private _qr5: boolean = false;
+  private _qr6: boolean = false;
+
 
   joined_players: number = 0;
   qrs: string[];
+  
   players: UserModel[];
   private left_players: UserModel[];
   private right_players: UserModel[];
@@ -19,10 +34,13 @@ export class SigninTableComponent implements OnInit {
   constructor(
     private userService: UsersService,
     private stateMachine: StateMachineService,
-    private socketService: SocketsService
+    private socketService: SocketsService,
   ) {
     this.qrs = [];
     this.players = [];
+    this.left_players = [];
+    this.right_players = [];
+    this.middle_players = [];
   }
 
   async ngOnInit() {
@@ -31,12 +49,9 @@ export class SigninTableComponent implements OnInit {
 
     this.players = await this.userService.getAllUsers().toPromise();
 
-    this.arrangePlayers();
-
     for (var i = 0; i < 7; i++) {
       this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.7:4200/mobile/login?position=${i}`)
     }
-
     this.socketService.syncMessages("playerJoined").subscribe(msg => {
       this.joined_players++;
       let newPlayer = new UserModel;
@@ -46,23 +61,71 @@ export class SigninTableComponent implements OnInit {
       newPlayer.position = msg.message.position;
       newPlayer.dead = msg.message.dead;
       this.players.push(newPlayer);
+      this.hidePhotos(msg.message.position);
+      this.arrangePlayers(newPlayer);
     });
   }
 
-  private arrangePlayers() {
-    this.left_players = [];
-    this.right_players = [];
-    this.middle_players = [];
+  private hidePhotos(position: number) {
+    switch (+position) {
+      case 0:
+        this._left = true;
+        this._qr0 = true;
+        break;
+      case 1:
+        this._qr1 = true;
+        this._bot_left = true;
+        break;
+        case 2:
+          this._qr2 = true;
+          this._bot_left = true;
+        break;
+      case 3:
+        this._qr3 = true;
+        this._bot_right = true;
+        break;
+      case 4:
+        this._qr4 = true;
+        this._bot_right = true;
+        break;
+      case 5:
+        this._qr5 = true;
+        this._bot_right = true;
+        break;
+      case 6:
+        this._qr6 = true;
+        this._right = true;
+    }
+  }
 
-    this.players.forEach(player => {
-      if (player.position < (this.players.length / 3) - 1) {
-        this.left_players.push(player);
-      } else if (player.position > (2 * this.players.length / 3)) {
-        this.right_players.push(player);
-      } else {
-        this.middle_players.push(player);
+  private arrangePlayers(newUser: UserModel) {
+    if (this.joined_players <= 7) {
+      switch (+newUser.position) {
+        case 0:
+        case 1:
+          this.left_players.push(newUser);
+          break;
+        case 2:
+        case 3:
+        case 4:
+          this.middle_players.push(newUser);
+          break;
+        case 5:
+        case 6:
+          this.right_players.push(newUser);
+          break;
       }
-    });
+    } else {
+      this.players.forEach(player => {
+        if (player.position < (this.players.length / 3) - 1) {
+          this.left_players.push(player);
+        } else if (player.position > (2 * this.players.length / 3)) {
+          this.right_players.push(player);
+        } else {
+          this.middle_players.push(player);
+        }
+      });
+    }
     this.left_players.sort(function (a, b) { return a.position - b.position });
     this.middle_players.sort(function (a, b) { return a.position - b.position });
     this.right_players.sort(function (a, b) { return a.position - b.position });
@@ -70,5 +133,40 @@ export class SigninTableComponent implements OnInit {
 
   readyToPlay() {
     return this.joined_players == 7;
+  }
+
+  public left() {
+    return this._left;
+  }
+  public bot_left() {
+    return this._bot_left;
+  }
+  public right() {
+    return this._right;
+  }
+  public bot_right() {
+    return this._bot_right;
+  }
+
+  public qr0(){
+    return this._qr0;
+  }
+  public qr1(){
+    return this._qr1;
+  }
+  public qr2(){
+    return this._qr2;
+  }
+  public qr3(){
+    return this._qr3;
+  }
+  public qr4(){
+    return this._qr4;
+  }
+  public qr5(){
+    return this._qr5;
+  }
+  public qr6(){
+    return this._qr6;
   }
 }

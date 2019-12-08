@@ -4,6 +4,11 @@ import { DIContainer, MinioService, SocketsService } from '@app/services';
 import { logger } from '../../../utils/logger';
 import { User, users } from './user.interface'
 import { json } from 'body-parser';
+import { resolve } from 'dns';
+
+function getRandomInt(max: number) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
 
 export class UsersController {
 
@@ -22,7 +27,8 @@ export class UsersController {
             .post('/getUser', this.getUser)
             .post('/checkUsername', this.checkUsername)
             .get('/joinedPlayers', this.joinedPlayers)
-            .get('/getAllUsers', this.getAllUsers);
+            .get('/getAllUsers', this.getAllUsers)
+            .get('/distributeRoles', this.distributeRoles);
         return router;
     }
 
@@ -42,7 +48,7 @@ export class UsersController {
             }
             users.push(newUser);
             const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("playerJoined", newUser); 
+            SocketService.broadcast("playerJoined", newUser);
             res.json("User added");
         } catch (e) {
             console.log(e)
@@ -87,26 +93,87 @@ export class UsersController {
         res.json(users);
     }
 
-    public async checkUsername(req: Request, res:Response) {
-        var found=false;
+    public async checkUsername(req: Request, res: Response) {
+        var found = false;
         try {
             users.forEach((user: User) => {
                 if (user.name === req.body.name) {
                     found = true;
-                } 
-            }) 
+                }
+            })
             res.send(found);
-        } catch(e) {
+        } catch (e) {
             console.log(e);
             res.send(e);
         }
     }
 
-    public joinedPlayers(req: Request, res: Response){
+    public joinedPlayers(req: Request, res: Response) {
         res.json(users.length);
     }
 
-    public distributeRoles(){
-        
+    public distributeRoles(req: Request, res: Response) {
+        try {
+
+            //For every 4 people 1 mafia (if its 7 we keep 2 Mafia)
+            //Calculate roles
+            let mafia: number;
+            if (users.length === 7) {
+                mafia = 2;
+            } else {
+                mafia = Math.floor(users.length / 4);
+            }
+            //Assign Mafia
+            let rng: number;
+            while (mafia != 0) {
+                rng = getRandomInt(users.length);
+                if (users[rng].role == 'undefined') {
+                    if (rng % 3 == 2) 
+                        users[rng].role = 'Mafioso';
+                    else if (rng % 3 == 1) 
+                        users[rng].role = 'Barman';
+                    else 
+                        users[rng].role = 'Godfather';
+                    mafia--;
+                }
+            }
+            //Masons
+            let masons = 2;
+            while (masons != 0) {
+                rng = getRandomInt(users.length);
+                if (users[rng].role == 'undefined') {
+                    users[rng].role = 'Mason';
+                    masons--;
+                }
+            }
+            //Detective 
+            let d = true
+            while (d) {
+                rng = getRandomInt(users.length);
+                if (users[rng].role == 'undefined') {
+                    users[rng].role = 'Detective';
+                    d = false;
+                }
+            }
+            //Doctor 
+            let doc = true
+            while (doc) {
+                rng = getRandomInt(users.length);
+                if (users[rng].role == 'undefined') {
+                    users[rng].role = 'Doctor';
+                    doc = false;
+                }
+            }
+            //Civilians the rest
+            users.forEach((player) => {
+                if (player.role == 'undefined')
+                    player.role = 'Civilian';
+                console.log(player.role);
+            });
+        }catch (e){
+            console.log(e);
+        }
+        res.json(users);
+        //TODO:Event to let everyone know
     }
 }

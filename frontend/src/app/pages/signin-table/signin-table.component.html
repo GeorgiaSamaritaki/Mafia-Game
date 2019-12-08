@@ -3,26 +3,28 @@
         <div class="qrCodes">
             <ul class='circle-container'>
                 <li>
-                    <div class="qr"> <img class="qrImg" src='{{qrs[2]}}'></div>
+                    <div class="qr" *ngIf="!qr5()"> <img class="qrImg" src='{{qrs[5]}}'></div>
                 </li>
                 <li>
-                    <div class="qr"> <img class="qrImg" src='{{qrs[3]}}'></div>
+                    <div class="qr" *ngIf="!qr4()"> <img class="qrImg" src='{{qrs[4]}}'></div>
                 </li>
                 <li>
-                    <div class="qr"> <img class="qrImg" src='{{qrs[4]}}'></div>
+                    <div class="qr" *ngIf="!qr3()"> <img class="qrImg" src='{{qrs[3]}}'></div>
                 </li>
                 <li>
-                    <div class="qr"> <img class="qrImg" src='{{qrs[5]}}'></div>
+                    <div class="qr" *ngIf="!qr2()"> <img class="qrImg" src='{{qrs[2]}}'></div>
                 </li>
                 <li>
-                    <div class="qr"> <img class="qrImg" src='{{qrs[6]}}'></div>
+                    <div class="qr" *ngIf="!qr1()"> <img class="qrImg" src='{{qrs[1]}}'></div>
                 </li>
                 <li>
-                    <div class="qr"> <img class="qrImg" src='{{qrs[0]}}'></div>
+                    <div class="qr" *ngIf="!qr0()"> <img class="qrImg" src='{{qrs[0]}}'></div>
                 </li>
-                <li><img id=add src='/assets/augmented_table/signin/add.png'></li>
                 <li>
-                    <div class="qr"> <img class="qrImg" src='{{qrs[1]}}'></div>
+                    <img id=add src='/assets/augmented_table/signin/add.png'>
+                </li>
+                <li>
+                    <div class="qr" *ngIf="!qr6()"> <img class="qrImg" src='{{qrs[6]}}'></div>
                 </li>
             </ul>
             <div id="confirm" [ngClass]="{'shadow': readyToPlay()}">
@@ -37,30 +39,30 @@
         </div>
     </div>
     <div class="photos">
-        <img id="leftBandit" src="assets/augmented_table/signin/leftBandit.png" alt="">
-        <img id="gun" src="assets/augmented_table/signin/gun.png" alt="">
-        <img id="rightBandit" src="assets/augmented_table/signin/rightBandit.png" alt="">
-        <img id="hands" src="assets/augmented_table/signin/hands.png" alt="">
+        <img id="leftBandit" *ngIf="!left()" src="assets/augmented_table/signin/leftBandit.png" alt="">
+        <img id="gun" *ngIf="!bot_left()" src="assets/augmented_table/signin/gun.png" alt="">
+        <img id="rightBandit" *ngIf="!right()" src="assets/augmented_table/signin/rightBandit.png" alt="">
+        <img id="hands" *ngIf="!bot_right()" src="assets/augmented_table/signin/hands.png" alt="">
     </div>
     <div class="leftPlayers">
-        <div class="player_container">     
-            <div class="player" *ngFor="let player of left_players" >
+        <div class="player_container">
+            <div class="player" *ngFor="let player of left_players; trackBy: trackF">
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
             </div>
         </div>
     </div>
     <div class="rightPlayers">
-        <div class="player_container">     
-            <div class="player" *ngFor="let player of right_players" >
+        <div class="player_container">
+            <div class="player" *ngFor="let player of right_players">
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
             </div>
         </div>
     </div>
     <div class="middlePlayers">
-        <div class="player_container">     
-            <div class="player" *ngFor="let player of middle_players" >
+        <div class="player_container">
+            <div class="player" *ngFor="let player of middle_players">
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 70%;" src="/assets/players/{{player.avatar_path}}">
             </div>
