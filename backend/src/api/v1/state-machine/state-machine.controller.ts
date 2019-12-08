@@ -3,6 +3,7 @@ import { NotFound, BadRequest } from 'http-errors';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
 import { logger } from '../../../utils/logger';
 import { json } from 'body-parser';
+import { UsersController } from '../users/users.controller';
 
 enum Phase {
     Day = 'Day',
@@ -29,24 +30,26 @@ export class StateMachineController {
      *
      * @returns {Router}
      */
+
+
     public applyRoutes(): Router {
         const router = Router();
 
         router
             .get('/getRound', this.getRound)
             .get('/changeRound', this.changeRound)
-            .get('/isDay', this.isDay)
             .post('/treatsb', this.treatsb);
         return router;
     }
-    
+
     public getRound(req: Request, res: Response) {
         res.json(round);
     }
 
     public changeRound(req: Request, res: Response) {
-        switch (round) { 
+        switch (round) {
             case Round.Waiting:
+                // await UsersController.distributeRoles().then((e)=>console.log("Roles set")); FIXME:
                 round = Round.Open_Ballot;
                 break;
             case Round.Open_Ballot:
@@ -70,11 +73,6 @@ export class StateMachineController {
         }
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("roundChange", round);
-    }
-
-
-    public isDay(req: Request, res: Response) {
-        res.json(phase == Phase.Day); 
     }
 
     public treatsb(req: Request) {

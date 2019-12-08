@@ -45,11 +45,6 @@ export class SmartTvComponent implements OnInit {
     for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
     this.deaths = [];
 
-    await this.userService.changePathOfUser("Maria", "player3.png").toPromise();
-    await this.userService.changePathOfUser("Alice", "player1.png").toPromise();
-    this.votesOfPlayers.set("George", 2);
-    this.votesOfPlayers.set("Maria", 4);
-    this.votesOfPlayers.set("Renata", 1);
   }
 
   async ngOnInit() {
@@ -68,6 +63,12 @@ export class SmartTvComponent implements OnInit {
       await this.changeRound();
         this.initialized = true;
       });
+
+    this.socketService.syncMessages("vote").subscribe(async msg => {
+      if(this.round != "Open Ballot") return;
+      console.log("Player " + msg.message.toWho + " received a vote");
+      this.votesOfPlayers.set(msg.message.toWho,this.votesOfPlayers.get(msg.message.toWho)+1);  
+    });
   }
 
   array_move(arr, old_index, new_index) {

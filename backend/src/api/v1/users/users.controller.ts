@@ -105,4 +105,8 @@ export class UsersController {
     public joinedPlayers(req: Request, res: Response){
         res.json(users.length);
     }
+
+    public distributeRoles(){
+        
+    }
 }

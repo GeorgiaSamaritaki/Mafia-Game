@@ -14,19 +14,9 @@ export class StateMachineService {
     this.hostURl = environment.host;
   }
 
-  public getPhase() {
-    return this.http
-      .get(`${this.hostURl}/api/stateMachine/getPhase`);
-  }
-
   public getRound() {
     return this.http
       .get(`${this.hostURl}/api/stateMachine/getRound`);
-  }
-
-  public changePhase() {
-    return this.http
-      .get(`${this.hostURl}/api/stateMachine/changePhase`);
   }
 
   public changeRound() {
@@ -34,10 +24,6 @@ export class StateMachineService {
       .get(`${this.hostURl}/api/stateMachine/changeRound`);
   }
 
-  public isDay() {
-    return this.http
-      .get(`${this.hostURl}/api/stateMachine/isDay`);
-  }
 
   public treatsb(foodToTreat, toUserID) {
     return this.http

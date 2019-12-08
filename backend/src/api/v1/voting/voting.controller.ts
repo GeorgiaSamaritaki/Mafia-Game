@@ -36,6 +36,8 @@ export class VotingController {
         };
         roundVotes.push(newVote);
         res.json(newVote);
+        const SocketService = DIContainer.get(SocketsService);
+        SocketService.broadcast("vote", newVote);
     }
 
     /**

@@ -14,6 +14,7 @@ export class AugmentedTableComponent implements OnInit {
   private left_players: UserModel[];
   private right_players: UserModel[];
   private middle_players: UserModel[];
+  votesOfPlayers: Map<string, number>;
   private backgroundSVG: string;
 
   constructor(
@@ -29,8 +30,6 @@ export class AugmentedTableComponent implements OnInit {
 
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
-    this.round = "Open Ballot";
-    console.log("Round was set to: " + this.round);
     this.changeRound();
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
@@ -38,10 +37,17 @@ export class AugmentedTableComponent implements OnInit {
       this.round = msg.message;
       this.changeRound();
     });
+    this.socketService.syncMessages("vote").subscribe(async msg => {
+      if(this.round != "Open Ballot") return;
+      console.log("Player " + msg.message.toWho + " received a vote");
+      this.votesOfPlayers.set(msg.message.toWho,this.votesOfPlayers.get(msg.message.toWho)+1);  
+    });
   }
 
   private async initializePlayers() {
+    this.votesOfPlayers = new Map();
     this.players = await this.usersService.getAllUsers().toPromise();
+    for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
     this.arrangePlayers();
   }
 
@@ -75,24 +81,18 @@ export class AugmentedTableComponent implements OnInit {
   public changeRound() {
     switch (this.round) {
       case 'Open Ballot':
-        this.round = 'Open Ballot';
         this.backgroundSVG = 'backgroundDay';
         break;
       case 'Secret Voting':
-        this.round = 'Secret Voting';
         break;
       case 'Mafia Voting':
-        this.round = 'Mafia Voting';
         this.backgroundSVG = 'backgroundNight';
         break;
       case 'Doctor':
-        this.round = 'Doctor';
         break;
       case 'Detective':
-        this.round = 'Detective';
         break;
       case 'Barman':
-        this.round = 'Barman';
         break;
       default:
         console.log('Something went very wrong');
