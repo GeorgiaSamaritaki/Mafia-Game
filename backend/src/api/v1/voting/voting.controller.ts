@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
-import {Vote, roundSum, roundVotes, voteHistory} from './voting.interface'
+import { Vote, roundSum, roundVotes, voteHistory } from './voting.interface'
 
 export class VotingController {
 
@@ -14,10 +14,10 @@ export class VotingController {
         const router = Router();
 
         router
-        .post('/vote', this.vote)
-        .post('/playerVotes', this.calculateVotesOfPlayer)
-        .post('/votesOfRound', this.votesOfRound)
-        .post('/addToHistory', this.addToHistory);
+            .post('/vote', this.vote)
+            .post('/playerVotes', this.calculateVotesOfPlayer)
+            .post('/votesOfRound', this.votesOfRound)
+            .post('/addToHistory', this.addToHistory);
         return router;
     }
 
@@ -45,9 +45,9 @@ export class VotingController {
      * @param res 
      */
     public calculateVotesOfPlayer(req: Request, res: Response) {
-        let cnt: number = 0; 
+        let cnt: number = 0;
         roundVotes.forEach(vote => {
-            if( vote.toWho === req.body.name )
+            if (vote.toWho === req.body.name)
                 cnt++
         });
         res.json(cnt);
@@ -59,16 +59,18 @@ export class VotingController {
      * @param req.body.round the desired round 
      * @param res 
      */
-    public votesOfRound(req: Request, res: Response){
+    public votesOfRound(req: Request, res: Response) {
         let found: boolean = false;
-        voteHistory.forEach( roundSum => {
-            if( roundSum.day === req.body.round ){
-                res.json(roundSum);
+        console.log(req.body.round);
+        voteHistory.forEach(roundSum => {
+            if (roundSum.day === req.body.round) {
                 found = true;
+                console.log('found');
+                res.json(roundSum);
             }
         });
-        if( !found )   res.json("Round not found");
-    } 
+        if (!found) res.json("Round not found");
+    }
 
 
     /**
@@ -77,9 +79,9 @@ export class VotingController {
      * @param req.body.dead who died 
      * @param res 
      */
-    public addToHistory(req: Request, res: Response){
+    public addToHistory(req: Request, res: Response) {
         let roundSum: roundSum = {
-            day: req.body.day, 
+            day: req.body.day,
             votes: roundVotes,
             dead: req.body.dead
         }

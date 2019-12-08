@@ -7,7 +7,7 @@ export interface Vote {
     round: string
 }
 
-var roundVotes: Array<Vote>;
+// var roundVotes: Array<Vote>;
 
 export interface roundSum {
     day: string, //day1, night1 etc
@@ -16,7 +16,7 @@ export interface roundSum {
 }
 
 
-var votes: Array<Vote> = [
+var roundVotes: Array<Vote> = [
     {
         fromWho: 'Alice',
         toWho: 'Maria',
@@ -57,7 +57,7 @@ var votes: Array<Vote> = [
 var voteHistory: Array<roundSum> = [
     {
         day: 'day1',
-        votes: votes,
+        votes: roundVotes,
         dead: 'Maria'
     }
 ];

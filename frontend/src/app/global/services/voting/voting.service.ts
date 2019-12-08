@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 @Injectable({
     providedIn: 'root'
 })   
-export class UsersService {
+export class VotingService {
 
     private hostURl: string;
 
@@ -30,16 +30,16 @@ export class UsersService {
 
     public getPlayerVotes(name: string) {
       return this.http
-        .post(`${this.hostURl}/api/vote/playerVotes`, name);
+        .post(`${this.hostURl}/api/votes/playerVotes`, {name});
     }
 
     public votesOfRound(round: string) {
         return this.http
-            .post(`${this.hostURl}/api/vote/votesOfRound`, round);
+            .post(`${this.hostURl}/api/votes/votesOfRound`, {round});
     }
 
     public addToHistory(day: string, dead: string){
         return this.http
-            .post(`${this.hostURl}/api/vote/addToHistory`, {day, dead});
+            .post(`${this.hostURl}/api/votes/addToHistory`, {day, dead});
     }
 }
