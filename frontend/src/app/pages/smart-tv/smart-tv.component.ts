@@ -48,6 +48,7 @@ export class SmartTvComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.count = 1;
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
     // if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']); //FIXME: this needs to be active

@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { NotFound, BadRequest } from 'http-errors';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
-import { logger } from '../../../utils/logger';
-import { json } from 'body-parser';
-import { UsersController } from '../users/users.controller';
 
 enum Phase {
     Day = 'Day',
@@ -22,6 +19,8 @@ enum Round {
 
 var phase = Phase.Day;
 var round: string = Round.Waiting;
+
+export { round }
 
 export class StateMachineController {
 
@@ -73,6 +72,11 @@ export class StateMachineController {
         }
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("roundChange", round);
+    }
+
+
+    public isDay(req: Request, res: Response) {
+        res.json(phase == Phase.Day);
     }
 
     public treatsb(req: Request) {
