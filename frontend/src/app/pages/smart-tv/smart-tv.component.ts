@@ -175,6 +175,7 @@ export class SmartTvComponent implements OnInit {
   }
 
   async changeRound() {
+    console.log("Round was set to: " + this.round);
     switch (this.round) {
       case 'Secret Voting': //Open Ballot -> Secret Voting
         this.background_rect = "sec-vot-rect-day";

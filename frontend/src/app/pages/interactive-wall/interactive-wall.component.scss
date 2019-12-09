@@ -33,6 +33,16 @@
   opacity: 1;
 }
 
+.clicked_speaker{
+  margin-top: 6%;
+  opacity: 1;
+}
+
+.unclicked_speaker{
+  margin-top: 0%;
+  opacity: 0.6;
+}
+
 .button_container {
   justify-content: space-evenly;
   color: white;
