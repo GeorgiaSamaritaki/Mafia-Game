@@ -27,7 +27,7 @@
                     <div class="qr" *ngIf="!qr6()"> <img class="qrImg" src='{{qrs[6]}}'></div>
                 </li>
             </ul>
-            <div id="confirm" [ngClass]="{'shadow': readyToPlay()}">
+            <div id="confirm" (click)="startGame()" [ngClass]="{'shadow': readyToPlay()}">
                 <img id="tick" src="/assets/augmented_table/signin/tick.png" alt="">
             </div>
             <div class="joinedPlayers" *ngIf="!readyToPlay()">

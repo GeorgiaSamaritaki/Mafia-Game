@@ -42,4 +42,9 @@ export class VotingService {
         return this.http
             .post(`${this.hostURl}/api/votes/addToHistory`, {day, dead});
     }
+
+    public getVoters(name: string) {
+      return this.http
+        .post(`${this.hostURl}/api/votes/getVoters`, {name});
+    }
 }

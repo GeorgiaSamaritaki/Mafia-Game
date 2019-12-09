@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { NotFound, BadRequest } from 'http-errors';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
+import {  UsersController } from '../users/users.controller';
 
 enum Phase {
     Day = 'Day',
@@ -18,7 +19,7 @@ enum Round {
 }
 
 var phase = Phase.Day;
-var round: string = Round.Waiting;
+var round: string = Round.Waiting; 
 
 export { round }
 
@@ -46,9 +47,12 @@ export class StateMachineController {
     }
 
     public changeRound(req: Request, res: Response) {
+        console.log('epae');
         switch (round) {
             case Round.Waiting:
-                // await UsersController.distributeRoles().then((e)=>console.log("Roles set")); FIXME:
+                new UsersController().distributeRoles().then( (users) => {
+                    console.log(users);
+                })
                 round = Round.Open_Ballot;
                 break;
             case Round.Open_Ballot:
@@ -70,6 +74,7 @@ export class StateMachineController {
                 round = Round.Open_Ballot
                 break;
         }
+        console.log(round);
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("roundChange", round);
     }
@@ -86,4 +91,6 @@ export class StateMachineController {
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast(event, message);
     }
+
+    
 }

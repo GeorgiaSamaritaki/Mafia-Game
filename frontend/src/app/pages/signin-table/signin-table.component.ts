@@ -66,6 +66,15 @@ export class SigninTableComponent implements OnInit {
     });
   }
 
+  public startGame() {
+    if( this.readyToPlay() ){
+      console.log('Game starts');
+      this.stateMachine.changeRound() //Starts the game
+    }
+    else 
+      console.log('Not enough players joined');
+  } 
+
   private hidePhotos(position: number) {
     switch (+position) {
       case 0:

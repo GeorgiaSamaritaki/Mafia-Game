@@ -5,6 +5,7 @@ import { logger } from '../../../utils/logger';
 import { User, users } from './user.interface'
 import { json } from 'body-parser';
 import { resolve } from 'dns';
+import { rejects } from 'assert';
 
 function getRandomInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
@@ -112,68 +113,72 @@ export class UsersController {
         res.json(users.length);
     }
 
-    public distributeRoles(req: Request, res: Response) {
-        try {
+    public distributeRoles() {
+        return new Promise((resolve, reject) => {
 
-            //For every 4 people 1 mafia (if its 7 we keep 2 Mafia)
-            //Calculate roles
-            let mafia: number;
-            if (users.length === 7) {
-                mafia = 2;
-            } else {
-                mafia = Math.floor(users.length / 4);
-            }
-            //Assign Mafia
-            let rng: number;
-            while (mafia != 0) {
-                rng = getRandomInt(users.length);
-                if (users[rng].role == 'undefined') {
-                    if (rng % 3 == 2) 
-                        users[rng].role = 'Mafioso';
-                    else if (rng % 3 == 1) 
-                        users[rng].role = 'Barman';
-                    else 
-                        users[rng].role = 'Godfather';
-                    mafia--;
+            try {
+
+                //For every 4 people 1 mafia (if its 7 we keep 2 Mafia)
+                //Calculate roles
+                let mafia: number;
+                if (users.length === 7) {
+                    mafia = 2;
+                } else {
+                    mafia = Math.floor(users.length / 4);
                 }
-            }
-            //Masons
-            let masons = 2;
-            while (masons != 0) {
-                rng = getRandomInt(users.length);
-                if (users[rng].role == 'undefined') {
-                    users[rng].role = 'Mason';
-                    masons--;
+                //Assign Mafia
+                let rng: number;
+                while (mafia != 0) {
+                    rng = getRandomInt(users.length);
+                    if (users[rng].role == 'undefined') {
+                        if (rng % 3 == 2)
+                            users[rng].role = 'Mafioso';
+                        else if (rng % 3 == 1)
+                            users[rng].role = 'Barman';
+                        else
+                            users[rng].role = 'Godfather';
+                        mafia--;
+                    }
                 }
-            }
-            //Detective 
-            let d = true
-            while (d) {
-                rng = getRandomInt(users.length);
-                if (users[rng].role == 'undefined') {
-                    users[rng].role = 'Detective';
-                    d = false;
+                //Masons
+                let masons = 2;
+                while (masons != 0) {
+                    rng = getRandomInt(users.length);
+                    if (users[rng].role == 'undefined') {
+                        users[rng].role = 'Mason';
+                        masons--;
+                    }
                 }
-            }
-            //Doctor 
-            let doc = true
-            while (doc) {
-                rng = getRandomInt(users.length);
-                if (users[rng].role == 'undefined') {
-                    users[rng].role = 'Doctor';
-                    doc = false;
+                //Detective 
+                let d = true
+                while (d) {
+                    rng = getRandomInt(users.length);
+                    if (users[rng].role == 'undefined') {
+                        users[rng].role = 'Detective';
+                        d = false;
+                    }
                 }
+                //Doctor 
+                let doc = true
+                while (doc) {
+                    rng = getRandomInt(users.length);
+                    if (users[rng].role == 'undefined') {
+                        users[rng].role = 'Doctor';
+                        doc = false;
+                    }
+                }
+                //Civilians the rest
+                users.forEach((player) => {
+                    if (player.role == 'undefined')
+                        player.role = 'Civilian';
+                    console.log(player.role);
+                });
+            } catch (e) {
+                console.log(e);
             }
-            //Civilians the rest
-            users.forEach((player) => {
-                if (player.role == 'undefined')
-                    player.role = 'Civilian';
-                console.log(player.role);
-            });
-        }catch (e){
-            console.log(e);
-        }
-        res.json(users);
-        //TODO:Event to let everyone know
+            resolve(users);
+            // res.json(users);
+            //TODO:Event to let everyone know
+        })
     }
 }
