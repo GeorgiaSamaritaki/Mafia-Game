@@ -23,10 +23,11 @@ export class VotingController {
         const router = Router();
 
         router
+            .get('/findSuspects', this.findSuspects)
             .post('/vote', this.vote)
             .post('/playerVotes', this.calculateVotesOfPlayer)
             .post('/votesOfRound', this.votesOfRound)
-            .get('/findSuspects', this.findSuspects)
+            .post('/getVoters', this.getVoters)
             .post('/addToHistory', this.addToHistory);
         return router;
     }
@@ -44,16 +45,16 @@ export class VotingController {
             toWho: req.body.to,
             round: ''
         };
-        if( suspects.findIndex( (elem) => elem.name === req.body.to ) === -1){
+        if (suspects.findIndex((elem) => elem.name === req.body.to) === -1) {
             let sus: Suspect = {
                 name: req.body.to,
                 votes: 1
             }
-            suspects.push(sus)
+            suspects.push(sus)  
         } else {
-            for( var sus in suspects){ 
-                if( suspects[sus].name == req.body.to){
-                    suspects[sus].votes++; 
+            for (var sus in suspects) {
+                if (suspects[sus].name == req.body.to) {
+                    suspects[sus].votes++;
                     break;
                 }
             }
@@ -115,17 +116,30 @@ export class VotingController {
         res.json("added to history");
     }
 
+
+    public getVoters(req: Request, res: Response) {
+        let voters: string[] = [];
+        roundVotes.forEach((vote) => {
+            if (vote.toWho === req.body.name)
+                voters.push(vote.fromWho);
+        })
+        if (voters.length == 0)
+            res.json('')
+        else
+            res.json(voters);
+    }
+
     public findSuspects(req: Request, res: Response) {
         var message;
         switch (round) {
             case 'Open Ballot':
-                suspects.sort((a,b) =>  b.votes - a.votes );
-                suspects =  suspects.slice(0, 2);
+                suspects.sort((a, b) => b.votes - a.votes);
+                suspects = suspects.slice(0, 2);
                 message = suspects;
                 break;
-                
+
         }
-    
+
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("suspects", message);
         res.json(message);
