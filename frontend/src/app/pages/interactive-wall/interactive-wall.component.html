@@ -11,9 +11,9 @@
         <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">{{phases[i]}} {{phases_num}}</div>
       </div>
     </div>
-    <div id="narrator_title" [ngStyle]="{display:(lap == 0)?'block':'none'}">Select Narrator:</div>
+    <div id="narrator_title" [ngStyle]="{display:(playersJoined == true)?'block':'none'}">Select Narrator:</div>
   </div>
-  <div class="button_container row" [ngStyle]="{'margin-top':(lap != 0)?'6%':'0%'}">
+  <div class="button_container row" *ngIf="(playersJoined == true)" [ngStyle]="{'margin-top':(lap != 0)?'6%':'0%'}">
     <div class="butt plyr_butt" [ngStyle]="{display:(lap == 0)?'block':'none'}">
       <img id="player_icon" src="/assets/interactive-wall/player_icon.png" alt="player icon">
       <p>Player</p>

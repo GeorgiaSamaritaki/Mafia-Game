@@ -9,6 +9,7 @@ import { SmartSpeakerService } from 'src/app/smart-speaker.service';
 })
 export class InteractiveWallComponent implements OnInit {
   round: string;
+  playersJoined: boolean = false;
   lap: number;
   phases_num: number;
   backgroundColor: string;
@@ -114,6 +115,12 @@ export class InteractiveWallComponent implements OnInit {
       this.round = msg.message;
       this.changeRound();
     });
+
+    this.socketService.syncMessages("selectNarrator").subscribe(msg => {
+      this.playersJoined = true;
+      console.log('Select a Narrator');
+    });
+
   }
 
 }

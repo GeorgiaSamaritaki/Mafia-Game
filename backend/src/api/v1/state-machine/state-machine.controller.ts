@@ -76,7 +76,10 @@ export class StateMachineController {
         SocketService.broadcast("roundChange", round);
     }
     public selectNarrator(req: Request, res: Response) {
+        console.log('broadcasting');
         const SocketService = DIContainer.get(SocketsService);
+        SocketService.broadcast("selectNarrator", '');
+        res.json('OK')
     }
         SocketService.broadcast("selectNarrator", '');
 

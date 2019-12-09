@@ -70,9 +70,9 @@ export class SigninTableComponent implements OnInit {
 
   public async startGame() {
     if( this.readyToPlay() ){
-      console.log('Game starts');
-      this.stateMachine.changeRound() //Starts the game
+      await this.stateMachine.selectNarrator().toPromise(); //Starts the game
       this._gameStarted = true;
+      console.log('Select narrator');
     }
     else 
       console.log('Not enough players joined');

@@ -24,6 +24,11 @@ export class StateMachineService {
       .get(`${this.hostURl}/api/stateMachine/changeRound`);
   }
 
+  public selectNarrator() {
+    console.log('aaa')
+    return this.http
+      .get(`${this.hostURl}/api/stateMachine/selectNarrator`);
+  }
 
   public treatsb(foodToTreat, toUserID) {
     return this.http
@@ -37,5 +42,5 @@ export class StateMachineService {
         }
       );
   }
-  
+
 }
