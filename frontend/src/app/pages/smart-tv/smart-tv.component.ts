@@ -70,6 +70,8 @@ export class SmartTvComponent implements OnInit {
       console.log("Player " + msg.message.toWho + " received a vote");
       this.votesOfPlayers.set(msg.message.toWho,this.votesOfPlayers.get(msg.message.toWho)+1);  
     });
+
+    await this.votingService.findSuspects().toPromise();
   }
 
   array_move(arr, old_index, new_index) {
@@ -175,7 +177,6 @@ export class SmartTvComponent implements OnInit {
   }
 
   async changeRound() {
-    console.log("Round was set to: " + this.round);
     switch (this.round) {
       case 'Secret Voting': //Open Ballot -> Secret Voting
         this.background_rect = "sec-vot-rect-day";
@@ -226,7 +227,8 @@ export class SmartTvComponent implements OnInit {
 
   }
 
-  async manualChange() { //FIXME: manual change with no need
+  async manualChange() { 
+    //FIXME: manual change with no need
     // switch (this.round) {
     //   case 'Secret Voting': //Open Ballot -> Secret Voting
     //     this.round = 'Mafia Voting';

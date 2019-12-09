@@ -10,7 +10,7 @@ import { rejects } from 'assert';
 function getRandomInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
 }
-
+var keyPlayers: Map<string, string>;
 export class UsersController {
 
 
@@ -94,6 +94,7 @@ export class UsersController {
         res.json(users);
     }
 
+
     public async checkUsername(req: Request, res: Response) {
         var found = false;
         try {
@@ -131,12 +132,17 @@ export class UsersController {
                 while (mafia != 0) {
                     rng = getRandomInt(users.length);
                     if (users[rng].role == 'undefined') {
-                        if (rng % 3 == 2)
+                        if (rng % 3 == 2) {
                             users[rng].role = 'Mafioso';
-                        else if (rng % 3 == 1)
+                            keyPlayers.set(users[rng].name, 'Mafioso');
+                        }
+                        else if (rng % 3 == 1) {
                             users[rng].role = 'Barman';
-                        else
+                            keyPlayers.set(users[rng].name, 'Barman');
+                        } else {
                             users[rng].role = 'Godfather';
+                            keyPlayers.set(users[rng].name, 'Doctor');
+                        }
                         mafia--;
                     }
                 }
@@ -156,6 +162,7 @@ export class UsersController {
                     if (users[rng].role == 'undefined') {
                         users[rng].role = 'Detective';
                         d = false;
+                        keyPlayers.set(users[rng].name, 'Detective');
                     }
                 }
                 //Doctor 
@@ -164,6 +171,7 @@ export class UsersController {
                     rng = getRandomInt(users.length);
                     if (users[rng].role == 'undefined') {
                         users[rng].role = 'Doctor';
+                        keyPlayers.set(users[rng].name, 'Doctor');
                         doc = false;
                     }
                 }
@@ -180,5 +188,15 @@ export class UsersController {
             // res.json(users);
             //TODO:Event to let everyone know
         })
+    }
+
+    public getRole(username:string){
+        return keyPlayers.get(username);
+    }
+
+    public getPlayerfromRole(role:string){
+        return [...users.entries()]
+        .filter(({ 1: v }) => v.role === role)
+        .map(([k]) => k);;
     }
 }

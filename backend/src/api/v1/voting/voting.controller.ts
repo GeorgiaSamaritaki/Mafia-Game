@@ -1,15 +1,19 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
 import { Vote, roundSum, roundVotes, voteHistory } from './voting.interface'
-import { users } from '../users/user.interface'
+import { User, users } from '../users/user.interface'
 import { round } from '../state-machine/state-machine.controller'
+import { request } from 'http';
 
-interface Suspect {
-    name: string,
+import { smcontroller, usercontroller } from '../index';
+
+
+interface Player {
+    canVote: boolean,
+    whotheyvoted: string,
     votes: number
 }
-
-let suspects: Array<Suspect> = [];
+let players: Map<string, Player> = new Map();
 
 export class VotingController {
 
@@ -45,22 +49,13 @@ export class VotingController {
             toWho: req.body.to,
             round: ''
         };
-        if (suspects.findIndex((elem) => elem.name === req.body.to) === -1) {
-            let sus: Suspect = {
-                name: req.body.to,
-                votes: 1
-            }
-            suspects.push(sus)  
-        } else {
-            for (var sus in suspects) {
-                if (suspects[sus].name == req.body.to) {
-                    suspects[sus].votes++;
-                    break;
-                }
-            }
-        }
-        roundVotes.push(newVote);
-        res.json(newVote);
+        
+        let p = players.get(newVote.fromWho)
+        if(! p.canVote ) console.log("error voted somehow");
+        if(p.whotheyvoted != "") console.log("1error voted somehow");
+        p.whotheyvoted = newVote.toWho;
+        p.votes = p.votes++;
+        players.set(newVote.fromWho, p);
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("vote", newVote);
     }
@@ -129,19 +124,76 @@ export class VotingController {
             res.json(voters);
     }
 
-    public findSuspects(req: Request, res: Response) {
-        var message;
-        switch (round) {
-            case 'Open Ballot':
-                suspects.sort((a, b) => b.votes - a.votes);
-                suspects = suspects.slice(0, 2);
-                message = suspects;
-                break;
-
+    public getSuspects() {
+        let suspects: Map<string, number>;
+        players.forEach((p: Player, username: string) => {
+            suspects.set(username, p.votes);
+        });
+        suspects[Symbol.iterator] = function* () {
+            yield* [...this.entries()].sort((a, b) => a[1] - b[1]);
         }
+        for (let [key, value] of suspects) {     // get data sorted
+            console.log(key + ' ' + value);
+        }
+        return Array.from(suspects.keys()).slice(0, 2);
+    }
 
+    public isMafia(username: string) {
+        let role = usercontroller.getRole(username)
+        return role == 'Mafioso' || role == 'Barman' || role == 'Doctor';
+    }
+
+    public canVote(username: string) {
+        switch (round) {
+            case 'Waiting':
+                return false;
+            case 'Secret Voting':
+            case 'Open Ballot':
+                return true;
+            case 'Mafia Voting':
+                return this.isMafia(username);
+            case 'Doctor':
+                return usercontroller.getRole(username) == 'Doctor';
+            case 'Detective':
+                return usercontroller.getRole(username) == 'Doctor';
+            case 'Barman':
+                return usercontroller.getRole(username) == 'Barman';
+            default:
+                console.log("Voting Controller:Error")
+        }
+    }
+
+    public initVoting() {
+        let p: Player = {
+            canVote: true,
+            whotheyvoted: "",
+            votes: 0,
+        };
+        
+        players.forEach((p: Player, username: string) => {
+            players.set(username, {
+                canVote: this.canVote(username),
+                whotheyvoted: "",
+                votes: 0,
+            });
+        });
+        
+        let suspects;
+        if(round == 'Secret Voting') suspects = this.getSuspects();
+        else suspects = Array.from(players.keys());
         const SocketService = DIContainer.get(SocketsService);
-        SocketService.broadcast("suspects", message);
-        res.json(message);
+        SocketService.broadcast("suspects", suspects);
+    }
+
+    public setPlayers() {
+        let p: Player = {
+            canVote: false,
+            whotheyvoted: "",
+            votes: 0,
+        };
+        users.forEach(
+            (user: User) => players.set(user.name, p)
+        );
+        this.initVoting();
     }
 }

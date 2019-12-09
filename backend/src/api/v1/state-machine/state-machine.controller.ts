@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { NotFound, BadRequest } from 'http-errors';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
-import {  UsersController } from '../users/users.controller';
+import { votingcontroller,usercontroller } from '../index';
 
 enum Phase {
     Day = 'Day',
@@ -17,7 +17,6 @@ enum Round {
     Detective = 'Detective',
     Barman = 'Barman'
 }
-
 var phase = Phase.Day;
 var round: string = Round.Waiting; 
 
@@ -38,7 +37,7 @@ export class StateMachineController {
         router
             .get('/getRound', this.getRound)
             .get('/changeRound', this.changeRound)
-            .post('/treatsb', this.treatsb);
+            ;
         return router;
     }
 
@@ -50,9 +49,9 @@ export class StateMachineController {
         console.log('epae');
         switch (round) {
             case Round.Waiting:
-                new UsersController().distributeRoles().then( (users) => {
-                    console.log(users);
-                })
+                // distribute roles set players
+                votingcontroller.setPlayers();
+                usercontroller.distributeRoles();
                 round = Round.Open_Ballot;
                 break;
             case Round.Open_Ballot:
@@ -79,18 +78,4 @@ export class StateMachineController {
         SocketService.broadcast("roundChange", round);
     }
 
-
-    public isDay(req: Request, res: Response) {
-        res.json(phase == Phase.Day);
-    }
-
-    public treatsb(req: Request) {
-        const message: string = req.body.message;
-        const event: string = req.body.event;
-
-        const SocketService = DIContainer.get(SocketsService);
-        SocketService.broadcast(event, message);
-    }
-
-    
 }

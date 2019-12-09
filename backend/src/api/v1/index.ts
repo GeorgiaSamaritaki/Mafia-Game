@@ -10,6 +10,9 @@ import { VotingController } from './voting/voting.controller';
 
 const apiV1Router = express.Router();
 
+export const smcontroller = new StateMachineController();
+export const usercontroller = new UsersController();
+export const votingcontroller = new VotingController();
 
 apiV1Router
   // Sockets events routes
@@ -38,17 +41,17 @@ apiV1Router
 
   .use(
     '/users',
-    new UsersController().applyRoutes()
+    usercontroller.applyRoutes()
   )
 
   .use(
     '/stateMachine',
-    new StateMachineController().applyRoutes()
+    smcontroller.applyRoutes()
   )
   
   .use(
     '/votes',
-    new VotingController().applyRoutes()
+    votingcontroller.applyRoutes()
   );
 
 export { apiV1Router };

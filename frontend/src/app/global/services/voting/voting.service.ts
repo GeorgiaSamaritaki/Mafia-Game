@@ -47,4 +47,9 @@ export class VotingService {
       return this.http
         .post(`${this.hostURl}/api/votes/getVoters`, {name});
     }
+    
+    public findSuspects() {
+      return this.http
+        .get(`${this.hostURl}/api/votes/findSuspects`);
+    }
 }
