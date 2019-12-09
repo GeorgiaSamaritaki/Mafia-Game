@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService, SocketsService, StateMachineService } from 'src/app/global/services';
+import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
 
 @Component({
@@ -21,6 +21,7 @@ export class SigninTableComponent implements OnInit {
   private _qr4: boolean = false;
   private _qr5: boolean = false;
   private _qr6: boolean = false;
+  private _gameStarted: boolean = false;
 
 
   joined_players: number = 0;
@@ -35,6 +36,7 @@ export class SigninTableComponent implements OnInit {
     private userService: UsersService,
     private stateMachine: StateMachineService,
     private socketService: SocketsService,
+    private votingService: VotingService
   ) {
     this.qrs = [];
     this.players = [];
@@ -66,14 +68,19 @@ export class SigninTableComponent implements OnInit {
     });
   }
 
-  public startGame() {
+  public async startGame() {
     if( this.readyToPlay() ){
       console.log('Game starts');
       this.stateMachine.changeRound() //Starts the game
+      this._gameStarted = true;
     }
     else 
       console.log('Not enough players joined');
   } 
+
+  gameStarted(){
+    return this._gameStarted; 
+  }
 
   private hidePhotos(position: number) {
     switch (+position) {

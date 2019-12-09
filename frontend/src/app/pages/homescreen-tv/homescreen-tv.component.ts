@@ -28,7 +28,7 @@ export class HomescreenTvComponent implements OnInit {
       }
     });
 
-    this.socketService.syncMessages("palyerJoined").subscribe( msg=> {
+    this.socketService.syncMessages("playerJoined").subscribe( msg=> {
       this.playersjoined++;
     })
   }

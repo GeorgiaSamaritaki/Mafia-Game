@@ -37,7 +37,7 @@ export class StateMachineController {
         router
             .get('/getRound', this.getRound)
             .get('/changeRound', this.changeRound)
-            ;
+            .get('/selectNarrator', this.selectNarrator);
         return router;
     }
 
@@ -46,7 +46,6 @@ export class StateMachineController {
     }
 
     public changeRound(req: Request, res: Response) {
-        console.log('epae');
         switch (round) {
             case Round.Waiting:
                 // distribute roles set players
@@ -73,9 +72,12 @@ export class StateMachineController {
                 round = Round.Open_Ballot
                 break;
         }
-        console.log(round);
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("roundChange", round);
     }
+    public selectNarrator(req: Request, res: Response) {
+        const SocketService = DIContainer.get(SocketsService);
+    }
+        SocketService.broadcast("selectNarrator", '');
 
 }
