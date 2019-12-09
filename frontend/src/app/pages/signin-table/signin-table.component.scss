@@ -40,8 +40,20 @@
   top: 0;
   bottom: 1em;
   margin: auto;
-  width: 486px;
   height: 341px;
+}
+
+#loadingText {
+  font-family: 'Revalia';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 45px;
+  line-height: 60px;
+  color: white;
+  overflow: visible;
+  margin-top: 0.8em;
+
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .addPlayer {
@@ -55,7 +67,7 @@
 .qr {
   height: 114px;
   width: 114px;
-  background: #F5F7FA;
+  background: #f5f7fa;
   border-radius: 13px;
 }
 
@@ -78,7 +90,8 @@
   font-family: "Chango";
   font-style: normal;
   font-weight: 400;
-  src: local("Chango Regular"), local("Chango-Regular"), url("http://themes.googleusercontent.com/static/fonts/chango/v2/tZuFZQQSznzm1NJDMY53Gg.ttf") format("truetype");
+  src: local("Chango Regular"), local("Chango-Regular"),
+    url("http://themes.googleusercontent.com/static/fonts/chango/v2/tZuFZQQSznzm1NJDMY53Gg.ttf") format("truetype");
 }
 
 .joinedPlayers p {
@@ -225,8 +238,8 @@
   font-style: normal;
   font-weight: normal;
   text-align: center;
-  color: #656D78;
-  background: #F5F7FA;
+  color: #656d78;
+  background: #f5f7fa;
   border-radius: 28px;
   margin: 0 0 5%;
   font-size: 2.3vmax;
@@ -291,7 +304,7 @@
   $angle: (360 / $nb-items);
   $rot: 0;
   @for $i from 1 through $nb-items {
-     @if not $class-for-IE{
+    @if not $class-for-IE {
       > :nth-of-type(#{$i}) {
         transform: rotate($rot * 1deg) translate($half-parent) rotate($rot * -1deg);
 
@@ -299,8 +312,7 @@
           transform: rotate(($rot - 180) * 1deg);
         }
       }
-    }
-    @else {
+    } @else {
       > .#{$class-for-IE}#{$i} {
         // If CSS transforms are not supported
         $mt: sin($rot * pi() / 180) * $half-parent - $half-item;
@@ -353,11 +365,11 @@ ul {
 }
 
 .shadow {
-  filter:drop-shadow(9px 8px 0px #259A56);
-  background-color: #2ECC71 !important;
+  filter: drop-shadow(9px 8px 0px #259a56);
+  background-color: #2ecc71 !important;
 }
 
 #confirm:active {
-  filter:none !important;
-  transform: translate(9px,8px);
+  filter: none !important;
+  transform: translate(9px, 8px);
 }

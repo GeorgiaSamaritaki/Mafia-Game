@@ -1,6 +1,6 @@
 <div class="all">
     <div class="center">
-        <div class="qrCodes">
+        <div class="qrCodes" *ngIf="!gameStarted()">
             <ul class='circle-container'>
                 <li>
                     <div class="qr" *ngIf="!qr5()"> <img class="qrImg" src='{{qrs[5]}}'></div>
@@ -37,6 +37,10 @@
                 <p id=p4>{{joined_players}}/7</p>
             </div>
         </div>
+        <div class="gameStart" *ngIf="gameStarted()">
+            <img id="hourglass" src="assets/augmented_table/signin/hourglass.png">
+            <p id="loadingText">Waiting for narrator</p>
+        </div>
     </div>
     <div class="photos">
         <img id="leftBandit" *ngIf="!left()" src="assets/augmented_table/signin/leftBandit.png" alt="">
@@ -44,7 +48,7 @@
         <img id="rightBandit" *ngIf="!right()" src="assets/augmented_table/signin/rightBandit.png" alt="">
         <img id="hands" *ngIf="!bot_right()" src="assets/augmented_table/signin/hands.png" alt="">
     </div>
-    <div class="leftPlayers">
+    <div class="leftPlayers" *ngIf="!gameStarted()" >
         <div class="player_container">
             <div class="player" *ngFor="let player of left_players; trackBy: trackF">
                 <div class="name_text">{{player.name}}</div>
@@ -52,7 +56,7 @@
             </div>
         </div>
     </div>
-    <div class="rightPlayers">
+    <div class="rightPlayers" *ngIf="!gameStarted()">
         <div class="player_container">
             <div class="player" *ngFor="let player of right_players">
                 <div class="name_text">{{player.name}}</div>
@@ -60,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div class="middlePlayers">
+    <div class="middlePlayers" *ngIf="!gameStarted()">
         <div class="player_container">
             <div class="player" *ngFor="let player of middle_players">
                 <div class="name_text">{{player.name}}</div>
