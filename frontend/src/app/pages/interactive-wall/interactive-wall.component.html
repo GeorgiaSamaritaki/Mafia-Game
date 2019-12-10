@@ -5,10 +5,18 @@
     <div class="column timeline" [ngStyle]="{display:(lap > 1)?'block':'none'}">
       <img class="game_start" src="/assets/interactive-wall/game_start.png" alt="game start">
       <div *ngFor="let phase of phases; let i=index" style="height: 175px;">
-        <img class="circle"
-          [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
-          alt="circle">
-        <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">{{phases[i]}} {{phases_num}}</div>
+        <div class="row">
+          <img class="circle"
+            [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+            alt="circle">
+          <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">{{phases[i]}} {{phases_num}}</div>
+          <div *ngFor="let suspect of suspects_pngs; let i=index" class="row suspects">
+            <img class="suspect" src="/assets/interactive-wall/{{suspect}}" alt="avatar of suspect">
+            <div *ngFor="let voter of voters_pngs[suspect]; let i=index">
+              <img class="voter" src="/assets/interactive-wall/{{voter}}" alt="avatar of suspect">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div id="narrator_title" [ngStyle]="{display:(lap == 0)?'block':'none'}">Select Narrator:</div>

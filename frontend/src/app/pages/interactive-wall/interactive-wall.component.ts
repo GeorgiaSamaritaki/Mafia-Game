@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { SmartSpeakerService } from 'src/app/smart-speaker.service';
+import { UserModel } from 'src/app/global/models';
+import { List } from 'lodash';
 
 @Component({
   selector: 'ami-fullstack-interactive-wall',
@@ -11,21 +13,29 @@ export class InteractiveWallComponent implements OnInit {
   round: string;
   lap: number;
   phases_num: number;
+  dead_player: string;
   backgroundColor: string;
   background_icon: string;
   round_histroy: string[];
+  voters_pngs: Map<string, List<string>>;
+  suspects_pngs: string[];
   phases: string[];
+  voted_players: Map<string, List<string>>;
   responses: Map<string, string>;
   constructor(private statemachineService: StateMachineService,
     private socketService: SocketsService,
     private speakerService: SmartSpeakerService,
-    private votingService: VotingService) {
+    private votingService: VotingService,
+    private userService: UsersService) {
     this.lap = 0;//this is backend
     this.phases_num = 0;
     this.backgroundColor = '#E74C3C';//TODO:this is css 
     this.background_icon = "background_icon_day";//TODO:this is css 
     this.round_histroy = [];
     this.phases = [];
+    this.suspects_pngs = [];
+    this.voters_pngs = new Map();
+    this.voted_players = new Map();
     this.responses = new Map([
       ['Waiting', ''],
       ['Open Ballot', 'The sun rises in Palermo, please, open your eyes.'],
@@ -59,6 +69,10 @@ export class InteractiveWallComponent implements OnInit {
 
   async changeRound() {
     this.lap++;
+    let tmp: any = (await this.votingService.votesOfRound('day1').toPromise());
+    console.log(tmp);
+    console.log(tmp.votes);
+    console.log(tmp.dead);
     console.log(this.round);
     switch (this.round) {
       case 'Open Ballot': //Open Ballot
@@ -66,6 +80,10 @@ export class InteractiveWallComponent implements OnInit {
         this.background_icon = "background_icon_day";
         this.phases_num++;
         this.phases.push('Day');
+        this.init_votes('Maria', 'Kiki');
+        this.init_votes('Maria', 'Manolis');
+        this.init_votes('Maria', 'Kosmas');
+        this.init_votes('George', 'Renata');
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Secret Voting': //Secret Voting 
@@ -74,6 +92,7 @@ export class InteractiveWallComponent implements OnInit {
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Mafia Voting': //Mafia Voting
+        this.dead_player = tmp.dead + "_killed.png";
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
         this.phases_num++;
@@ -91,8 +110,8 @@ export class InteractiveWallComponent implements OnInit {
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Barman': //Barman 
-      this.backgroundColor = '#34495E';
-      this.background_icon = "background_icon_night";
+        this.backgroundColor = '#34495E';
+        this.background_icon = "background_icon_night";
         this.speakerService.speak(this.responses.get(this.round));
         break;
     }
@@ -102,18 +121,41 @@ export class InteractiveWallComponent implements OnInit {
     return;
   }
 
+  async init_votes(key: string, value: string) {
+    this.voted_players[key] = this.voted_players[key] || [];
+    this.voted_players[key].push(value); //fills map
+    let player: UserModel = await this.userService.getUser(key).toPromise();
+    console.log("suspect avatar path: " + player.avatar_path);
+    this.suspects_pngs.push(player.avatar_path); //get the img paths of the suspects
+    let num: number =  this.voted_players[key].length;
+    for(let i: number = 0; i < num; i++ ){
+      console.log("Name of voter: " + this.voted_players[key][i]);
+      let voter: UserModel = await this.userService.getUser(this.voted_players[key][i]).toPromise();
+      console.log("voter avatar path: " + voter.avatar_path);
+      this.voters_pngs[player.avatar_path] = this.voters_pngs[player.avatar_path] || [];
+      this.voters_pngs[player.avatar_path].push(voter.avatar_path); //fills map
+      console.log("voters_pngs[]: " + this.voters_pngs[player.avatar_path]);
+    }
+  }
+
+
   async ngOnInit() {
     this.round = <string>await this.statemachineService.getRound().toPromise();
     this.round = "Open Ballot";
     console.log("Number of rounds: " + this.round_histroy);
     console.log("Round was set to: " + this.round);
-    console.log(await this.votingService.votesOfRound(this.round).toPromise());
+    await console.log(this.votingService.votesOfRound(this.round).toPromise());
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
       console.log("Round is Changing");
       this.round = msg.message;
       this.changeRound();
     });
+    // this.socketService.syncMessages("vote").subscribe(async msg => {
+    //   if (this.round != "Open Ballot") return;
+    //   console.log("Player " + msg.message.toWho + " received a vote");
+    //   this.init_votes(msg.message.toWho, msg.message.fromWho)
+    // });
   }
 
 }

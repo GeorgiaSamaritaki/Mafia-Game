@@ -33,16 +33,6 @@
   opacity: 1;
 }
 
-.clicked_speaker{
-  margin-top: 6%;
-  opacity: 1;
-}
-
-.unclicked_speaker{
-  margin-top: 0%;
-  opacity: 0.6;
-}
-
 .button_container {
   justify-content: space-evenly;
   color: white;
@@ -102,7 +92,7 @@
   position: relative;
   left: 155px;
   z-index: 2;
-  width: 900px;
+  width: 100%;
   overflow: auto;
   height: auto;
 
@@ -117,8 +107,9 @@
 #day_txt {
   width: 142px;
   padding: 0px 22px;
-  top: -142px;
+  top: 46px;
   z-index: 3;
+  left: -163px;
   position: relative;
   font-style: normal;
   font-weight: normal;
@@ -138,7 +129,25 @@
   width: 147px;
   height: 143px;
   top: 173px;
-  margin: 25px 0px;
+  margin: 25px 15px;
+}
+
+.suspects {
+  width: 300px;
+  height: 125px;
+  flex-wrap: wrap;
+}
+
+.suspect {
+  width: 104px;
+  height: 104px;
+  z-index: 3;
+}
+
+.voter {
+  width: 58px;
+  height: 58px;
+  z-index: 3;
 }
 
 .background_icon_night {
