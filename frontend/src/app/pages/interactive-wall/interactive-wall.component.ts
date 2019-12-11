@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { SmartSpeakerService } from 'src/app/smart-speaker.service';
 import { UserModel } from 'src/app/global/models';
-import { List } from 'lodash';
 
 @Component({
   selector: 'ami-fullstack-interactive-wall',
@@ -17,10 +16,10 @@ export class InteractiveWallComponent implements OnInit {
   backgroundColor: string;
   background_icon: string;
   round_histroy: string[];
-  voters_pngs: Map<string, List<string>>;
+  voters_pngs: Map<string, Array<string>>;
   suspects_pngs: string[];
   phases: string[];
-  voted_players: Map<string, List<string>>;
+  voted_players: Map<string, Array<string>>;
   responses: Map<string, string>;
   constructor(private statemachineService: StateMachineService,
     private socketService: SocketsService,
@@ -80,11 +79,11 @@ export class InteractiveWallComponent implements OnInit {
         this.background_icon = "background_icon_day";
         this.phases_num++;
         this.phases.push('Day');
-        this.init_votes('Maria', 'Kiki');
-        this.init_votes('Maria', 'Manolis');
-        this.init_votes('Maria', 'Kosmas');
-        this.init_votes('George', 'Renata');
-        this.speakerService.speak(this.responses.get(this.round));
+        await this.insert_votes('Maria', 'Kiki').then((e) => console.log("!!!KIKI voted maria"));
+        await this.insert_votes('Maria', 'Manolis').then((e) => console.log("!!!Manolis voted maria"));
+        await this.insert_votes('Maria', 'Kosmas').then((e) => console.log("!!!Kosmas voted maria"));
+        await this.insert_votes('George', 'Renata').then((e) => console.log("!!!George voted Renata"));
+        await this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Secret Voting': //Secret Voting 
         this.backgroundColor = '#E67E22';
@@ -121,21 +120,25 @@ export class InteractiveWallComponent implements OnInit {
     return;
   }
 
-  async init_votes(key: string, value: string) {
-    this.voted_players[key] = this.voted_players[key] || [];
-    this.voted_players[key].push(value); //fills map
-    let player: UserModel = await this.userService.getUser(key).toPromise();
+  async insert_votes(toWho: string, fromWho: string) {
+    if (!this.voted_players.has(toWho)) this.voted_players.set(toWho, []);
+    this.voted_players.get(toWho).push(fromWho);
+
+    let player: UserModel = await this.userService.getUser(toWho).toPromise();
     console.log("suspect avatar path: " + player.avatar_path);
-    this.suspects_pngs.push(player.avatar_path); //get the img paths of the suspects
-    let num: number =  this.voted_players[key].length;
-    for(let i: number = 0; i < num; i++ ){
-      console.log("Name of voter: " + this.voted_players[key][i]);
-      let voter: UserModel = await this.userService.getUser(this.voted_players[key][i]).toPromise();
-      console.log("voter avatar path: " + voter.avatar_path);
-      this.voters_pngs[player.avatar_path] = this.voters_pngs[player.avatar_path] || [];
-      this.voters_pngs[player.avatar_path].push(voter.avatar_path); //fills map
-      console.log("voters_pngs[]: " + this.voters_pngs[player.avatar_path]);
-    }
+
+    if (this.suspects_pngs.includes(player.avatar_path, 0) == false) this.suspects_pngs.push(player.avatar_path); //get the img paths of the suspects
+
+    console.log("Name of voter: " + fromWho);
+    let voter: UserModel = await this.userService.getUser(fromWho).toPromise();
+    console.log("voter avatar path: " + voter.avatar_path);
+    if (!this.voters_pngs.has(player.avatar_path)) this.voters_pngs.set(player.avatar_path, []);
+    this.voters_pngs.get(player.avatar_path).push(voter.avatar_path);
+
+
+    // this.voters_pngs.set(player.avatar_path, this.voters_pngs.get(player.avatar_path));
+    console.log("voters_pngs[]: " + this.voters_pngs.get(player.avatar_path));
+    console.log("suspects_pngs[]: " + this.suspects_pngs);
   }
 
 
@@ -145,16 +148,17 @@ export class InteractiveWallComponent implements OnInit {
     console.log("Number of rounds: " + this.round_histroy);
     console.log("Round was set to: " + this.round);
     await console.log(this.votingService.votesOfRound(this.round).toPromise());
-
+    
     this.socketService.syncMessages("roundChange").subscribe(msg => {
       console.log("Round is Changing");
       this.round = msg.message;
       this.changeRound();
     });
+
     // this.socketService.syncMessages("vote").subscribe(async msg => {
     //   if (this.round != "Open Ballot") return;
     //   console.log("Player " + msg.message.toWho + " received a vote");
-    //   this.init_votes(msg.message.toWho, msg.message.fromWho)
+    //   this.insert_votes(msg.message.toWho, msg.message.fromWho)
     // });
   }
 

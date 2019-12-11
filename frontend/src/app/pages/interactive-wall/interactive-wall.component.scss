@@ -95,7 +95,6 @@
   width: 100%;
   overflow: auto;
   height: auto;
-
 }
 
 ::-webkit-scrollbar {
@@ -106,10 +105,12 @@
 
 #day_txt {
   width: 142px;
+  height: 100px;
   padding: 0px 22px;
-  top: 46px;
+  grid-column: 1;
+  grid-row: 1;
+  top: 52px;
   z-index: 3;
-  left: -163px;
   position: relative;
   font-style: normal;
   font-weight: normal;
@@ -125,17 +126,35 @@
 
 }
 
+.circleAndText {
+  display: grid;
+
+}
+
 .circle {
   width: 147px;
   height: 143px;
-  top: 173px;
-  margin: 25px 15px;
+  margin: 25px 0px;
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .suspects {
   width: 300px;
   height: 125px;
-  flex-wrap: wrap;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin: auto 0;
+  margin-left: 30px;
+  align-content: center;
+}
+
+.timelineRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%
 }
 
 .suspect {
@@ -144,10 +163,20 @@
   z-index: 3;
 }
 
+#voters {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 170px;
+  margin: 0 10px;
+}
+
 .voter {
   width: 58px;
   height: 58px;
   z-index: 3;
+  margin: 0 8px;
+  margin-top: 8px;
 }
 
 .background_icon_night {
