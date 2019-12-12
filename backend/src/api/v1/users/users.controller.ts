@@ -118,7 +118,6 @@ export class UsersController {
         return new Promise((resolve, reject) => {
 
             try {
-
                 //For every 4 people 1 mafia (if its 7 we keep 2 Mafia)
                 //Calculate roles
                 let mafia: number;
@@ -179,7 +178,7 @@ export class UsersController {
                 users.forEach((player) => {
                     if (player.role == 'undefined')
                         player.role = 'Civilian';
-                    console.log(player.role);
+                    console.log("Player "+player.name+" role: "+player.role);
                 });
             } catch (e) {
                 console.log(e);

@@ -30,19 +30,7 @@ export class LoginComponent implements OnInit {
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log(this.round);
     this.selectedavatarindex = 0;
-
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.position = params['position'];
-      console.log(this.position); // Print the parameter to the console. 
-    });
-
-    this.socketService.syncMessages("treating").subscribe(msg => { //FIXME:
-      if (msg.message.userID == this.myUserID) {
-        this.treated(msg.message.food);
-        this.socketEvents.push(msg);
-      }
-    });
-
+   
   }
 
   public treatsb() { // this is to broadcast
@@ -67,7 +55,10 @@ export class LoginComponent implements OnInit {
   }
 
   async addUser() {
-
+    if (this.round == null) { //a game has started and you're not logged in
+      (<HTMLElement>document.getElementById("alert")).innerHTML = "{internal error: Events were not received properly}";
+      return;
+    }
     if (this.round != "Waiting") { //a game has started and you're not logged in
       (<HTMLElement>document.getElementById("alert")).innerHTML = "Game is in Session";
       return;

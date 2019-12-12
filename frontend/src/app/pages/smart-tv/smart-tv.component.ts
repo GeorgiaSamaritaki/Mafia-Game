@@ -62,16 +62,15 @@ export class SmartTvComponent implements OnInit {
       this.initialized = false;
       this.round = msg.message;
       await this.changeRound();
-        this.initialized = true;
-      });
-
-    this.socketService.syncMessages("vote").subscribe(async msg => {
-      if(this.round != "Open Ballot") return;
-      console.log("Player " + msg.message.toWho + " received a vote");
-      this.votesOfPlayers.set(msg.message.toWho,this.votesOfPlayers.get(msg.message.toWho)+1);  
+      this.initialized = true;
     });
 
-    await this.votingService.findSuspects().toPromise();
+    this.socketService.syncMessages("vote").subscribe(async msg => {
+      console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
+      this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
+    });
+
+    // await this.votingService.findSuspects().toPromise();
   }
 
   array_move(arr, old_index, new_index) {
@@ -227,7 +226,7 @@ export class SmartTvComponent implements OnInit {
 
   }
 
-  async manualChange() { 
+  async manualChange() {
     //FIXME: manual change with no need
     // switch (this.round) {
     //   case 'Secret Voting': //Open Ballot -> Secret Voting

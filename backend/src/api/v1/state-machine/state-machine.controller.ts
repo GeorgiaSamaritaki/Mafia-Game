@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { NotFound, BadRequest } from 'http-errors';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
-import { votingcontroller,usercontroller } from '../index';
+import { votingcontroller, usercontroller } from '../index';
 
 enum Phase {
     Day = 'Day',
@@ -18,7 +18,7 @@ enum Round {
     Barman = 'Barman'
 }
 var phase = Phase.Day;
-var round: string = Round.Waiting; 
+var round: string = Round.Waiting;
 
 export { round }
 
@@ -49,7 +49,6 @@ export class StateMachineController {
         switch (round) {
             case Round.Waiting:
                 // distribute roles set players
-                votingcontroller.setPlayers();
                 usercontroller.distributeRoles();
                 round = Round.Open_Ballot;
                 break;
@@ -72,6 +71,7 @@ export class StateMachineController {
                 round = Round.Open_Ballot
                 break;
         }
+        votingcontroller.setPlayers().then((e)=>console.log("players set"));
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("roundChange", round);
     }
@@ -79,7 +79,6 @@ export class StateMachineController {
         console.log('broadcasting');
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("selectNarrator", '');
-        res.json('OK')
+        res.json('OK');
     }
-
 }

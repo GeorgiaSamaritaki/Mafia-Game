@@ -8,12 +8,12 @@
         </p>
         
         <div id="avatars">
-            <div *ngFor="let player of suspects; let i = index;" [ngClass]="(i==selectedavatarindex)?'selected':''"
+            <div *ngFor="let player of parent.suspects; let i = index;" [ngClass]="(i==selectedavatarindex)?'selected':''"
             (click)="selectedavatar(i)" class="avatar">
             <img src="/assets/players/mobile_{{player.avatar_path}}" alt="Avatar{{number}}">
             <span class="name">{{player.name}}</span>
         </div>
     </div>
-    <button id="confirm" (click)="submitVote()" type="button" value=""></button>
+    <button *ngIf="!parent.voted" id="confirm" (click)="parent.submitVote()" type="button" value=""></button>
 </div>
 </div>
