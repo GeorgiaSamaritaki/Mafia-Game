@@ -27,7 +27,6 @@ export class VotingController {
         const router = Router();
 
         router
-            .get('/findSuspects', this.findSuspects)
             .post('/vote', this.vote)
             .post('/playerVotes', this.calculateVotesOfPlayer)
             .post('/votesOfRound', this.votesOfRound)
@@ -159,11 +158,11 @@ export class VotingController {
             case 'Barman':
                 return usercontroller.getRole(username) == 'Barman';
             default:
-                console.log("Voting Controller:Error")
+                console.log("Voting Controller:Error");
         }
     }
 
-    public initVoting() {
+    public async initVoting() {
         let p: Player = {
             canVote: true,
             whotheyvoted: "",
@@ -178,14 +177,14 @@ export class VotingController {
             });
         });
         
-        let suspects;
+        let suspects:string[];
         if(round == 'Secret Voting') suspects = this.getSuspects();
         else suspects = Array.from(players.keys());
         const SocketService = DIContainer.get(SocketsService);
-        SocketService.broadcast("suspects", suspects);
+        await SocketService.broadcast("suspects", suspects);
     }
 
-    public setPlayers() {
+    public async setPlayers() {
         let p: Player = {
             canVote: false,
             whotheyvoted: "",
@@ -194,6 +193,6 @@ export class VotingController {
         users.forEach(
             (user: User) => players.set(user.name, p)
         );
-        this.initVoting();
+        await this.initVoting();
     }
 }
