@@ -81,6 +81,5 @@ export class StateMachineController {
         SocketService.broadcast("selectNarrator", '');
         res.json('OK')
     }
-        SocketService.broadcast("selectNarrator", '');
 
 }
