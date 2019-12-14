@@ -19,6 +19,7 @@ enum Round {
 }
 var phase = Phase.Day;
 var round: string = Round.Waiting;
+var roundCounter: number = 1;
 
 export { round }
 
@@ -45,11 +46,13 @@ export class StateMachineController {
         res.json(round);
     }
 
-    public changeRound(req: Request, res: Response) {
+    public async changeRound(req: Request, res: Response) {
+        console.log(round);
         switch (round) {
             case Round.Waiting:
                 // distribute roles set players
-                usercontroller.distributeRoles();
+                votingcontroller.setPlayers();
+                await usercontroller.distributeRoles();
                 round = Round.Open_Ballot;
                 break;
             case Round.Open_Ballot:
@@ -69,16 +72,18 @@ export class StateMachineController {
                 break;
             case Round.Barman:
                 round = Round.Open_Ballot
+                roundCounter++;
                 break;
         }
-        votingcontroller.setPlayers().then((e)=>console.log("players set"));
+        await votingcontroller.setPlayers();
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("roundChange", round);
     }
+
     public selectNarrator(req: Request, res: Response) {
-        console.log('broadcasting');
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("selectNarrator", '');
         res.json('OK');
     }
+
 }

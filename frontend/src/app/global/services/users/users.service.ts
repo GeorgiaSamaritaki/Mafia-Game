@@ -25,7 +25,7 @@ export class UsersService {
 
     public getUser(name: string): Observable<UserModel> {
       return this.http
-        .post<UserModel>(`${this.hostURl}/api/users/getUser`, name)
+        .post<UserModel>(`${this.hostURl}/api/users/getUser`, {name})
         .pipe(map(result => new UserModel(result)));
     }
 
