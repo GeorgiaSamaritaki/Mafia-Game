@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ami-fullstack-signin-table',
@@ -36,7 +37,7 @@ export class SigninTableComponent implements OnInit {
     private userService: UsersService,
     private stateMachine: StateMachineService,
     private socketService: SocketsService,
-    private votingService: VotingService
+    private router: Router
   ) {
     this.qrs = [];
     this.players = [];
@@ -65,6 +66,13 @@ export class SigninTableComponent implements OnInit {
       this.hidePhotos(msg.message.position);
       this.arrangePlayers(newPlayer);
       this.joined_players++;
+    });
+
+    this.socketService.syncMessages("roundChange").subscribe(msg => {
+      console.log('Starting game!');
+      if (msg.message != 'Waiting') {
+        this.router.navigate(['/augmented-table']);
+      }
     });
   }
 
@@ -148,7 +156,7 @@ export class SigninTableComponent implements OnInit {
   }
 
   readyToPlay() {
-    return this.joined_players == 7;
+    return this.joined_players >= 7;
   }
 
   public left() {

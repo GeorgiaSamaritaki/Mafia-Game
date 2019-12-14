@@ -209,8 +209,6 @@ export class VotingController {
             //TODO: make sure detective learns what he asked for
         }
 
-    }
-
     public async initVoting() {
         let p: Player = {
             canVote: true,

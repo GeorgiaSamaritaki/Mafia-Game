@@ -53,11 +53,14 @@ export class InteractiveWallComponent implements OnInit {
     return (this.round == 'Open Ballot' || this.round == 'Secret Voting');
   }
 
-  speakerSelected() {
+  async speakerSelected() {
     this.lap++;
     console.log(this.lap);
-    this.speakerService.speak('Hi! I am Smart Speaker. I will be your narrator for this game.');
+    this.speakerService.speak('Hi! I am Smart Speaker. I will be your narrator for this game.', async () => {
+      console.log('starting');
+    });
     console.log('welcome speech');
+    this.statemachineService.changeRound();
   }
 
   async changeRound() {

@@ -135,13 +135,16 @@ export class UsersController {
                         if (rng % 3 == 2) {
                             users[rng].role = 'Mafioso';
                             keyPlayers.set(users[rng].name, 'Mafioso');
+                            console.log('Mafioso set');
                         }
                         else if (rng % 3 == 1) {
                             users[rng].role = 'Barman';
                             keyPlayers.set(users[rng].name, 'Barman');
+                            console.log('Barman set');
                         } else {
                             users[rng].role = 'Godfather';
                             keyPlayers.set(users[rng].name, 'Doctor');
+                            console.log('Godfather set');
                         }
                         mafia--;
                     }
@@ -153,6 +156,7 @@ export class UsersController {
                     if (users[rng].role == 'undefined') {
                         users[rng].role = 'Mason';
                         masons--;
+                        console.log('Mason set');
                     }
                 }
                 //Detective 
@@ -163,6 +167,7 @@ export class UsersController {
                         users[rng].role = 'Detective';
                         d = false;
                         keyPlayers.set(users[rng].name, 'Detective');
+                        console.log('Detectice set');
                     }
                 }
                 //Doctor 
@@ -173,6 +178,7 @@ export class UsersController {
                         users[rng].role = 'Doctor';
                         keyPlayers.set(users[rng].name, 'Doctor');
                         doc = false;
+                        console.log('Doctor set');
                     }
                 }
                 //Civilians the rest
@@ -185,8 +191,6 @@ export class UsersController {
                 console.log(e);
             }
             resolve(users);
-            // res.json(users);
-            //TODO:Event to let everyone know
         })
     }
 

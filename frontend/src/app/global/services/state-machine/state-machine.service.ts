@@ -20,12 +20,12 @@ export class StateMachineService {
   }
 
   public changeRound() {
+    console.log('eee');
     return this.http
       .get(`${this.hostURl}/api/stateMachine/changeRound`);
   }
 
   public selectNarrator() {
-    console.log('aaa')
     return this.http
       .get(`${this.hostURl}/api/stateMachine/selectNarrator`);
   }
