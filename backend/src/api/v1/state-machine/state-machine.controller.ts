@@ -19,6 +19,7 @@ enum Round {
 }
 var phase = Phase.Day;
 var round: string = Round.Waiting; 
+var roundCounter: number = 1;
 
 export { round }
 
