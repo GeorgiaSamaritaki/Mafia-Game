@@ -51,15 +51,20 @@ export class StateMachineController {
                 // distribute roles set players
                 usercontroller.distributeRoles();
                 round = Round.Open_Ballot;
+                votingcontroller.setPlayers().then((e) => console.log("players set"));
                 break;
             case Round.Open_Ballot:
                 round = Round.Secret_Voting;
+                votingcontroller.setPlayers().then((e) => console.log("players set"));
                 break;
             case Round.Secret_Voting:
+                votingcontroller.whoToKill(); //who the players killed
                 round = Round.Mafia_Voting;
+                votingcontroller.setPlayers().then((e) => console.log("players set"));         
                 break;
             case Round.Mafia_Voting:
                 round = Round.Doctor;
+                votingcontroller.setPlayers().then((e) => console.log("players set"));
                 break;
             case Round.Doctor:
                 round = Round.Detective;
@@ -68,10 +73,10 @@ export class StateMachineController {
                 round = Round.Barman;
                 break;
             case Round.Barman:
+                votingcontroller.whoToKill(); // who the mafia killed
                 round = Round.Open_Ballot
                 break;
         }
-        votingcontroller.setPlayers().then((e)=>console.log("players set"));
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("roundChange", round);
     }

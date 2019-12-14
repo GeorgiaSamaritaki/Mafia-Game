@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { SmartSpeakerService } from 'src/app/smart-speaker.service';
+import { LeapService } from 'src/app/cursor/leap.service';
 
 @Component({
   selector: 'ami-fullstack-interactive-wall',
@@ -19,6 +20,7 @@ export class InteractiveWallComponent implements OnInit {
   responses: Map<string, string>;
   constructor(private statemachineService: StateMachineService,
     private socketService: SocketsService,
+    private _leapService: LeapService,
     private speakerService: SmartSpeakerService,
     private votingService: VotingService) {
     this.lap = 0;//this is backend
@@ -119,6 +121,9 @@ export class InteractiveWallComponent implements OnInit {
     this.socketService.syncMessages("selectNarrator").subscribe(msg => {
       this.playersJoined = true;
       console.log('Select a Narrator');
+    });
+
+    this._leapService.cursorRecognizer().subscribe((cursor)=>{
     });
 
   }

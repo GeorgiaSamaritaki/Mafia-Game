@@ -126,6 +126,7 @@ export class UsersController {
                 } else {
                     mafia = Math.floor(users.length / 4);
                 }
+                console.log("Distributing roles to "+users.length+"players");
                 //Assign Mafia
                 let rng: number;
                 while (mafia != 0) {

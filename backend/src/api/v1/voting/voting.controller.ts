@@ -14,6 +14,9 @@ interface Player {
     votes: number
 }
 let players: Map<string, Player> = new Map();
+let doctor_vote: string = null;
+let detective_vote: string = null;
+let barman_vote: string = null;
 
 export class VotingController {
 
@@ -42,17 +45,35 @@ export class VotingController {
      * @param req.body.to the player that got the vote 
      */
     public vote(req: Request, res: Response) {
-        //Check if player has already voted ??
         var newVote: Vote = {
             fromWho: req.body.from,
             toWho: req.body.to,
             round: ''
         };
-        
-        let p = players.get(newVote.fromWho)
-        if(! p.canVote ) console.log("error voted somehow");
-        if(p.whotheyvoted != "") console.log("1error voted somehow");
-        p.whotheyvoted = newVote.toWho;
+        switch (round) {
+            case "Doctor":
+                doctor_vote = newVote.toWho;
+                break;
+            case "Detective":
+                detective_vote = newVote.toWho;
+                break;
+            case "Barman":
+                if (detective_vote == newVote.toWho) detective_vote = null;
+                if (doctor_vote == newVote.toWho) doctor_vote = null;
+                break;
+            case "Open Ballot":
+            case "Secret Voting":
+            case "Mafia Voting":
+            case "Waiting":
+                this.voteToDie(newVote.fromWho, newVote.toWho, newVote);
+        }
+    }
+    public voteToDie(fromWho: string, toWho: string, newVote: Vote) {
+        //Check if player has already voted ??
+        let p = players.get(fromWho)
+        if (!p.canVote) console.log("error voted somehow");
+        if (p.whotheyvoted != "") console.log("1error voted somehow");
+        p.whotheyvoted = toWho;
         p.votes = p.votes++;
         players.set(newVote.fromWho, p);
         const SocketService = DIContainer.get(SocketsService);
@@ -131,10 +152,11 @@ export class VotingController {
         suspects[Symbol.iterator] = function* () {
             yield* [...this.entries()].sort((a, b) => a[1] - b[1]);
         }
-        for (let [key, value] of suspects) {     // get data sorted
-            console.log(key + ' ' + value);
+        for (let [key, value] of suspects) {     // print data sorted
+            // console.log(key + ' ' + value);
         }
         return Array.from(suspects.keys()).slice(0, 2);
+        //TODO: if more people have the same vote count add them
     }
 
     public isMafia(username: string) {
@@ -161,6 +183,33 @@ export class VotingController {
                 console.log("Voting Controller:Error");
         }
     }
+    public whoToKill() {
+        let suspects: Map<string, number>;
+        players.forEach((p: Player, username: string) => {
+            suspects.set(username, p.votes);
+        });
+        suspects[Symbol.iterator] = function* () {
+            yield* [...this.entries()].sort((a, b) => a[1] - b[1]);
+        }
+        for (let [key, value] of suspects) {     // print data sorted
+            // console.log(key + ' ' + value);
+        }
+        let todie = Array.from(suspects.keys()).slice(0, 1)[0];
+        if (todie == doctor_vote) {
+            console.log("The deceased was saved by the doctor");
+            todie = null;
+        }
+        if (todie != null) {
+            const SocketService = DIContainer.get(SocketsService);
+            SocketService.broadcast("died", todie);//FIXME:kill that guy and let everyone know
+        }
+        if (detective_vote != null) {
+            const SocketService = DIContainer.get(SocketsService);
+            SocketService.broadcast("detective_findings", detective_vote);
+            //TODO: make sure detective learns what he asked for
+        }
+
+    }
 
     public async initVoting() {
         let p: Player = {
@@ -168,7 +217,11 @@ export class VotingController {
             whotheyvoted: "",
             votes: 0,
         };
-        
+
+        let suspects: string[];
+        if (round == 'Secret Voting') suspects = this.getSuspects();
+        else suspects = Array.from(players.keys());
+
         players.forEach((p: Player, username: string) => {
             players.set(username, {
                 canVote: this.canVote(username),
@@ -176,10 +229,7 @@ export class VotingController {
                 votes: 0,
             });
         });
-        
-        let suspects:string[];
-        if(round == 'Secret Voting') suspects = this.getSuspects();
-        else suspects = Array.from(players.keys());
+
         const SocketService = DIContainer.get(SocketsService);
         await SocketService.broadcast("suspects", suspects);
     }
@@ -194,5 +244,8 @@ export class VotingController {
             (user: User) => players.set(user.name, p)
         );
         await this.initVoting();
+        detective_vote = null;
+        doctor_vote = null;
+        barman_vote = null;
     }
 }

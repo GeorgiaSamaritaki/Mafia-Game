@@ -55,7 +55,6 @@ export class SigninTableComponent implements OnInit {
       this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.7:4200/mobile/login?position=${i}`)
     }
     this.socketService.syncMessages("playerJoined").subscribe(msg => {
-      this.joined_players++;
       let newPlayer = new UserModel;
       newPlayer.name = msg.message.name;
       newPlayer.role = msg.message.role;
@@ -65,6 +64,7 @@ export class SigninTableComponent implements OnInit {
       this.players.push(newPlayer);
       this.hidePhotos(msg.message.position);
       this.arrangePlayers(newPlayer);
+      this.joined_players++;
     });
   }
 

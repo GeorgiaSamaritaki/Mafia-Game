@@ -5,6 +5,9 @@
             <span *ngIf="parent.isOpenBallot()">Who is your main suspect?</span>
             <span *ngIf="parent.isSecretVoting()">Who do you want to kill?</span>
             <span *ngIf="parent.isMafiaVoting()">Who will die tonight?</span>
+            <span *ngIf="parent.round =='Detective'">Whose role would you like to know?</span>
+            <span *ngIf="parent.round =='Doctor'">Who will be protected tonight?</span>
+            <span *ngIf="parent.round =='Barman'">Whose powers will be muted tonight?</span>
         </p>
         
         <div id="avatars">

@@ -48,8 +48,12 @@ export class MainpageComponent implements OnInit {
     if (this.username == null || !await this.usernameExists(this.username)) this.goBack();
     this.round = <string>await this.statemachineService.getRound().toPromise();
     this.initializePlayers().then(() => this.initialized = true);
-
+    this.initialized = true;
     this.socketService.syncMessages("roundChange").subscribe(msg => {
+      if(this.round == "Waiting"){
+        this.initialized = false;
+        this.initializePlayers().then(() => this.initialized = true);
+      }
       this.round = msg.message;
       this.voted == false;
       this.canVote = this.checkCanVote();
