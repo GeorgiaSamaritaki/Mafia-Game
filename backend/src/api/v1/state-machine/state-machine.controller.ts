@@ -47,7 +47,6 @@ export class StateMachineController {
     }
 
     public async changeRound(req: Request, res: Response) {
-        console.log(round);
         switch (round) {
             case Round.Waiting:
                 // distribute roles set players
