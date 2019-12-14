@@ -208,6 +208,7 @@ export class VotingController {
             SocketService.broadcast("detective_findings", detective_vote);
             //TODO: make sure detective learns what he asked for
         }
+    }
 
     public async initVoting() {
         let p: Player = {

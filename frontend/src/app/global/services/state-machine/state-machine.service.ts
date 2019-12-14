@@ -30,6 +30,10 @@ export class StateMachineService {
       .get(`${this.hostURl}/api/stateMachine/selectNarrator`);
   }
 
+  public getCounter() {
+    return this.http
+      .get(`${this.hostURl}/api/stateMachine/getCounter`);
+  }
   public treatsb(foodToTreat, toUserID) {
     return this.http
       .post(`${this.hostURl}/api/stateMachine/treatsb`,

@@ -38,7 +38,8 @@ export class StateMachineController {
         router
             .get('/getRound', this.getRound)
             .get('/changeRound', this.changeRound)
-            .get('/selectNarrator', this.selectNarrator);
+            .get('/selectNarrator', this.selectNarrator)
+            .get('/getCounter', this.getCounter);
         return router;
     }
 
@@ -51,7 +52,7 @@ export class StateMachineController {
             case Round.Waiting:
                 // distribute roles set players
                 votingcontroller.setPlayers();
-                usercontroller.distributeRoles();
+                await usercontroller.distributeRoles();
                 round = Round.Open_Ballot;
                 votingcontroller.setPlayers().then((e) => console.log("players set"));
                 break;
@@ -88,5 +89,9 @@ export class StateMachineController {
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("selectNarrator", '');
         res.json('OK');
+    }
+
+    public getCounter(req: Request, res:Response) {
+        res.json(roundCounter);
     }
 }
