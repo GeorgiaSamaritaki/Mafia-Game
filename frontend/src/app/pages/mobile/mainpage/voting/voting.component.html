@@ -1,6 +1,6 @@
 <div style="height:100%; display:flex;">
 
-    <div id="container">
+    <div id="container" *ngIf="parent.canVote">
         <p id="prompt">
             <span *ngIf="parent.isOpenBallot()">Who is your main suspect?</span>
             <span *ngIf="parent.isSecretVoting()">Who do you want to kill?</span>
@@ -9,14 +9,14 @@
             <span *ngIf="parent.round =='Doctor'">Who will be protected tonight?</span>
             <span *ngIf="parent.round =='Barman'">Whose powers will be muted tonight?</span>
         </p>
-        
-        <div id="avatars"   *ngIf="parent.initialized">
-            <div *ngFor="let player of parent.suspects; let i = index;" [ngClass]="(i==selectedavatarindex)?'selected':''"
-            (click)="selectedavatar(i)" class="avatar">
-            <img src="/assets/players/mobile_{{player.avatar_path}}" alt="Avatar{{number}}">
-            <span class="name">{{player.name}}</span>
+
+        <div id="avatars" *ngIf="parent.suspects">
+            <div *ngFor="let player of parent.suspects; let i = index;"
+                [ngClass]="(i==selectedavatarindex)?'selected':''" (click)="selectedavatar(i)" class="avatar">
+                <img src="/assets/players/mobile_{{player.avatar_path}}" alt="Avatar{{number}}">
+                <span class="name">{{player.name}}</span>
+            </div>
         </div>
+        <button *ngIf="!parent.voted" id="confirm" (click)="parent.submitVote()" type="button" value=""></button>
     </div>
-    <button *ngIf="!parent.voted" id="confirm" (click)="parent.submitVote()" type="button" value=""></button>
-</div>
 </div>

@@ -19,7 +19,7 @@ export class MainpageComponent implements OnInit {
   username: string;
   selectedTab: number = 1;
   players: UserModel[] = [];
-  suspects: UserModel[] = [];
+  suspects: UserModel[] = null;
   private async initializePlayers() {
     // this.players = 
     await this.usersService.getAllUsers().toPromise().then(
@@ -60,6 +60,7 @@ export class MainpageComponent implements OnInit {
     }
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
+      console.log("Mobile: Round changing");
       if (this.round == "Waiting") { //first round only
         this.initialized = false;
         this.initializePlayers().then(() => this.initialized = true);
@@ -67,15 +68,22 @@ export class MainpageComponent implements OnInit {
       this.round = msg.message;
       this.voted == false;
 
+      this.canVote = this.checkCanVote();
+      if (this.isVoting())
+        this.selectedTab = 2;
+      else if (this.selectedTab == 2) this.selectedTab = 1;
+
     });
 
     this.socketService.syncMessages("suspects").subscribe(msg => {
       //youcan vote yourself always
       console.log("Mobile: suspects Received");
-      this.setSuspects(msg.message);
+      console.log(msg.message);
+      this.suspects = null;
+      this.suspects = msg.message;
     });
 
-
+    
     this.socketService.syncMessages("died").subscribe(msg => {
       console.log("User Died");
       let died: UserModel = msg.message;
@@ -93,34 +101,26 @@ export class MainpageComponent implements OnInit {
     });
   }
   public async RetriveInfoonReload() {
-    console.log("Retrieving info on Reload"); // FIXME: need to check if this player has voted to init hasvoted var
+    console.log("Retrieving info on Reload"); 
+    this.suspects = null;
     this.initialized = false;
-    await this.votingService.getSuspects().toPromise().then(
-      (e) => {
-        this.setSuspects(e)
-        this.initializePlayers().then(() => {
-        });
-      }
-      );
-      await(10000);
-      this.initialized = true;
+    this.initializePlayers().then(() => {
+    });
+    await this.votingService.getSuspects().toPromise().then((e) => this.suspects = e);
+    // FIXME: need to check if this player has voted to init hasvoted var
+    this.canVote = this.checkCanVote();
+    this.initialized = true;
+    if (this.isVoting())
+      this.selectedTab = 2;
+    else if (this.selectedTab == 2) this.selectedTab = 1;
   }
 
-  public setSuspects(_suspects:UserModel[]) {
-    console.log("Set Suspcets")
-    this.suspects = [];
-    _suspects.forEach(
-      (user:UserModel)=> this.suspects.push(user)
-    )
-    this.canVote = this.checkCanVote();
-    console.log("Can vote" + this.canVote)
-     if (this.isVoting())
-       this.selectedTab = 2;
-     else if (this.selectedTab == 2) this.selectedTab = 1;
-  }
 
   submitVote(toIndex) { //called from subcomponent
     this.voted = true;
+    this.suspects = null;
+    this.canVote = false;
+    if (this.selectedTab == 2) this.selectedTab = 1;
     let from = this.username, to = this.suspects[toIndex].name;
     this.votingService.vote(from, to);
   }

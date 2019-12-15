@@ -2,6 +2,7 @@ import { Component, OnInit, Optional } from '@angular/core';
 import { UserModel } from 'src/app/global/models';
 import { MainpageComponent } from '../mainpage.component';
 import { ThrowStmt } from '@angular/compiler';
+import { SocketsService } from 'src/app/global/services';
 
 @Component({
   selector: 'ami-fullstack-voting',
@@ -10,7 +11,6 @@ import { ThrowStmt } from '@angular/compiler';
 })
 export class VotingComponent implements OnInit {
   selectedavatarindex: number;
-  suspects: UserModel[]= [];
   constructor( @Optional() private parent: MainpageComponent) { }
 
   selectedavatar(index: number) {
@@ -22,7 +22,7 @@ export class VotingComponent implements OnInit {
     
     this.parent.submitVote(this.selectedavatarindex);
   }
-  
+
   async ngOnInit() {
     await this.parent.ngOnInit;
     

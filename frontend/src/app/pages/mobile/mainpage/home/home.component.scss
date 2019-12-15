@@ -119,6 +119,17 @@
   transform: rotateY(180deg);
 }
 
+.flip-card-front:active {
+  filter:none;
+  box-shadow: none;
+  transform: translate(2px,3px);
+}
+.flip-card-back:active {
+  filter:none;
+  box-shadow: none;
+  transform: rotateY(180deg) translate(2px,3px);
+}
+
 #flipbutton {
   position: absolute;
   width: 81px;
