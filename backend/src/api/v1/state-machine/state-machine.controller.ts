@@ -75,10 +75,11 @@ export class StateMachineController {
                 break;
         }
 
-        await votingcontroller.setPlayers().then((e) => {
+        await votingcontroller.setPlayers().then( () => {
             console.log("players set");
             const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("roundChange", round);
+            res.json(`Round changed to ${round}`);
         });
     }
 

@@ -7,6 +7,7 @@ import { request } from 'http';
 
 import { smcontroller, usercontroller } from '../index';
 import { UsersController } from '../users/users.controller';
+import { resolve } from 'dns';
 
 
 interface Player {
@@ -229,15 +230,17 @@ export class VotingController {
     }
 
     public initVoting() {
-        console.log("Init voting with players:");
+        return new Promise ( (resolve, reject) => {
+            
+            console.log("Init voting with players:");
+            
+            let p: Player = {
+                canVote: true,
+                whotheyvoted: "",
+                votes: 0,
+            };
 
-        let p: Player = {
-            canVote: true,
-            whotheyvoted: "",
-            votes: 0,
-        };
-
-        let suspects: User[] = round == 'Secret Voting' ? this.getSuspects() : users;
+        suspects = round == 'Secret Voting' ? this.getSuspects() : users;
         players.clear();
         users.forEach(
             (user: User) => {
@@ -248,25 +251,31 @@ export class VotingController {
                 }); 
                 console.log("Player " + user.name + "" + players.get(user.name).votes);
             }
-        );
-        suspects.forEach((user: User) => {
-            console.log("Suspect " + user.name);
+            );
+            suspects.forEach((user: User) => {
+                console.log("Suspect " + user.name);
+            });
+            console.log("Broadcasting suspects!!");
+            const SocketService = DIContainer.get(SocketsService);
+            SocketService.broadcast("suspects", suspects);
+            resolve();
         });
-        console.log("Broadcasting suspects!!")
-        const SocketService = DIContainer.get(SocketsService);
-        SocketService.broadcast("suspects", suspects);
     }
 
     public async setPlayers() {
-        let p: Player = {
-            canVote: false,
-            whotheyvoted: "",
-            votes: 0,
-        };
+        return new Promise ( async (resolve, reject) => {
 
-        await this.initVoting();
-        detective_vote = null;
-        doctor_vote = null;
-        barman_vote = null;
+            let p: Player = {
+                canVote: false,
+                whotheyvoted: "",
+                votes: 0,
+            };
+            
+            await this.initVoting();
+            detective_vote = null;
+            doctor_vote = null;
+            barman_vote = null;
+            resolve();
+        });
     }
 }
