@@ -20,7 +20,6 @@ export class StateMachineService {
   }
 
   public changeRound() {
-    console.log('eee');
     return this.http
       .get(`${this.hostURl}/api/stateMachine/changeRound`);
   }

@@ -40,9 +40,13 @@ export class AugmentedTableComponent implements OnInit {
       this.changeRound();
     });
     this.socketService.syncMessages("vote").subscribe(async msg => {
-      if(this.round != "Open Ballot") return;
+      if (this.round != "Open Ballot") return;
       console.log("Player " + msg.message.toWho + " received a vote");
-      this.votesOfPlayers.set(msg.message.toWho,this.votesOfPlayers.get(msg.message.toWho)+1);  
+      this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
+    });
+    this.socketService.syncMessages("died").subscribe(msg => {
+      console.log(msg.message);
+
     });
   }
 
@@ -54,22 +58,38 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   private arrangePlayers() {
-    this.left_players = [];
-    this.right_players = [];
-    this.middle_players = [];
-
-    this.players.forEach(player => {
-      if ( player.position < (this.players.length / 3)-1) {
-        this.left_players.push(player);
-      } else if ( player.position > (2*this.players.length/3)) {
-        this.right_players.push(player);
-      } else {
-        this.middle_players.push(player);
-      }
-    });
-    this.left_players.sort(function(a,b){return a.position - b.position } );
-    this.middle_players.sort(function(a,b){return a.position - b.position } );
-    this.right_players.sort(function(a,b){return a.position - b.position } );
+    if (this.players.length <= 7) {
+      this.players.forEach(player => {
+        switch (player.position) {
+          case 0:
+          case 1:
+            this.left_players.push(player);
+            break;
+          case 2:
+          case 3:
+          case 4:
+            this.middle_players.push(player);
+            break;
+          case 5:
+          case 6:
+            this.right_players.push(player);
+            break;
+        }
+      })
+    } else {
+      this.players.forEach(player => {
+        if (player.position < (this.players.length / 3) - 1) {
+          this.left_players.push(player);
+        } else if (player.position > (2 * this.players.length / 3)) {
+          this.right_players.push(player);
+        } else {
+          this.middle_players.push(player);
+        }
+      });
+    }
+    this.left_players.sort(function (a, b) { return a.position - b.position });
+    this.middle_players.sort(function (a, b) { return a.position - b.position });
+    this.right_players.sort(function (a, b) { return a.position - b.position });
   }
 
   public isDay() {
@@ -99,6 +119,12 @@ export class AugmentedTableComponent implements OnInit {
       default:
         this.router.navigate(['/signin-table']);
     }
+  }
+
+  public aPlayerDied(dead: UserModel) {
+    dead.avatar_path = `/graveyard/${dead.role}.png`;
+    let index = this.players.findIndex(user => user.name == dead.name);
+    this.players[index] = dead;
   }
 
 }
