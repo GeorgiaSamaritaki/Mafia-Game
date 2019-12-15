@@ -6,6 +6,7 @@ import { round } from '../state-machine/state-machine.controller'
 import { request } from 'http';
 
 import { smcontroller, usercontroller } from '../index';
+import { UsersController } from '../users/users.controller';
 
 
 interface Player {
@@ -155,7 +156,13 @@ export class VotingController {
         for (let [key, value] of suspects) {     // print data sorted
             // console.log(key + ' ' + value);
         }
-        return Array.from(suspects.keys()).slice(0, 2);
+        let results: User[] = [];
+        let suspect1: string = suspects.values().next().value;
+        let suspect2: string = suspects.values().next().value;
+        users.forEach(
+            (user: User) => { if (user.name == suspect1 || user.name == suspect2) results.push(user) }
+        );
+        return results;
         //TODO: if more people have the same vote count add them
     }
 
@@ -200,12 +207,16 @@ export class VotingController {
             todie = null;
         }
         if (todie != null) {
+            usercontroller.changePathOfUser(todie);
             const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("died", todie);//FIXME:kill that guy and let everyone know
+            SocketService.broadcast("died", players.get(todie));//FIXME:kill that guy and let everyone know
+        }else{ //TODO:Smart Speaker -> this is the case the player was saved by the doctor
+                //an event can be added so that the speaker says that nobody died todat
+
         }
         if (detective_vote != null) {
             const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("detective_findings", detective_vote);
+            SocketService.broadcast("detective_findings", players.get(detective_vote));
             //TODO: make sure detective learns what he asked for
         }
     }
@@ -217,9 +228,7 @@ export class VotingController {
             votes: 0,
         };
 
-        let suspects: string[];
-        if (round == 'Secret Voting') suspects = this.getSuspects();
-        else suspects = Array.from(players.keys());
+        let suspects: User[] = round == 'Secret Voting' ? this.getSuspects() : users;
 
         players.forEach((p: Player, username: string) => {
             players.set(username, {

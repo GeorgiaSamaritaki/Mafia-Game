@@ -70,18 +70,8 @@ export class SmartTvComponent implements OnInit {
       this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
     });
 
-    // await this.votingService.findSuspects().toPromise();
+    
   }
-
-  array_move(arr, old_index, new_index) {
-    if (new_index >= arr.length) {
-      var k = new_index - arr.length + 1;
-      while (k--) {
-        arr.push(undefined);
-      }
-    }
-    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-  };
 
   sendToEnd(name: string) {
     let from: number = -1;
@@ -92,14 +82,17 @@ export class SmartTvComponent implements OnInit {
     this.players.splice(this.players.length, 0, cutOut);
   }
 
-  async aPlayerWasKilled() { //find index or name
-    var playertokil = this.players[this.suspects_indexes[0]];
-    this.deaths.push(playertokil.name);
-    this.sendToEnd(playertokil.name);
-    this.players[this.players.length - 1] = await this.userService.changePathOfUser(
-      playertokil.name, "killed_" + playertokil.avatar_path).toPromise();
-    this.players[this.players.length - 1].role = "night"; //check if we can show the card or not
-    for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
+  async aPlayerWasKilled(dead_player:UserModel) { //find index or name
+    this.deaths.push(dead_player.name);
+    this.sendToEnd(dead_player.name);
+    if(dead_player.dead == "day"){
+    }else if(dead_player.dead == "night"){
+      dead_player.role = "night";
+    }else
+      console.log("There was an error");
+    
+    this.players[this.players.length - 1] = dead_player;
+    
   }
 
   getPlayer(player_name: string) {
@@ -183,7 +176,6 @@ export class SmartTvComponent implements OnInit {
         this.phase_title = "Secret Voting";
         this.next_title = "Mafia Voting";
         this.next_up_icon = "nu_mafia";
-        this.whoShouldDie(); //FIXME:counts votes and gets player in the middle
         break;
       case 'Mafia Voting': //Secret Voting -> Mafia Voting
         this.background_rect = "tv-rectangle-night";
@@ -191,7 +183,6 @@ export class SmartTvComponent implements OnInit {
         this.phase_title = "Mafia Voting";
         this.next_title = "Doctor";
         this.next_up_icon = "nu_doctor";
-        await this.aPlayerWasKilled(); //FIXME: backend
         this.count++;
         break;
       case 'Doctor': //Mafia Voting -> Doctor
@@ -223,6 +214,7 @@ export class SmartTvComponent implements OnInit {
         this.next_up_icon = "nu_secret_voting";
         break;
     }
+    for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
 
   }
 

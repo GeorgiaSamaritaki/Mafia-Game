@@ -6,6 +6,7 @@ import { User, users } from './user.interface'
 import { json } from 'body-parser';
 import { resolve } from 'dns';
 import { rejects } from 'assert';
+import { round } from '../state-machine/state-machine.controller';
 
 function getRandomInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
@@ -57,23 +58,13 @@ export class UsersController {
         }
     }
 
-    public async changePathOfUser(req: Request, res: Response) {
-        var found = false;
-        try {
-            // Check if the user exists
-            users.forEach((user: User) => {
-                if (user.name === req.body.name) {
-                    user.avatar_path = req.body.avatar_path;
-                    found = true;
-                    res.send(user);
-                }
-            })
-            if (!found)
-                res.json({ "error": "User doesn't exist" })
-        } catch (e) {
-            console.log(e)
-            res.json(e)
-        }
+    public async changePathOfUser(todie: string) {
+        users.forEach((user: User) => {
+            if (user.name === todie) {
+                user.avatar_path = "killed_" + user.avatar_path;
+                user.dead = (round == "Open Ballot" || round == "Secret Voting") ? "day" : "night";
+            }
+        })
     }
 
     public getUser(req: Request, res: Response) {
@@ -126,7 +117,7 @@ export class UsersController {
                 } else {
                     mafia = Math.floor(users.length / 4);
                 }
-                console.log("Distributing roles to "+users.length+"players");
+                console.log("Distributing roles to " + users.length + "players");
                 //Assign Mafia
                 let rng: number;
                 while (mafia != 0) {
@@ -143,7 +134,7 @@ export class UsersController {
                             console.log('Barman set');
                         } else {
                             users[rng].role = 'Godfather';
-                            keyPlayers.set(users[rng].name, 'Doctor');
+                            keyPlayers.set(users[rng].name, 'Godfather');
                             console.log('Godfather set');
                         }
                         mafia--;
@@ -185,7 +176,7 @@ export class UsersController {
                 users.forEach((player) => {
                     if (player.role == 'undefined')
                         player.role = 'Civilian';
-                    console.log("Player "+player.name+" role: "+player.role);
+                    console.log("Player " + player.name + " role: " + player.role);
                 });
             } catch (e) {
                 console.log(e);
@@ -194,13 +185,13 @@ export class UsersController {
         })
     }
 
-    public getRole(username:string){
+    public getRole(username: string) {
         return keyPlayers.get(username);
     }
 
-    public getPlayerfromRole(role:string){
+    public getPlayerfromRole(role: string) {
         return [...users.entries()]
-        .filter(({ 1: v }) => v.role === role)
-        .map(([k]) => k);;
+            .filter(({ 1: v }) => v.role === role)
+            .map(([k]) => k);;
     }
 }
