@@ -33,12 +33,6 @@ export class LoginComponent implements OnInit {
    
   }
 
-  public treatsb() { // this is to broadcast
-    this.myUserID = (<HTMLInputElement>document.getElementById("inputname")).value;
-    var foodToTreat = "i treat you this from " + this.myUserID;
-    this.statemachineService.treatsb(foodToTreat, "trix").subscribe();
-  }
-
   goHome() {
     this.router.navigate(['/mobile/mainpage']);
   }

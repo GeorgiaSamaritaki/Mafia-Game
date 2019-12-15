@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService, StateMachineService, SocketsService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ami-fullstack-augmented-table',
@@ -20,7 +21,8 @@ export class AugmentedTableComponent implements OnInit {
   constructor(
     private usersService: UsersService,
     private statemachineService: StateMachineService,
-    private socketService: SocketsService
+    private socketService: SocketsService,
+    private router: Router
   ) {
     this.backgroundSVG = 'backgroundDay'
   }
@@ -95,8 +97,7 @@ export class AugmentedTableComponent implements OnInit {
       case 'Barman':
         break;
       default:
-        console.log('Something went very wrong');
-        console.log('No you should redirect to the signin in (:');
+        this.router.navigate(['/signin-table']);
     }
   }
 

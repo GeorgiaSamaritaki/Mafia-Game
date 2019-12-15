@@ -34,17 +34,4 @@ export class StateMachineService {
     return this.http
       .get(`${this.hostURl}/api/stateMachine/getCounter`);
   }
-  public treatsb(foodToTreat, toUserID) {
-    return this.http
-      .post(`${this.hostURl}/api/stateMachine/treatsb`,
-        {
-          message: {
-            food: foodToTreat,
-            userID: toUserID
-          },
-          event: "treating"
-        }
-      );
-  }
-
 }
