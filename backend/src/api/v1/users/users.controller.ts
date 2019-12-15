@@ -36,14 +36,16 @@ export class UsersController {
 
     public async addUser(req: Request, res: Response) {
         try {
+            var found: boolean = false;
             // Check if the user exists
             users.forEach((user: User) => {
-                if (user.name === req.body.name){
-                    res.json({ "error": "User already exists" })
-                    console.log('oops');
-                    return;
-                }
+                if (user.name === req.body.name)
+                    found = true;
             });
+            if (found) {
+                res.json({ "error": "User already exists" })
+                return;
+            }
             var newUser = {
                 "name": req.body.name,
                 "role": "undefined",
@@ -56,8 +58,7 @@ export class UsersController {
             SocketService.broadcast("playerJoined", newUser);
             res.json("User added");
         } catch (e) {
-            // console.log(e)
-            console.log('F');
+            console.log(e)
             res.json(e)
         }
     }
@@ -187,7 +188,7 @@ export class UsersController {
             resolve(users);
         })
     }
-    
+
     public getRole(username: string) {
         return keyPlayers.get(username);
     }
