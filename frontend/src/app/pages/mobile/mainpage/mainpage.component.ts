@@ -19,7 +19,7 @@ export class MainpageComponent implements OnInit {
   username: string;
   selectedTab: number = 1;
   players: UserModel[] = [];
-  suspects: UserModel[] = null;
+  
   private async initializePlayers() {
     // this.players = 
     await this.usersService.getAllUsers().toPromise().then(
@@ -75,15 +75,8 @@ export class MainpageComponent implements OnInit {
 
     });
 
-    this.socketService.syncMessages("suspects").subscribe(msg => {
-      //youcan vote yourself always
-      console.log("Mobile: suspects Received");
-      console.log(msg.message);
-      this.suspects = null;
-      this.suspects = msg.message;
-    });
-
     
+
     this.socketService.syncMessages("died").subscribe(msg => {
       console.log("User Died");
       let died: UserModel = msg.message;
@@ -100,13 +93,13 @@ export class MainpageComponent implements OnInit {
       }
     });
   }
+
   public async RetriveInfoonReload() {
     console.log("Retrieving info on Reload"); 
-    this.suspects = null;
+    // this.suspects = null;
     this.initialized = false;
     this.initializePlayers().then(() => {
     });
-    await this.votingService.getSuspects().toPromise().then((e) => this.suspects = e);
     // FIXME: need to check if this player has voted to init hasvoted var
     this.canVote = this.checkCanVote();
     this.initialized = true;
@@ -115,13 +108,11 @@ export class MainpageComponent implements OnInit {
     else if (this.selectedTab == 2) this.selectedTab = 1;
   }
 
-
-  submitVote(toIndex) { //called from subcomponent
+  submitVote(suspects_name:string) { //called from subcomponent
     this.voted = true;
-    this.suspects = null;
     this.canVote = false;
     if (this.selectedTab == 2) this.selectedTab = 1;
-    let from = this.username, to = this.suspects[toIndex].name;
+    let from = this.username, to = suspects_name;
     this.votingService.vote(from, to);
   }
 

@@ -22,7 +22,7 @@ let detective_vote: string = null;
 let barman_vote: string = null;
 
 export class VotingController {
-
+    
 
     /**
      * Apply all routes for example
@@ -153,9 +153,10 @@ export class VotingController {
         suspects.forEach((user: User) => {
             console.log("Suspect " + user.name);
         });
+        if(suspects.length == 0) console.log("suspects empty");
         res.json(suspects);
     }
-
+    
     public getSuspects() {
         let _suspects: Map<string, number> = new Map();
         players.forEach((p: Player, username: string) => {
