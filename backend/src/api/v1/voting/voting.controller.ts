@@ -152,7 +152,7 @@ export class VotingController {
     }
 
     public getSuspects() {
-        let _suspects: Map<string, number>;
+        let _suspects: Map<string, number> = new Map();
         players.forEach((p: Player, username: string) => {
             _suspects.set(username, p.votes);
         });
@@ -160,7 +160,7 @@ export class VotingController {
             yield* [...this.entries()].sort((a, b) => a[1] - b[1]);
         }
         for (let [key, value] of _suspects) {     // print data sorted
-            // console.log(key + ' ' + value);
+            console.log(key + ' ' + value);
         }
         let results: User[] = [];
         let suspect1: string = _suspects.values().next().value;
@@ -228,7 +228,9 @@ export class VotingController {
         }
     }
 
-    public async initVoting() {
+    public initVoting() {
+        console.log("Init voting with players:");
+
         let p: Player = {
             canVote: true,
             whotheyvoted: "",
@@ -236,17 +238,23 @@ export class VotingController {
         };
 
         let suspects: User[] = round == 'Secret Voting' ? this.getSuspects() : users;
-
-        players.forEach((p: Player, username: string) => {
-            players.set(username, {
-                canVote: this.canVote(username),
-                whotheyvoted: "",
-                votes: 0,
-            });
+        players.clear();
+        users.forEach(
+            (user: User) => {
+                players.set(user.name, {
+                    canVote: this.canVote(user.name),
+                    whotheyvoted: "",
+                    votes: 0,
+                }); 
+                console.log("Player " + user.name + "" + players.get(user.name).votes);
+            }
+        );
+        suspects.forEach((user: User) => {
+            console.log("Suspect " + user.name);
         });
-        console.log("Broadcasting suspects!!");
+        console.log("Broadcasting suspects!!")
         const SocketService = DIContainer.get(SocketsService);
-        await SocketService.broadcast("suspects", suspects);
+        SocketService.broadcast("suspects", suspects);
     }
 
     public async setPlayers() {
@@ -255,9 +263,7 @@ export class VotingController {
             whotheyvoted: "",
             votes: 0,
         };
-        users.forEach(
-            (user: User) => players.set(user.name, p)
-        );
+
         await this.initVoting();
         detective_vote = null;
         doctor_vote = null;

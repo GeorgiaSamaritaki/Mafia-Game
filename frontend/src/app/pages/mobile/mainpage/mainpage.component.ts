@@ -92,10 +92,9 @@ export class MainpageComponent implements OnInit {
       }
     });
   }
-
   public async RetriveInfoonReload(){
     this.initialized = false;
-    await this.votingService.getSuspects.toPromise().then((e)=>console.log(e))
+    await this.votingService.getSuspects().toPromise().then((e)=>this.setSuspects(e))
     // this.setSuspects();
     this.initializePlayers().then(() =>{ 
       this.initialized = true});
