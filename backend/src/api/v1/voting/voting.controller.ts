@@ -34,13 +34,14 @@ export class VotingController {
         router
             .post('/vote', this.vote)
             .post('/playerVotes', this.calculateVotesOfPlayer)
-            .post('/getSuspects', this.getSuspectsFront)
+            .get('/getSuspects', this.getSuspectsFront)
             .post('/getVoters', this.getVoters)
             .post('/addToHistory', this.addToHistory)
             .get('/votesOfRound', this.votesOfRound);
         return router;
     }
 
+    
     /**
      *  Vote somebody 
      *  
@@ -148,6 +149,9 @@ export class VotingController {
     }
 
     public getSuspectsFront(req: Request, res: Response) {
+        suspects.forEach((user: User) => {
+            console.log("Suspect " + user.name);
+        });
         res.json(suspects);
     }
 
@@ -168,7 +172,7 @@ export class VotingController {
         users.forEach(
             (user: User) => { if (user.name == suspect1 || user.name == suspect2) results.push(user) }
         );
-        suspects = results;
+        
         return results;
         //TODO: if more people have the same vote count add them
     }
@@ -237,7 +241,7 @@ export class VotingController {
             votes: 0,
         };
 
-        let suspects: User[] = round == 'Secret Voting' ? this.getSuspects() : users;
+        suspects = round == 'Secret Voting' ? this.getSuspects() : users;
         players.clear();
         users.forEach(
             (user: User) => {

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { StateMachineService, UsersService, SocketsService, VotingService } from 'src/app/global/services';
 import { Router } from '@angular/router';
 import { UserModel } from 'src/app/global/models';
+import { SelectMultipleControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'ami-fullstack-mainpage',
@@ -56,7 +57,6 @@ export class MainpageComponent implements OnInit {
     this.initialized = true;
     if (this.round != "Waiting") {
       this.RetriveInfoonReload();
-      
     }
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
@@ -66,7 +66,7 @@ export class MainpageComponent implements OnInit {
       }
       this.round = msg.message;
       this.voted == false;
-      
+
     });
 
     this.socketService.syncMessages("suspects").subscribe(msg => {
@@ -92,21 +92,31 @@ export class MainpageComponent implements OnInit {
       }
     });
   }
-  public async RetriveInfoonReload(){
+  public async RetriveInfoonReload() {
+    console.log("Retrieving info on Reload"); // FIXME: need to check if this player has voted to init hasvoted var
     this.initialized = false;
-    await this.votingService.getSuspects().toPromise().then((e)=>this.setSuspects(e))
-    // this.setSuspects();
-    this.initializePlayers().then(() =>{ 
-      this.initialized = true});
+    await this.votingService.getSuspects().toPromise().then(
+      (e) => {
+        this.setSuspects(e)
+        this.initializePlayers().then(() => {
+        });
+      }
+      );
+      await(10000);
+      this.initialized = true;
   }
-      
-  public setSuspects(suspects){
-    this.suspects = suspects;
-    this.canVote = this.checkCanVote();
-    if (this.isVoting()) 
-      this.selectedTab = 2;
-     //ask for suspects to give to voting
 
+  public setSuspects(_suspects:UserModel[]) {
+    console.log("Set Suspcets")
+    this.suspects = [];
+    _suspects.forEach(
+      (user:UserModel)=> this.suspects.push(user)
+    )
+    this.canVote = this.checkCanVote();
+    console.log("Can vote" + this.canVote)
+     if (this.isVoting())
+       this.selectedTab = 2;
+     else if (this.selectedTab == 2) this.selectedTab = 1;
   }
 
   submitVote(toIndex) { //called from subcomponent
@@ -129,7 +139,6 @@ export class MainpageComponent implements OnInit {
       case "Mason":
         return (other_role == "Mason") ? other_role : "hidden";
       default:
-        console.log("Error knowRole");
       case "Detective":
       case "Doctor":
       case "Civilian":

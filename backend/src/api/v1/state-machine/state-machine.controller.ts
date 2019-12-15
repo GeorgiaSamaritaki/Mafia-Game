@@ -2,6 +2,7 @@ import { Request, Response, NextFunction, Router } from 'express';
 import { NotFound, BadRequest } from 'http-errors';
 import { DIContainer, MinioService, SocketsService } from '@app/services';
 import { votingcontroller, usercontroller } from '../index';
+import { Socket } from 'dgram';
 
 enum Phase {
     Day = 'Day',
@@ -75,11 +76,10 @@ export class StateMachineController {
                 break;
         }
 
-        await votingcontroller.setPlayers().then((e) => {
-            console.log("players set");
-            const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("roundChange", round);
-        });
+        await votingcontroller.setPlayers();
+        console.log("players set");
+        const SocketService = DIContainer.get(SocketsService);
+        SocketService.broadcast("roundChange", round);
     }
 
     public selectNarrator(req: Request, res: Response) {

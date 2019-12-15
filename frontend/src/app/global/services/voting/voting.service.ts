@@ -49,9 +49,10 @@ export class VotingService {
         .post(`${this.hostURl}/api/votes/getVoters`, {name});
     }
     
-    public getSuspects() {
+    public getSuspects(): Observable<UserModel[]>  {
       return this.http
-        .get(`${this.hostURl}/api/votes/getSuspects`)
+        .get<UserModel[]>(`${this.hostURl}/api/votes/getSuspects`)
         .pipe(map(result => _.map(result, (t) => new UserModel(t))));
     }
 }
+

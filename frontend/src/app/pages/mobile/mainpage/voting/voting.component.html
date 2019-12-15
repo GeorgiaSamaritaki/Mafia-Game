@@ -10,7 +10,7 @@
             <span *ngIf="parent.round =='Barman'">Whose powers will be muted tonight?</span>
         </p>
         
-        <div id="avatars">
+        <div id="avatars"   *ngIf="parent.initialized">
             <div *ngFor="let player of parent.suspects; let i = index;" [ngClass]="(i==selectedavatarindex)?'selected':''"
             (click)="selectedavatar(i)" class="avatar">
             <img src="/assets/players/mobile_{{player.avatar_path}}" alt="Avatar{{number}}">
