@@ -58,9 +58,9 @@ export class InteractiveWallComponent implements OnInit {
     console.log(this.lap);
     this.speakerService.speak('Hi! I am Smart Speaker. I will be your narrator for this game.', async () => {
       console.log('starting');
+      await this.statemachineService.changeRound().toPromise();
     });
     console.log('welcome speech');
-    this.statemachineService.changeRound();
   }
 
   async changeRound() {

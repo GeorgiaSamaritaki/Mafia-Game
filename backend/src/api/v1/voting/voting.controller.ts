@@ -38,7 +38,7 @@ export class VotingController {
             .post('/getSuspects', this.getSuspectsFront)
             .post('/getVoters', this.getVoters)
             .post('/addToHistory', this.addToHistory)
-            .get('/votesOfRound', this.votesOfRound);
+            .post('/votesOfRound', this.votesOfRound);
         return router;
     }
 
@@ -217,14 +217,14 @@ export class VotingController {
         if (todie != null) {
             usercontroller.changePathOfUser(todie);
             const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("died", players.get(todie));//FIXME:kill that guy and let everyone know
+            SocketService.broadcast("died", users.find((user) => user.name == todie));//FIXME:kill that guy and let everyone know
         } else { //TODO:Smart Speaker -> this is the case the player was saved by the doctor
             //an event can be added so that the speaker says that nobody died todat
 
         }
         if (detective_vote != null) {
             const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("detective_findings", players.get(detective_vote));
+            SocketService.broadcast("detective_findings", users.find((user) => user.name == detective_vote));
             //TODO: make sure detective learns what he asked for
         }
     }

@@ -38,9 +38,12 @@ export class UsersController {
         try {
             // Check if the user exists
             users.forEach((user: User) => {
-                if (user.name === req.body.name)
+                if (user.name === req.body.name){
                     res.json({ "error": "User already exists" })
-            })
+                    console.log('oops');
+                    return;
+                }
+            });
             var newUser = {
                 "name": req.body.name,
                 "role": "undefined",
@@ -53,7 +56,8 @@ export class UsersController {
             SocketService.broadcast("playerJoined", newUser);
             res.json("User added");
         } catch (e) {
-            console.log(e)
+            // console.log(e)
+            console.log('F');
             res.json(e)
         }
     }
