@@ -111,7 +111,8 @@ export class MainpageComponent implements OnInit {
     this.canVote = false;
     let from = this.username, to = suspects_name;
     this.votingService.vote(from, to).toPromise();
-  }
+  } 
+  
 
   goBack() {
     console.log("Going back to login no logged in user");

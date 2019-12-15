@@ -50,13 +50,14 @@ export class VotingController {
      * @param req.body.to the player that got the vote 
      */
     public vote(req: Request, res: Response) {
-        console.log("Vote received from: " + newVote.fromWho + " to: " + newVote.toWho);
-        
+
         var newVote: Vote = {
             fromWho: req.body.from,
             toWho: req.body.to,
             round: ''
         };
+        console.log("Vote received from: " + newVote.fromWho + " to: " +
+         newVote.toWho + " round: " + round);
         switch (round) {
             case "Doctor":
                 doctor_vote = newVote.toWho;
@@ -72,18 +73,31 @@ export class VotingController {
             case "Secret Voting":
             case "Mafia Voting":
             case "Waiting":
-                this.voteToDie(newVote.fromWho, newVote.toWho, newVote);
+                console.log("here?");
+                this.voteToDie(newVote);
+                break;
+            default:
+                console.log("what is wrong");
         }
     }
 
-    public voteToDie(fromWho: string, toWho: string, newVote: Vote) {
+    public voteToDie(newVote: Vote) {
         //Check if player has already voted ??
-        let p = players.get(fromWho)
+        console.log("VotetoDie: " + newVote.fromWho +
+         " to: " + newVote.toWho);
+
+        //Fix stuff for voter
+        let p = players.get(newVote.fromWho)
         if (!p.canVote) console.log("error voted somehow");
         if (p.whotheyvoted != "") console.log("1error voted somehow");
-        p.whotheyvoted = toWho;
-        p.votes = p.votes++;
+        p.whotheyvoted = newVote.toWho;
         players.set(newVote.fromWho, p);
+        
+        //Fix stuff for votee
+        p = players.get(newVote.toWho);
+        p.votes = p.votes + 1;
+        players.set(newVote.toWho, p);
+
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("vote", newVote);
     }
