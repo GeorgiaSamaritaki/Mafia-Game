@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SocketsService, UsersService } from 'src/app/global/services';
+import { SocketsService, UsersService, StateMachineService } from 'src/app/global/services';
 import { Router } from '@angular/router';
 @Component({
   selector: 'ami-fullstack-homescreen-tv',
@@ -16,7 +16,8 @@ export class HomescreenTvComponent implements OnInit {
   constructor(
     private socketService: SocketsService,
     private router: Router,
-    private userService: UsersService 
+    private userService: UsersService, 
+    private statemachineService: StateMachineService
     ) { }
 
   async ngOnInit() {
@@ -31,6 +32,9 @@ export class HomescreenTvComponent implements OnInit {
     this.socketService.syncMessages("playerJoined").subscribe( msg=> {
       this.playersjoined++;
     })
+  }
+  async manualChange() {
+    await this.statemachineService.changeRound().toPromise();
   }
 
 }

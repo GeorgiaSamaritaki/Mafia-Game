@@ -1,5 +1,5 @@
 <div *ngIf="initialized" class="background" [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
-    <mat-tab-group *ngIf="players" headerPosition="below" [disableRipple]=true [selectedIndex]="selectedTab">
+    <mat-tab-group headerPosition="below" [disableRipple]=true [selectedIndex]="selectedTab">
         <mat-tab>
             <ng-template mat-tab-label>
                 <img src="/assets/mobile/infonavbar.png" alt="Info">

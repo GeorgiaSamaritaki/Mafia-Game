@@ -11,7 +11,7 @@ import { round } from '../state-machine/state-machine.controller';
 function getRandomInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
 }
-var keyPlayers: Map<string, string>;
+var keyPlayers: Map<string, string> = new Map();
 export class UsersController {
 
 
@@ -43,7 +43,7 @@ export class UsersController {
             })
             var newUser = {
                 "name": req.body.name,
-                "role": req.body.role,
+                "role": "undefined",
                 "avatar_path": req.body.avatar_path,
                 "position": req.body.position,
                 "dead": req.body.dead
@@ -107,7 +107,6 @@ export class UsersController {
 
     public distributeRoles() {
         return new Promise((resolve, reject) => {
-
             try {
                 //For every 4 people 1 mafia (if its 7 we keep 2 Mafia)
                 //Calculate roles
@@ -117,7 +116,7 @@ export class UsersController {
                 } else {
                     mafia = Math.floor(users.length / 4);
                 }
-                console.log("Distributing roles to " + users.length + "players");
+                console.log("Distributing roles to " + users.length + " players");
                 //Assign Mafia
                 let rng: number;
                 while (mafia != 0) {
@@ -184,7 +183,7 @@ export class UsersController {
             resolve(users);
         })
     }
-
+    
     public getRole(username: string) {
         return keyPlayers.get(username);
     }

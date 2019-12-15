@@ -51,13 +51,14 @@ export class SmartTvComponent implements OnInit {
     this.count = 1;
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
-    // if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']); //FIXME: this needs to be active
+     if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']); //FIXME: this needs to be active
     this.round = "Open Ballot";
     this.changeRound();
 
     this.initializePlayers().then(() => this.initialized = true);
 
     this.socketService.syncMessages("roundChange").subscribe(async msg => {
+      if (this.round == "Barman") this.count++; // if last round war barman
       console.log("Round is Changing");
       this.initialized = false;
       this.round = msg.message;
@@ -69,8 +70,12 @@ export class SmartTvComponent implements OnInit {
       console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
       this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
     });
+    this.socketService.syncMessages("died").subscribe(async msg => {
+      console.log("User Died");
+      this.aPlayerWasKilled(msg.message);
+    });
 
-    
+
   }
 
   sendToEnd(name: string) {
@@ -82,17 +87,18 @@ export class SmartTvComponent implements OnInit {
     this.players.splice(this.players.length, 0, cutOut);
   }
 
-  async aPlayerWasKilled(dead_player:UserModel) { //find index or name
+  async aPlayerWasKilled(dead_player: UserModel) { //find index or name
     this.deaths.push(dead_player.name);
     this.sendToEnd(dead_player.name);
-    if(dead_player.dead == "day"){
-    }else if(dead_player.dead == "night"){
+
+    if (dead_player.dead == "day") {
+    } else if (dead_player.dead == "night") {
       dead_player.role = "night";
-    }else
+    } else
       console.log("There was an error");
-    
+
     this.players[this.players.length - 1] = dead_player;
-    
+
   }
 
   getPlayer(player_name: string) {

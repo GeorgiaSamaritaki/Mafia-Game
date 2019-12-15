@@ -17,20 +17,26 @@ export class MainpageComponent implements OnInit {
   role: string;
   username: string;
   selectedTab: number = 1;
-  players: UserModel[];
-  suspects: UserModel[];
-
+  players: UserModel[] = [];
+  suspects: UserModel[] = [];
   private async initializePlayers() {
-    this.players = await this.usersService.getAllUsers().toPromise(); //this shouldnt be kept here but for the sake of this demo
-    let from: number;
-    this.players.forEach((user: UserModel, index: number) => { if (user.name == this.username) { from = index; this.role = user.role; } });
-    this.players.forEach((user: UserModel, index: number) => { user.role = this.knowRole(user.role) });
-    this.players.splice(0, 0, this.players.splice(from, 1)[0]);
-    if (this.role == "" || this.role == undefined) {//FIXME: Should exit not patch
-      console.log("ERROR: Player has not been assigned a role");
-      this.role = "Civilian"
-    }
-    this.suspects = [];
+    // this.players = 
+    await this.usersService.getAllUsers().toPromise().then(
+      (e) => {
+        this.players = e;
+        let from: number;
+        this.players.forEach((user: UserModel, index: number) => { if (user.name == this.username) { from = index; this.role = user.role; } });
+        this.players.forEach((user: UserModel, index: number) => { if (user.name != this.username) user.role = this.knowRole(user.role) });
+        this.players.splice(0, 0, this.players.splice(from, 1)[0]);
+        if (this.role == "" || this.role == undefined) {//FIXME: Should exit not patch
+          console.log("ERROR: Player has not been assigned a role");
+          this.role = "Civilian"
+        }
+        this.suspects = [];
+        console.log(this.players);
+
+      }
+    ); //this shouldnt be kept here but for the sake of this demo
   }
 
   constructor(private statemachineService: StateMachineService,
@@ -44,47 +50,64 @@ export class MainpageComponent implements OnInit {
     return await this.usersService.checkUsername(username).toPromise();
   }
   async ngOnInit() {
-    // this.round = await this.statemachineService.getRound().toPromise().catch(e=>console.log(e));
     this.username = localStorage.getItem("username");
     if (this.username == null || !await this.usernameExists(this.username)) this.goBack();
     this.round = <string>await this.statemachineService.getRound().toPromise();
-    this.initializePlayers().then(() => this.initialized = true);//this shouldnt be here but it works only like that
+    this.initialized = true;
+    if (this.round != "Waiting") {
+      this.RetriveInfoonReload();
+      
+    }
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
-      if (this.round == "Waiting") {
+      if (this.round == "Waiting") { //first round only
         this.initialized = false;
         this.initializePlayers().then(() => this.initialized = true);
       }
       this.round = msg.message;
       this.voted == false;
-      this.canVote = this.checkCanVote();
-      if (this.isVoting()) {
-        this.selectedTab = 2;
-      } //ask for suspects to give to voting
+      
     });
 
     this.socketService.syncMessages("suspects").subscribe(msg => {
       //youcan vote yourself always
       console.log("Mobile: suspects Received");
-      this.suspects = msg.message;
+      this.setSuspects(msg.message);
     });
+
 
     this.socketService.syncMessages("died").subscribe(msg => {
       console.log("User Died");
       let died: UserModel = msg.message;
-      died.role = died.dead == "day" ? died.role : "night";
+      died.role = died.dead == "day" ? died.role : "hidden";
       for (let i = 0; i < this.players.length; i++)
-        if(this.players[i].name == died.name)this.players[i] = died;
-      
-      });
-      this.socketService.syncMessages("detective_findings").subscribe(msg => {
-        if(this.role=="Detective"){
-          console.log("Detective action");
-          for (let i = 0; i < this.players.length; i++)
-            if(this.players[i].name == msg.message.name) this.players[i] = msg.message;
-            
+        if (this.players[i].name == died.name) this.players[i] = died;
+
+    });
+    this.socketService.syncMessages("detective_findings").subscribe(msg => {
+      if (this.role == "Detective") {
+        console.log("Detective action");
+        for (let i = 0; i < this.players.length; i++)
+          if (this.players[i].name == msg.message.name) this.players[i] = msg.message;
       }
     });
+  }
+
+  public async RetriveInfoonReload(){
+    this.initialized = false;
+    await this.votingService.getSuspects.toPromise().then((e)=>console.log(e))
+    // this.setSuspects();
+    this.initializePlayers().then(() =>{ 
+      this.initialized = true});
+  }
+      
+  public setSuspects(suspects){
+    this.suspects = suspects;
+    this.canVote = this.checkCanVote();
+    if (this.isVoting()) 
+      this.selectedTab = 2;
+     //ask for suspects to give to voting
+
   }
 
   submitVote(toIndex) { //called from subcomponent
@@ -103,13 +126,15 @@ export class MainpageComponent implements OnInit {
       case "Mafioso":
       case "Barman":
       case "Godfather":
-        return (other_role == "Mafioso" || other_role == "Barman" || other_role == "Godfather") ? other_role : "night";
+        return (other_role == "Mafioso" || other_role == "Barman" || other_role == "Godfather") ? other_role : "hidden";
       case "Mason":
-        return (other_role == "Mason") ? other_role : "night";
+        return (other_role == "Mason") ? other_role : "hidden";
+      default:
+        console.log("Error knowRole");
       case "Detective":
       case "Doctor":
       case "Civilian":
-        return "night";
+        return "hidden";
     }
   }
 

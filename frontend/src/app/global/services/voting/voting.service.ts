@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import * as _ from 'lodash';
+import { UserModel } from '../../models';
 
 @Injectable({
     providedIn: 'root'
@@ -48,8 +49,9 @@ export class VotingService {
         .post(`${this.hostURl}/api/votes/getVoters`, {name});
     }
     
-    public findSuspects() {
+    public getSuspects() {
       return this.http
-        .get(`${this.hostURl}/api/votes/findSuspects`);
+        .get(`${this.hostURl}/api/votes/getSuspects`)
+        .pipe(map(result => _.map(result, (t) => new UserModel(t))));
     }
 }

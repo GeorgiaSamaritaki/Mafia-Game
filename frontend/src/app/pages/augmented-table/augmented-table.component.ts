@@ -96,6 +96,7 @@ export class AugmentedTableComponent implements OnInit {
         break;
       default:
         console.log('Something went very wrong');
+        console.log('No you should redirect to the signin in (:');
     }
   }
 

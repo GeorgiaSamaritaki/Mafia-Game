@@ -7,6 +7,8 @@
   font-family: Revalia;
   font-style: normal;
   font-weight: normal;
+  min-height: 100%;
+  height: fit-content;
 }
 
 #waiting {
@@ -118,23 +120,24 @@
 }
 
 #flipbutton {
-  position:absolute;
+  position: absolute;
   width: 81px;
   height: 83.7px;
-  right: 0px;
+  right: 0;
   top: 67%;
   filter:drop-shadow( 0px 4px 0px rgba(0, 0, 0, 0.39));
-  border:none;
+  border: none;
   background: none;
-  padding:0;
-}
-#flipbutton img{
-  width: 100%;
-    height: 100%;
-}
-#flipbutton:active {
-  filter:none;
-  border:none;
-  transform: translate(0,4px);
+  padding: 0;
 }
 
+#flipbutton img {
+  width: 100%;
+  height: 100%;
+}
+
+#flipbutton:active {
+  filter:none;
+  border: none;
+  transform: translate(0,4px);
+}

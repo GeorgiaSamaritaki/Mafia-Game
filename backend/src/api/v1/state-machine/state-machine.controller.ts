@@ -31,7 +31,6 @@ export class StateMachineController {
      * @returns {Router}
      */
 
-
     public applyRoutes(): Router {
         const router = Router();
 
@@ -50,8 +49,7 @@ export class StateMachineController {
     public async changeRound(req: Request, res: Response) {
         switch (round) {
             case Round.Waiting:
-                // distribute roles set players
-                await usercontroller.distributeRoles();
+                await usercontroller.distributeRoles().then((e) => console.log("Roles Distributed"));
                 round = Round.Open_Ballot;
                 break;
             case Round.Open_Ballot:
@@ -76,6 +74,7 @@ export class StateMachineController {
                 roundCounter++;
                 break;
         }
+    
         votingcontroller.setPlayers().then((e) => console.log("players set"));
         const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("roundChange", round);

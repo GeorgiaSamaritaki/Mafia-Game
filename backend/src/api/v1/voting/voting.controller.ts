@@ -15,6 +15,7 @@ interface Player {
     votes: number
 }
 let players: Map<string, Player> = new Map();
+let suspects: User[];
 let doctor_vote: string = null;
 let detective_vote: string = null;
 let barman_vote: string = null;
@@ -33,9 +34,10 @@ export class VotingController {
         router
             .post('/vote', this.vote)
             .post('/playerVotes', this.calculateVotesOfPlayer)
-            .post('/votesOfRound', this.votesOfRound)
+            .post('/getSuspects', this.getSuspectsFront)
             .post('/getVoters', this.getVoters)
-            .post('/addToHistory', this.addToHistory);
+            .post('/addToHistory', this.addToHistory)
+            .get('/votesOfRound', this.votesOfRound);
         return router;
     }
 
@@ -145,23 +147,28 @@ export class VotingController {
             res.json(voters);
     }
 
+    public getSuspectsFront(req: Request, res: Response) {
+        res.json(suspects);
+    }
+
     public getSuspects() {
-        let suspects: Map<string, number>;
+        let _suspects: Map<string, number>;
         players.forEach((p: Player, username: string) => {
-            suspects.set(username, p.votes);
+            _suspects.set(username, p.votes);
         });
-        suspects[Symbol.iterator] = function* () {
+        _suspects[Symbol.iterator] = function* () {
             yield* [...this.entries()].sort((a, b) => a[1] - b[1]);
         }
-        for (let [key, value] of suspects) {     // print data sorted
+        for (let [key, value] of _suspects) {     // print data sorted
             // console.log(key + ' ' + value);
         }
         let results: User[] = [];
-        let suspect1: string = suspects.values().next().value;
-        let suspect2: string = suspects.values().next().value;
+        let suspect1: string = _suspects.values().next().value;
+        let suspect2: string = _suspects.values().next().value;
         users.forEach(
             (user: User) => { if (user.name == suspect1 || user.name == suspect2) results.push(user) }
         );
+        suspects = results;
         return results;
         //TODO: if more people have the same vote count add them
     }
@@ -210,8 +217,8 @@ export class VotingController {
             usercontroller.changePathOfUser(todie);
             const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("died", players.get(todie));//FIXME:kill that guy and let everyone know
-        }else{ //TODO:Smart Speaker -> this is the case the player was saved by the doctor
-                //an event can be added so that the speaker says that nobody died todat
+        } else { //TODO:Smart Speaker -> this is the case the player was saved by the doctor
+            //an event can be added so that the speaker says that nobody died todat
 
         }
         if (detective_vote != null) {
@@ -237,7 +244,7 @@ export class VotingController {
                 votes: 0,
             });
         });
-
+        console.log("Broadcasting suspects!!");
         const SocketService = DIContainer.get(SocketsService);
         await SocketService.broadcast("suspects", suspects);
     }

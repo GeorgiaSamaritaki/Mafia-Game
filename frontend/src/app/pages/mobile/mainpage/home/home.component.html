@@ -17,7 +17,7 @@
                             align-content: center;
                             flex-direction: column;
                             height:100%">
-                                <div class="playername">{{player.name}}</div>
+                                <div class="playername">{{player.name}}<span *ngIf="i==0" style="opacity: 0.5;font-size: 11px;"><br>(You)</span></div>
 
                             </div>
                         </div>
