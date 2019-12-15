@@ -82,5 +82,16 @@
 
 #confirm:active {
   filter:none;
-  transform:translate(2px,3px);
+  transform: translate(2px,3px);
+}
+
+#hint {
+  font-size: 12px;
+  line-height: 12px;
+
+  font-size: 10px;
+  line-height: 12px;
+  text-align: center;
+  text-transform: capitalize;
+  font-weight: lighter;
 }

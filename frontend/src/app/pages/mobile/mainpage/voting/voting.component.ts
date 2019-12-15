@@ -12,17 +12,20 @@ import { SocketsService, VotingService } from 'src/app/global/services';
 export class VotingComponent implements OnInit {
   selectedavatarindex: number;
   suspects: UserModel[];
+  voted: boolean = false;
+
+
   constructor(@Optional() private parent: MainpageComponent,
     private socketService: SocketsService,
     private votingService: VotingService,
   ) { }
 
   selectedavatar(index: number) {
-
-    if (!this.parent.voted) this.selectedavatarindex = index;
+    if (!this.voted) this.selectedavatarindex = index;
   }
 
   submitVote() {
+    this.voted = true;
     this.parent.submitVote(this.suspects[this.selectedavatarindex].name);
     this.selectedavatarindex = 0;
   }
@@ -36,6 +39,7 @@ export class VotingComponent implements OnInit {
       //youcan vote yourself always
       console.log("Voting: suspects Received");
       console.log(msg.message);
+      this.voted = false;
       this.suspects = msg.message;
     });
 

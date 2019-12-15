@@ -13,7 +13,7 @@ import { SelectMultipleControlValueAccessor } from '@angular/forms';
 export class MainpageComponent implements OnInit {
   round: string;
   initialized: boolean = false;
-  voted: boolean = false;
+  
   canVote: boolean = false;
   role: string;
   username: string;
@@ -33,7 +33,6 @@ export class MainpageComponent implements OnInit {
           console.log("ERROR: Player has not been assigned a role");
           this.role = "Civilian"
         }
-        this.suspects = [];
         console.log(this.players);
 
       }
@@ -66,16 +65,13 @@ export class MainpageComponent implements OnInit {
         this.initializePlayers().then(() => this.initialized = true);
       }
       this.round = msg.message;
-      this.voted == false;
-
+      
       this.canVote = this.checkCanVote();
       if (this.isVoting())
         this.selectedTab = 2;
       else if (this.selectedTab == 2) this.selectedTab = 1;
 
     });
-
-    
 
     this.socketService.syncMessages("died").subscribe(msg => {
       console.log("User Died");
@@ -108,12 +104,13 @@ export class MainpageComponent implements OnInit {
     else if (this.selectedTab == 2) this.selectedTab = 1;
   }
 
-  submitVote(suspects_name:string) { //called from subcomponent
-    this.voted = true;
-    this.canVote = false;
+  public submitVote(suspects_name:string) { //called from subcomponent
+    console.log("Submiting vote to "+ suspects_name);
+    
     if (this.selectedTab == 2) this.selectedTab = 1;
+    this.canVote = false;
     let from = this.username, to = suspects_name;
-    this.votingService.vote(from, to);
+    this.votingService.vote(from, to).toPromise();
   }
 
   goBack() {

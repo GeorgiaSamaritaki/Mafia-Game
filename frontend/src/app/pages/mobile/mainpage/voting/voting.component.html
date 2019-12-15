@@ -11,13 +11,13 @@
         </p>
 
         <div id="avatars" *ngIf="suspects">
-            
-            <div *ngFor="let player of suspects; let i = index;"
-                [ngClass]="(i==selectedavatarindex)?'selected':''" (click)="selectedavatar(i)" class="avatar">
+            <div *ngFor="let player of suspects; let i = index;" [ngClass]="(i==selectedavatarindex)?'selected':''"
+                (click)="selectedavatar(i)" class="avatar">
                 <img src="/assets/players/mobile_{{player.avatar_path}}" alt="Avatar{{number}}">
                 <span class="name">{{player.name}}</span>
             </div>
         </div>
-        <button *ngIf="!parent.voted" id="confirm" (click)="parent.submitVote()" type="button" value=""></button>
+        <button *ngIf="!voted" id="confirm" (click)="submitVote()" type="button" value=""></button>
+        <span *ngIf="parent.isOpenBallot()" id="hint">Hint: they wont die yet, you just place suspicions</span>
     </div>
 </div>

@@ -22,7 +22,7 @@ let detective_vote: string = null;
 let barman_vote: string = null;
 
 export class VotingController {
-    
+
 
     /**
      * Apply all routes for example
@@ -35,14 +35,14 @@ export class VotingController {
         router
             .post('/vote', this.vote)
             .post('/playerVotes', this.calculateVotesOfPlayer)
-            .get('/getSuspects', this.getSuspectsFront)
             .post('/getVoters', this.getVoters)
             .post('/addToHistory', this.addToHistory)
-            .post('/votesOfRound', this.votesOfRound);
+            .post('/votesOfRound', this.votesOfRound)
+            .get('/getSuspects', this.getSuspectsFront)
+            ;
         return router;
     }
 
-    
     /**
      *  Vote somebody 
      *  
@@ -50,6 +50,8 @@ export class VotingController {
      * @param req.body.to the player that got the vote 
      */
     public vote(req: Request, res: Response) {
+        console.log("Vote received from: " + newVote.fromWho + " to: " + newVote.toWho);
+        
         var newVote: Vote = {
             fromWho: req.body.from,
             toWho: req.body.to,
@@ -73,6 +75,7 @@ export class VotingController {
                 this.voteToDie(newVote.fromWho, newVote.toWho, newVote);
         }
     }
+
     public voteToDie(fromWho: string, toWho: string, newVote: Vote) {
         //Check if player has already voted ??
         let p = players.get(fromWho)
@@ -153,10 +156,10 @@ export class VotingController {
         suspects.forEach((user: User) => {
             console.log("Suspect " + user.name);
         });
-        if(suspects.length == 0) console.log("suspects empty");
+        if (suspects.length == 0) console.log("suspects empty");
         res.json(suspects);
     }
-    
+
     public getSuspects() {
         let _suspects: Map<string, number> = new Map();
         players.forEach((p: Player, username: string) => {
@@ -165,16 +168,15 @@ export class VotingController {
         _suspects[Symbol.iterator] = function* () {
             yield* [...this.entries()].sort((a, b) => a[1] - b[1]);
         }
-        for (let [key, value] of _suspects) {     // print data sorted
-            console.log(key + ' ' + value);
-        }
+        // for (let [key, value] of _suspects) {     // print data sorted
+        //     console.log(key + ' ' + value);
+        // }
         let results: User[] = [];
-        let suspect1: string = _suspects.values().next().value;
-        let suspect2: string = _suspects.values().next().value;
+        let tmp: string[] = Array.from(_suspects.keys()).splice(0, 2);
         users.forEach(
-            (user: User) => { if (user.name == suspect1 || user.name == suspect2) results.push(user) }
+            (user: User) => { if (user.name == tmp[0] || user.name == tmp[1]) results.push(user) }
         );
-        
+
         return results;
         //TODO: if more people have the same vote count add them
     }
@@ -235,27 +237,27 @@ export class VotingController {
     }
 
     public initVoting() {
-        return new Promise ( (resolve, reject) => {
-            
+        return new Promise((resolve, reject) => {
+
             console.log("Init voting with players:");
-            
+
             let p: Player = {
                 canVote: true,
                 whotheyvoted: "",
                 votes: 0,
             };
 
-        suspects = round == 'Secret Voting' ? this.getSuspects() : users;
-        players.clear();
-        users.forEach(
-            (user: User) => {
-                players.set(user.name, {
-                    canVote: this.canVote(user.name),
-                    whotheyvoted: "",
-                    votes: 0,
-                }); 
-                console.log("Player " + user.name + "" + players.get(user.name).votes);
-            }
+            suspects = round == 'Secret Voting' ? this.getSuspects() : users;
+            players.clear();
+            users.forEach(
+                (user: User) => {
+                    players.set(user.name, {
+                        canVote: this.canVote(user.name),
+                        whotheyvoted: "",
+                        votes: 0,
+                    });
+                    console.log("Player " + user.name + "" + players.get(user.name).votes);
+                }
             );
             suspects.forEach((user: User) => {
                 console.log("Suspect " + user.name);
@@ -268,14 +270,14 @@ export class VotingController {
     }
 
     public async setPlayers() {
-        return new Promise ( async (resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
 
             let p: Player = {
                 canVote: false,
                 whotheyvoted: "",
                 votes: 0,
             };
-            
+
             await this.initVoting();
             detective_vote = null;
             doctor_vote = null;
