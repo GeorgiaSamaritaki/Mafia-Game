@@ -16,7 +16,7 @@ export class SmartTvComponent implements OnInit {
   next_title: string;
   day: string;
   count: number;
-  winner: string = 'Town';
+  winner: string = '';
   next_up_icon: string;
   round_title_path: string;
   background_rect: string;

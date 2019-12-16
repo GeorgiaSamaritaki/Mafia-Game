@@ -45,7 +45,7 @@
       <img class="down_vector" src="/assets/smart_tv/{{round_title_path}}.png" alt="Title of round">
     </div>
   </div>
-  <div class="gameEnd">
+  <div class="gameEnd" *ngIf="gameEnded()">
     <div *ngIf="isDay()">
       <img src="/assets/smart_tv/gameOverDay.png" alt="">
     </div>
