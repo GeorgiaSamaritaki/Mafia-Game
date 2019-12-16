@@ -3,7 +3,6 @@ import { DIContainer, MinioService, SocketsService } from '@app/services';
 import { Vote, roundSum, roundVotes, voteHistory } from './voting.interface'
 import { User, users } from '../users/user.interface'
 import { round } from '../state-machine/state-machine.controller'
-import { request } from 'http';
 
 import { smcontroller, usercontroller, votingcontroller } from '../index';
 import { UsersController } from '../users/users.controller';
@@ -16,7 +15,7 @@ interface Player {
     votes: number
 }
 let players: Map<string, Player> = new Map();
-let suspects: User[];
+let suspects: User[] = [];
 let doctor_vote: string = null;
 let detective_vote: string = null;
 let barman_vote: string = null;
@@ -38,8 +37,7 @@ export class VotingController {
             .post('/getVoters', this.getVoters)
             .post('/addToHistory', this.addToHistory)
             .post('/votesOfRound', this.votesOfRound)
-            .get('/getSuspects', this.getSuspectsFront)
-            ;
+            .get('/getSuspects', this.getSuspectsFront);
         return router;
     }
 
@@ -225,7 +223,7 @@ export class VotingController {
             case 'Doctor':
                 return usercontroller.getRole(username) == 'Doctor';
             case 'Detective':
-                return usercontroller.getRole(username) == 'Doctor';
+                return usercontroller.getRole(username) == 'Detective';
             case 'Barman':
                 return usercontroller.getRole(username) == 'Barman';
             default:
@@ -343,5 +341,35 @@ export class VotingController {
             barman_vote = null;
             resolve();
         });
+    }
+
+    public gameEnded() {
+        return new Promise((resolve, reject) => {
+
+            //Town win -> all mafia members dead
+            let townWin: boolean = true;
+            let mafiaMembersAlive: number = 0;
+            let townMembersAlive: number = 0;
+            users.forEach((user) => {
+                if (votingcontroller.isMafia(user.name)) {
+                    if (user.dead === 'alive') {
+                        mafiaMembersAlive++;
+                        townWin = false;
+                    }
+                } else {
+                    if (user.dead === 'alive')
+                        townMembersAlive++;
+                }
+            })
+            if (townWin) {
+                const SocketService = DIContainer.get(SocketsService);
+                SocketService.broadcast("gameEnded", 'Town');
+            } else if (mafiaMembersAlive >= townMembersAlive) {
+                //If mafia members are equal or more than thw town members they always win 
+                const SocketService = DIContainer.get(SocketsService);
+                SocketService.broadcast("mafiaWin", 'Mafia');
+            }
+            resolve();
+        })
     }
 }

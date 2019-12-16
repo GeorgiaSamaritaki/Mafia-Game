@@ -45,4 +45,16 @@
       <img class="down_vector" src="/assets/smart_tv/{{round_title_path}}.png" alt="Title of round">
     </div>
   </div>
+  <div class="gameEnd">
+    <div *ngIf="isDay()">
+      <img src="/assets/smart_tv/gameOverDay.png" alt="">
+    </div>
+    <div *ngIf="!isDay()">
+      <img src="/assets/smart_tv/gameOverNight.png" alt="">
+    </div>
+    <div class="winner">The {{winner}} won</div>
+    <div class="winnerImg">
+        <img src="/assets/smart_tv/winner{{winner}}.png" alt="">
+    </div>
+  </div>
 </div>

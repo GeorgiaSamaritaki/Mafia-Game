@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class AugmentedTableComponent implements OnInit {
 
   round: string;
+  winner: boolean = false;
   private players: UserModel[];
   private left_players: UserModel[];
   private right_players: UserModel[];
@@ -28,12 +29,12 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.initializePlayers();
-
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
     this.changeRound();
 
+    await this.initializePlayers();
+    
     this.socketService.syncMessages("roundChange").subscribe(msg => {
       console.log("Round is Changing");
       this.round = msg.message;
@@ -46,11 +47,17 @@ export class AugmentedTableComponent implements OnInit {
     });
     this.socketService.syncMessages("died").subscribe(msg => {
       console.log(msg.message);
-
+    });
+    this.socketService.syncMessages("gameEnded").subscribe( msg => {
+      console.log(`${msg.message} won`);
+      this.winner = true;
     });
   }
 
   private async initializePlayers() {
+    this.left_players = [];
+    this.right_players = [];
+    this.middle_players = [];
     this.votesOfPlayers = new Map();
     this.players = await this.usersService.getAllUsers().toPromise();
     for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
@@ -101,20 +108,17 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   public changeRound() {
+    console.log(this.round);
     switch (this.round) {
+      case 'Secret Voting':
       case 'Open Ballot':
         this.backgroundSVG = 'backgroundDay';
         break;
-      case 'Secret Voting':
-        break;
+      case 'Doctor':
+      case 'Detective':
+      case 'Barman':
       case 'Mafia Voting':
         this.backgroundSVG = 'backgroundNight';
-        break;
-      case 'Doctor':
-        break;
-      case 'Detective':
-        break;
-      case 'Barman':
         break;
       default:
         this.router.navigate(['/signin-table']);
@@ -125,6 +129,10 @@ export class AugmentedTableComponent implements OnInit {
     dead.avatar_path = `/graveyard/${dead.role}.png`;
     let index = this.players.findIndex(user => user.name == dead.name);
     this.players[index] = dead;
+  }
+
+  gameEnded() {
+    return this.winner;
   }
 
 }

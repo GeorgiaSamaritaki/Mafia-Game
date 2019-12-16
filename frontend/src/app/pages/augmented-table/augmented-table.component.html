@@ -84,4 +84,8 @@
             </div>
         </div>
     </div>
+    <div class="gameEnd" *ngIf="gameEnded()" >
+        <img src="/assets/augmented_table/gameOverDay.png" *ngIf="isDay()" alt="">
+        <img src="/assets/augmented_table/gameOverNight.png" *ngIf="!isDay()" alt="">
+    </div>
 </div>

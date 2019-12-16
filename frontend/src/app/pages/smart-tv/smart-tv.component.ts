@@ -16,7 +16,7 @@ export class SmartTvComponent implements OnInit {
   next_title: string;
   day: string;
   count: number;
-
+  winner: string = 'Town';
   next_up_icon: string;
   round_title_path: string;
   background_rect: string;
@@ -76,6 +76,10 @@ export class SmartTvComponent implements OnInit {
     this.socketService.syncMessages("died").subscribe(async msg => {
       console.log("User Died");
       this.aPlayerWasKilled(msg.message);
+    });
+    this.socketService.syncMessages("gameEnded").subscribe( msg => {
+      console.log(`${msg.message} won`);
+      this.winner = msg.message;
     });
 
     this.socketService.syncMessages("suspects").subscribe(msg => {
@@ -196,6 +200,10 @@ export class SmartTvComponent implements OnInit {
     }
     for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
 
+  }
+
+  gameEnded() {
+    return this.winner !== '';
   }
 
   async manualChange() {
