@@ -1,4 +1,9 @@
-<div id="background">
-
-    <img id="info" src="/assets/mobile/info.png" >
+<div id="container">
+    <div id="roleDes">Role Description</div>
+    <div class="roles">
+        <div class="role" *ngFor="let role of roles;">
+            <div class="roleText">{{role.description}}</div>
+            <!-- <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}"> -->
+        </div>
+    </div>
 </div>

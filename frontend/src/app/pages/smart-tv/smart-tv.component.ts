@@ -16,7 +16,7 @@ export class SmartTvComponent implements OnInit {
   next_title: string;
   day: string;
   count: number;
-
+  winner: string = 'Town';
   next_up_icon: string;
   round_title_path: string;
   background_rect: string;
@@ -51,7 +51,7 @@ export class SmartTvComponent implements OnInit {
     this.count = 1;
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
-     if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']); //FIXME: this needs to be active
+     if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']);
     this.round = "Open Ballot";
     this.changeRound();
 
@@ -74,7 +74,10 @@ export class SmartTvComponent implements OnInit {
       console.log("User Died");
       this.aPlayerWasKilled(msg.message);
     });
-
+    this.socketService.syncMessages("gameEnded").subscribe( msg => {
+      console.log(`${msg.message} won`);
+      this.winner = msg.message;
+    });
 
   }
 
@@ -222,6 +225,10 @@ export class SmartTvComponent implements OnInit {
     }
     for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
 
+  }
+
+  gameEnded() {
+    return this.winner !== '';
   }
 
   async manualChange() {

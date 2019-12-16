@@ -58,6 +58,7 @@ export class StateMachineController {
                 break;
             case Round.Secret_Voting:
                 await votingcontroller.whoToKill(); //who the players killed
+                await votingcontroller.gameEnded();
                 round = Round.Mafia_Voting;
                 break;
             case Round.Mafia_Voting:
@@ -71,6 +72,7 @@ export class StateMachineController {
                 break;
             case Round.Barman:
                 await votingcontroller.whoToKill(); // who the mafia killed
+                await votingcontroller.gameEnded();
                 round = Round.Open_Ballot
                 roundCounter++;
                 break;

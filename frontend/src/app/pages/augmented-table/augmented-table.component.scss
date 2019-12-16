@@ -219,3 +219,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.gameEnd {
+  position: absolute;
+  top: 0;
+  z-index: 10;
+}

@@ -1,9 +1,9 @@
 .all {
-  font-family: 'Revalia';
+  font-family: "Revalia";
   font-size: 28px;
   width: 1920px;
   height: 1080px;
-  background-color: #E67E22;
+  background-color: #e67e22;
   overflow: hidden;
   height: 100vh;
 }
@@ -27,12 +27,12 @@
   font-size: 40px;
   line-height: 70px;
   justify-content: center;
-  color: #656D78;
+  color: #656d78;
   width: 70px;
   height: 70px;
   margin-top: -6%;
   position: relative;
-  background: #F5F7FA;
+  background: #f5f7fa;
   border-radius: 56px;
 }
 
@@ -86,21 +86,20 @@
   bottom: 1028px;
   position: absolute;
   z-index: 1;
-  zoom: .7;
+  zoom: 0.7;
   align-self: flex-start;
 }
 
 .player_container_upper * {
   text-align: center;
-
 }
 
 .name_text {
   font-style: normal;
   font-weight: normal;
   text-align: center;
-  color: #656D78;
-  background: #F5F7FA;
+  color: #656d78;
+  background: #f5f7fa;
   border-radius: 28px;
   margin: 0 0 5%;
   font-size: 2vmax;
@@ -115,8 +114,8 @@
 .name_text_down {
   font-size: 36px;
   line-height: 45px;
-  color: #656D78;
-  background: #F5F7FA;
+  color: #656d78;
+  background: #f5f7fa;
   border-radius: 28px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -140,7 +139,7 @@
   display: flex;
   align-items: center;
 
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .tv_upper_icon {
@@ -154,7 +153,7 @@
 }
 
 #next_up_text {
-  color: #FFFFFF;
+  color: #ffffff;
   position: absolute;
   width: 191px;
   height: 33px;
@@ -190,7 +189,7 @@
   font-size: 20px;
   line-height: 25px;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
 
   position: absolute;
   left: 87.5%;
@@ -219,7 +218,7 @@
   font-weight: normal;
   font-size: 95px;
   align-items: center;
-  color: #F5F7FA;
+  color: #f5f7fa;
   z-index: 10;
   padding-bottom: 80px;
   padding-left: 48px;
@@ -257,7 +256,7 @@
   font-size: 60px;
   line-height: 74px;
   z-index: 3;
-  color: #F5F7FA;
+  color: #f5f7fa;
 }
 
 .secretVoting {
@@ -267,4 +266,33 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.gameEnd {
+  position: absolute;
+  top: 0;
+  z-index: 10;
+}
+
+.winner {
+  position: absolute;
+  width: 940px;
+  height: 119px;
+  left: 458px;
+  top: 492px;
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 96px;
+  line-height: 119px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.winnerImg {
+  position: absolute;
+  width: 295px;
+  height: 314px;
+  left: 1398px;
+  top: 719px;
 }
