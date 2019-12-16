@@ -42,19 +42,12 @@ export class SmartTvComponent implements OnInit {
     await this.userService.getAllUsers().toPromise().then(
       (players) => {
         this.players = players;
-        for (let i = 0, j = this.players.length; j >= 0; i++ , j--) {
-          this.votesOfPlayers.set(this.players[i].name, 0);
-          if (this.players[i].dead != "alive") {
-            console.log("sending to end" + this.players[i].name);
-            this.sendToEnd(this.players[i].name);
-            i = -1;
-          }
-        }
-        console.log(this.players);
+        this.players.forEach((user: UserModel) =>
+          this.votesOfPlayers.set(user.name, 0));
       }
     );
     this.deaths = [];
-  }
+  }  
 
   async ngOnInit() {
     this.count = 1;

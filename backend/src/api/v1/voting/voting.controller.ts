@@ -193,7 +193,7 @@ export class VotingController {
         let string1: string = "";
         let string2: string = "";
         for (let [key, value] of _suspects) {     // nothing actually works i swear
-            // console.log(key + ' ' + value);
+            console.log(key + ' ' + value);
             if (string1 != "") { string2 = key; break; }
             string1 = key;
         }
@@ -281,6 +281,13 @@ export class VotingController {
             //TODO: make sure detective learns what he asked for
         }
     }
+    getalive() {
+        var tmp: User[] = [];
+        users.forEach(
+            (user: User) => { if (user.dead == "alive") tmp.push(user) }
+        );
+        return tmp;
+    }
 
     public initVoting() {
         return new Promise((resolve, reject) => {
@@ -293,8 +300,8 @@ export class VotingController {
                 votes: 0,
             };
 
+            suspects = (round == 'Secret Voting') ? this.getSuspects() : this.getalive();
             players.clear();
-            suspects = [];
             users.forEach(
                 (user: User) => {
                     if (user.dead == "alive") {
@@ -304,13 +311,11 @@ export class VotingController {
                             votes: 0,
                         });
                         console.log("Player " + user.name);
-                        suspects.push(user);
                     } else {
                         console.log("Dead Player " + user.name);
                     }
                 }
             );
-            suspects = (round == 'Secret Voting') ? this.getSuspects() : suspects;
             suspects.forEach((user: User) => {
                 console.log("Suspect " + user.name);
             });
