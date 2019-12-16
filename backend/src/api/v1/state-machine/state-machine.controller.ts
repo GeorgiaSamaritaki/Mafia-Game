@@ -47,7 +47,7 @@ export class StateMachineController {
         res.json(round);
     }
 
-    public async changeRound(req: Request, res: Response) {
+    public async changeRound(req: Request = null, res: Response = null) {
         switch (round) {
             case Round.Waiting:
                 await usercontroller.distributeRoles().then((e) => console.log("Roles Distributed"));
@@ -57,7 +57,7 @@ export class StateMachineController {
                 round = Round.Secret_Voting;
                 break;
             case Round.Secret_Voting:
-                await votingcontroller.whoToKill(); //who the players killed
+                await votingcontroller.whoToKillDay(); //who the players killed
                 round = Round.Mafia_Voting;
                 break;
             case Round.Mafia_Voting:
@@ -70,19 +70,20 @@ export class StateMachineController {
                 round = Round.Barman;
                 break;
             case Round.Barman:
-                await votingcontroller.whoToKill(); // who the mafia killed
+                await votingcontroller.whoToKillNight(); // who the mafia killed
                 round = Round.Open_Ballot
                 roundCounter++;
                 break;
         }
 
-        await votingcontroller.setPlayers().then( () => {
+        await votingcontroller.setPlayers().then(() => {
             console.log("players set");
             const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("roundChange", round);
-            res.json(`Round changed to ${round}`);
+            if (res != null) res.json(`Round changed to ${round}`);
         });
     }
+    
 
     public selectNarrator(req: Request, res: Response) {
         const SocketService = DIContainer.get(SocketsService);
