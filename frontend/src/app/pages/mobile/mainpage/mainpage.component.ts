@@ -13,13 +13,13 @@ import { SelectMultipleControlValueAccessor } from '@angular/forms';
 export class MainpageComponent implements OnInit {
   round: string;
   initialized: boolean = false;
-  
+
   canVote: boolean = false;
   role: string;
   username: string;
   selectedTab: number = 1;
   players: UserModel[] = [];
-  
+
   private async initializePlayers() {
     // this.players = 
     await this.usersService.getAllUsers().toPromise().then(
@@ -27,7 +27,7 @@ export class MainpageComponent implements OnInit {
         this.players = e;
         let from: number;
         this.players.forEach((user: UserModel, index: number) => { if (user.name == this.username) { from = index; this.role = user.role; } });
-        this.players.forEach((user: UserModel, index: number) => { if (user.name != this.username) user.role = this.knowRole(user.role) });
+        this.players.forEach((user: UserModel, index: number) => { if (user.name != this.username && user.dead != "day") user.role = this.knowRole(user.role) });
         this.players.splice(0, 0, this.players.splice(from, 1)[0]);
         if (this.role == "" || this.role == undefined) {//FIXME: Should exit not patch
           console.log("ERROR: Player has not been assigned a role");
@@ -65,7 +65,7 @@ export class MainpageComponent implements OnInit {
         this.initializePlayers().then(() => this.initialized = true);
       }
       this.round = msg.message;
-      
+
       this.canVote = this.checkCanVote();
       if (this.isVoting())
         this.selectedTab = 2;
@@ -76,9 +76,12 @@ export class MainpageComponent implements OnInit {
     this.socketService.syncMessages("died").subscribe(msg => {
       console.log("User Died");
       let died: UserModel = msg.message;
-      died.role = died.dead == "day" ? died.role : "hidden";
       for (let i = 0; i < this.players.length; i++)
-        if (this.players[i].name == died.name) this.players[i] = died;
+        if (this.players[i].name == died.name) {
+          if (this.players[i].role == "hidden" && died.dead == 'night') died.role = "hidden";
+          console.log("User died: " + died.name + " " + died.role);
+          this.players[i] = died;
+        }
 
     });
     this.socketService.syncMessages("detective_findings").subscribe(msg => {
@@ -91,7 +94,7 @@ export class MainpageComponent implements OnInit {
   }
 
   public async RetriveInfoonReload() {
-    console.log("Retrieving info on Reload"); 
+    console.log("Retrieving info on Reload");
     // this.suspects = null;
     this.initialized = false;
     this.initializePlayers().then(() => {
@@ -104,15 +107,15 @@ export class MainpageComponent implements OnInit {
     else if (this.selectedTab == 2) this.selectedTab = 1;
   }
 
-  public submitVote(suspects_name:string) { //called from subcomponent
-    console.log("Submiting vote to "+ suspects_name);
-    
+  public submitVote(suspects_name: string) { //called from subcomponent
+    console.log("Submiting vote to " + suspects_name);
+
     if (this.selectedTab == 2) this.selectedTab = 1;
     this.canVote = false;
     let from = this.username, to = suspects_name;
     this.votingService.vote(from, to).toPromise();
-  } 
-  
+  }
+
 
   goBack() {
     console.log("Going back to login no logged in user");
