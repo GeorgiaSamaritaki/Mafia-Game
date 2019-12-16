@@ -5,6 +5,7 @@ import { User, users } from '../users/user.interface'
 import { round } from '../state-machine/state-machine.controller'
 
 import { smcontroller, usercontroller, votingcontroller } from '../index';
+import { UsersController } from '../users/users.controller';
 import { resolve } from 'dns';
 
 
@@ -76,6 +77,14 @@ export class VotingController {
             default:
                 console.log("what is wrong");
         }
+        if (votingcontroller.everyoneVoted()) smcontroller.changeRound();
+    }
+
+    public everyoneVoted() {
+        for (var [layer_name, player] of players)
+            if (player.canVote && player.whotheyvoted === "")
+                return false;
+        return true;
     }
 
     public voteToDie(newVote: Vote) {
@@ -84,10 +93,11 @@ export class VotingController {
             " to: " + newVote.toWho);
 
         //Fix stuff for voter
-        let p: Player = players.get(newVote.fromWho)
-        console.log(p);
-        if (!p.canVote) console.log("error voted somehow");
-        if (p.whotheyvoted != "") console.log("1error voted somehow");
+        let p = players.get(newVote.fromWho)
+        if (!p.canVote)
+            console.log("error voted somehow");
+        if (p.whotheyvoted != "")
+            console.log("1error voted again?");//todo: the player reloaded the page and voted again
         p.whotheyvoted = newVote.toWho;
         players.set(newVote.fromWho, p);
 
@@ -178,16 +188,19 @@ export class VotingController {
             _suspects.set(username, p.votes);
         });
         _suspects[Symbol.iterator] = function* () {
-            yield* [...this.entries()].sort((a, b) => a[1] - b[1]);
+            yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
         }
-        // for (let [key, value] of _suspects) {     // print data sorted
-        //     console.log(key + ' ' + value);
-        // }
-        let results: User[] = [];
-        let tmp: string[] = Array.from(_suspects.keys()).splice(0, 2);
-        users.forEach(
-            (user: User) => { if (user.name == tmp[0] || user.name == tmp[1]) results.push(user) }
-        );
+        let string1: string = "";
+        let string2: string = "";
+        for (let [key, value] of _suspects) {     // nothing actually works i swear
+            // console.log(key + ' ' + value);
+            if (string1 != "") { string2 = key; break; }
+            string1 = key;
+        }
+        console.log(" 1. " + string1 + " 2. " + string2);
+        var results: User[] = [];
+        results.push(users.find((user) => user.name == string1));
+        results.push(users.find((user) => user.name == string2));
 
         return results;
         //TODO: if more people have the same vote count add them
@@ -206,7 +219,7 @@ export class VotingController {
             case 'Open Ballot':
                 return true;
             case 'Mafia Voting':
-                return this.isMafia(username);
+                return votingcontroller.isMafia(username);
             case 'Doctor':
                 return usercontroller.getRole(username) == 'Doctor';
             case 'Detective':
@@ -217,18 +230,39 @@ export class VotingController {
                 console.log("Voting Controller:Error");
         }
     }
-    public whoToKill() {
-        let suspects: Map<string, number>;
+    public whoToKillDay() {
+        let suspects: Map<string, number> = new Map();
         players.forEach((p: Player, username: string) => {
             suspects.set(username, p.votes);
         });
         suspects[Symbol.iterator] = function* () {
-            yield* [...this.entries()].sort((a, b) => a[1] - b[1]);
+            yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
         }
+        var todie: string;
         for (let [key, value] of suspects) {     // print data sorted
-            // console.log(key + ' ' + value);
+            // console.log("Day sorted " + key + ' ' + value);
+            todie = key; break;
         }
-        let todie = Array.from(suspects.keys()).slice(0, 1)[0];
+        console.log("Day:brodcasting todie " + todie);
+        usercontroller.changePathOfUser(todie);
+        const SocketService = DIContainer.get(SocketsService);
+        SocketService.broadcast("died", users.find((user) => user.name == todie));
+    }
+
+    public whoToKillNight() {
+        let suspects: Map<string, number> = new Map();
+        players.forEach((p: Player, username: string) => {
+            suspects.set(username, p.votes);
+        });
+        suspects[Symbol.iterator] = function* () {
+            yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
+        }
+        var todie: string;
+        for (let [key, value] of suspects) {     // print data sorted
+            // console.log("Day sorted " + key + ' ' + value);
+            todie = key; break;
+        }
+        console.log("Day:brodcasting todie " + todie);
         if (todie == doctor_vote) {
             console.log("The deceased was saved by the doctor");
             todie = null;
@@ -259,18 +293,24 @@ export class VotingController {
                 votes: 0,
             };
 
-            suspects = round == 'Secret Voting' ? this.getSuspects() : users;
             players.clear();
+            suspects = [];
             users.forEach(
                 (user: User) => {
-                    players.set(user.name, {
-                        canVote: this.canVote(user.name),
-                        whotheyvoted: "",
-                        votes: 0,
-                    });
-                    console.log("Player " + user.name + "" + players.get(user.name).votes);
+                    if (user.dead == "alive") {
+                        players.set(user.name, {
+                            canVote: this.canVote(user.name),
+                            whotheyvoted: "",
+                            votes: 0,
+                        });
+                        console.log("Player " + user.name);
+                        suspects.push(user);
+                    } else {
+                        console.log("Dead Player " + user.name);
+                    }
                 }
             );
+            suspects = (round == 'Secret Voting') ? this.getSuspects() : suspects;
             suspects.forEach((user: User) => {
                 console.log("Suspect " + user.name);
             });

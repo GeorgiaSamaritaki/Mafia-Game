@@ -12,14 +12,16 @@
       <div [className]="isSecretVoting() ? 'player_container_upper' : 'player_container'">
         <div class="player" *ngFor="let player of players; let i=index" [ngStyle]="isSecretVoting()? { 'width': 'calc(75% / (' + this.players.length -2 + '))' } :
                      {'width': 'calc(95% / ' + this.players.length + ')' }"
-          [ngClass]="(isSecretVoting() && (isSuspect(i)||isDead(i))) ? 'hide': '' ">
+          [ngClass]="(isSecretVoting() && (isSuspect(player.name)||player.dead!='alive')) ? 'hide': '' ">
           <div class="name_text">{{player.name}}</div>
           <img style="width: 90%;" src="/assets/players/{{player.avatar_path}}">
           <div class="votes" [ngClass]="{hide: !showVotes(i) || !isOpenBallot()}">
             {{this.votesOfPlayers.get(this.players[i].name)}}
           </div>
-          <div *ngIf="!isSecretVoting() && isDead(i)" class="card">
-            <img src="/assets/smart_tv/card_{{players[i].role}}.png" alt="card icon">
+          <div *ngIf="!isSecretVoting() && player.dead!='alive'" class="card">
+            <img *ngIf="players[i].dead =='night'" src="/assets/smart_tv/card_night.png" alt="card icon">
+            <img *ngIf="players[i].dead =='day'" class="cardicon" src="/assets/smart_tv/card_{{players[i].role}}.png"
+              alt="card icon">
           </div>
         </div>
       </div>
@@ -27,9 +29,9 @@
     <div class="secretVoting" [ngClass]="{hide: !isSecretVoting()}">
       <p id="final_words">Who will say their final words?</p>
       <div id="suspect_container">
-        <div *ngFor="let player of players; let i=index" [ngClass]="{hide: !isSuspect(i)}" class="suspect">
+        <div *ngFor="let player of suspects; let i=index" class="suspect">
           <img style="width: 100%;" src="/assets/players/{{player.avatar_path}}">
-          <div [className]="isSuspect(i) ? 'name_text_down' : 'name_text'">{{player.name}}</div>
+          <div class="name_text_down">{{player.name}}</div>
         </div>
       </div>
     </div>

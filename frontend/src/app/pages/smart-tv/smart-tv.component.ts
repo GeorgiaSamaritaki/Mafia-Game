@@ -22,7 +22,7 @@ export class SmartTvComponent implements OnInit {
   background_rect: string;
   players: UserModel[] = [];
   votesOfPlayers: Map<string, number>;
-  suspects_indexes: number[] = [1, 2]; //can change
+  suspects: UserModel[] = null; //can change
   index_of_killed: number;
   shouldDie: UserModel;
   deaths: string[];
@@ -37,21 +37,30 @@ export class SmartTvComponent implements OnInit {
     private router: Router) {
   }
 
-
-
   private async initializePlayers() {
     this.votesOfPlayers = new Map();
-    this.players = await this.userService.getAllUsers().toPromise();
-    for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
+    await this.userService.getAllUsers().toPromise().then(
+      (players) => {
+        this.players = players;
+        for (let i = 0, j = this.players.length; j >= 0; i++ , j--) {
+          this.votesOfPlayers.set(this.players[i].name, 0);
+          if (this.players[i].dead != "alive") {
+            console.log("sending to end" + this.players[i].name);
+            this.sendToEnd(this.players[i].name);
+            i = -1;
+          }
+        }
+        console.log(this.players);
+      }
+    );
     this.deaths = [];
-
   }
 
   async ngOnInit() {
     this.count = 1;
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
-     if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']);
+    if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']); //FIXME: this needs to be active
     this.round = "Open Ballot";
     this.changeRound();
 
@@ -70,6 +79,7 @@ export class SmartTvComponent implements OnInit {
       console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
       this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
     });
+
     this.socketService.syncMessages("died").subscribe(async msg => {
       console.log("User Died");
       this.aPlayerWasKilled(msg.message);
@@ -79,6 +89,12 @@ export class SmartTvComponent implements OnInit {
       this.winner = msg.message;
     });
 
+    this.socketService.syncMessages("suspects").subscribe(msg => {
+      //youcan vote yourself always
+      console.log("Suspects Received");
+      console.log(msg.message);
+      this.suspects = msg.message;
+    });
   }
 
   sendToEnd(name: string) {
@@ -116,43 +132,9 @@ export class SmartTvComponent implements OnInit {
       return this.votesOfPlayers.get(player);
   }
 
-
-  whoShouldDie() { //get suspects in the middle TODO: maybe some with same votes and we have more
-    var max: number = -Infinity, max1: number = max, player_name: string, player_name1: string;
-    this.votesOfPlayers.forEach((votes: number, name: string) => {
-      if (max1 < votes) {
-        if (max < votes) {
-          max1 = max;
-          player_name1 = player_name;
-          max = votes;
-          player_name = name;
-        } else {
-          max1 = votes;
-          player_name1 = name;
-        }
-      }
-    });
-    console.log("WhoshouldDie-> player: " + player_name + " player2:" + player_name1);
-    this.suspects_indexes[0] = -1;
-    this.suspects_indexes[1] = -1;
-    for (var i = 0; i < this.players.length; i++) {
-      if (this.players[i].name == player_name) this.suspects_indexes[0] = i;
-      if (this.players[i].name == player_name1) this.suspects_indexes[1] = i;
-    }
-    this.votesOfPlayers.set(player_name, 0);
-    this.votesOfPlayers.set(player_name1, 0);
-  }
-
-  isSuspect(i: number) {
-    if (i == this.suspects_indexes[0] || i == this.suspects_indexes[1]) return true;
-    return false;
-  }
-
-
-  isDead(i: number) {
-    for (var player_name of this.deaths)
-      if (this.players[i].name == player_name) return true;
-
+  isSuspect(username: string) {
+    for (let i = 0; i < this.suspects.length; i++)
+      if (this.suspects[i].name == username) return true;
     return false;
   }
 
@@ -232,28 +214,6 @@ export class SmartTvComponent implements OnInit {
   }
 
   async manualChange() {
-    //FIXME: manual change with no need
-    // switch (this.round) {
-    //   case 'Secret Voting': //Open Ballot -> Secret Voting
-    //     this.round = 'Mafia Voting';
-    //     break;
-    //   case 'Mafia Voting': //Secret Voting -> Mafia Voting
-    //     this.round = 'Doctor';
-    //     break;
-    //   case 'Doctor': //Mafia Voting -> Doctor
-    //     this.round = 'Detective';
-    //     break;
-    //   case 'Detective': //Doctor -> Detective
-    //     this.round = 'Barman';
-    //     break;
-    //   case 'Barman': //Detective -> Barman
-    //     this.round = 'Open Ballot';
-    //     break;
-    //   case 'Open Ballot': //Barman -> Open Ballot
-    //     this.round = 'Secret Voting';
-    //     break;
-    // }
-    // this.changeRound();
     await this.statemachineService.changeRound().toPromise();
   }
 
