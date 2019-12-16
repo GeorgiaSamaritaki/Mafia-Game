@@ -64,13 +64,22 @@ export class UsersController {
     }
 
     public async changePathOfUser(todie: string) {
-        users.forEach((user: User) => {
-            if (user.name === todie) {
-                user.avatar_path = "killed_" + user.avatar_path;
-                user.dead = (round == "Open Ballot" || round == "Secret Voting") ? "day" : "night";
-            }
-        })
-    }
+        var BreakException = {};
+        try {
+            users.forEach((user: User, index: number) => {
+                if (user.name === todie) {
+                    user.avatar_path = "killed_" + user.avatar_path;
+                    user.dead = (round == "Open Ballot" || round == "Secret Voting") ? "day" : "night";
+
+                    let cutOut = users.splice(index, 1)[0]; // move dead to the end
+                    users.splice(users.length, 0, cutOut);
+                    throw BreakException;
+                }
+            })
+        } catch (e) {
+            if (e !== BreakException) throw e;
+        }
+    } 
 
     public getUser(req: Request, res: Response) {
         try {

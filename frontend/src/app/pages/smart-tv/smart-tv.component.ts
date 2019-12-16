@@ -25,8 +25,6 @@ export class SmartTvComponent implements OnInit {
   suspects: UserModel[] = null; //can change
   index_of_killed: number;
   shouldDie: UserModel;
-  deaths: string[];
-  dead_indexes: number[] = [];
   @Input() player_count: number;
   suspect_count: number;
 
@@ -46,7 +44,6 @@ export class SmartTvComponent implements OnInit {
           this.votesOfPlayers.set(user.name, 0));
       }
     );
-    this.deaths = [];
   }  
 
   async ngOnInit() {
@@ -100,7 +97,6 @@ export class SmartTvComponent implements OnInit {
   }
 
   async aPlayerWasKilled(dead_player: UserModel) { //find index or name
-    this.deaths.push(dead_player.name);
     this.sendToEnd(dead_player.name);
 
     if (dead_player.dead == "day") {

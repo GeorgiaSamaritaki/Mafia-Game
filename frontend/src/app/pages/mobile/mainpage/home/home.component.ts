@@ -34,5 +34,10 @@ export class HomeComponent implements OnInit {
       this.flips[index] = false;
     });;
   }
+  getpath(path: string) {
+    if (path.startsWith("killed_")) return path;
+    return "mobile_" + path;
+
+  }
 
 }
