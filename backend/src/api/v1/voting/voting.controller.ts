@@ -281,6 +281,7 @@ export class VotingController {
             //TODO: make sure detective learns what he asked for
         }
     }
+    
     getalive() {
         var tmp: User[] = [];
         users.forEach(

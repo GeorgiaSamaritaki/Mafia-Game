@@ -19,7 +19,7 @@ export class MainpageComponent implements OnInit {
   username: string;
   selectedTab: number = 1;
   players: UserModel[] = [];
-
+ 
   private async initializePlayers() {
     // this.players = 
     await this.usersService.getAllUsers().toPromise().then(
@@ -139,6 +139,7 @@ export class MainpageComponent implements OnInit {
   }
 
   public checkCanVote() {
+    // if(this.players.find((user:UserModel)=>user.name == this.username).dead !="alive") return false;
     switch (this.round) {
       case 'Waiting':
         return false;

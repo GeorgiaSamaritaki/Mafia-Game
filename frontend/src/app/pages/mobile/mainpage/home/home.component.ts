@@ -18,9 +18,8 @@ export class HomeComponent implements OnInit {
     this.flips[index] = !this.flips[index];
   }
   public flipall() {
-    //initial thought of majority
-    // let tmp:boolean = !(this.flips.filter(current=>current).length >= this.flips.length);
     let tmp: boolean = this.flips.filter(current => current).length != 0 ? false : true;
+    tmp = true;
     this.flips.forEach((item, index) => { this.flips[index] = tmp; });
   }
 
@@ -30,6 +29,7 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     await this.parent.ngOnInit;
+    console.log("ok")
     this.parent.players.forEach((item, index) => {
       this.flips[index] = false;
     });;
