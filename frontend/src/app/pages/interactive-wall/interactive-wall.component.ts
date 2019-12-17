@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { SmartSpeakerService } from 'src/app/smart-speaker.service';
 import { UserModel } from 'src/app/global/models';
+import { LeapService, Gestures } from '../cursor/leap.service';
 
 @Component({
   selector: 'ami-fullstack-interactive-wall',
@@ -25,7 +26,8 @@ export class InteractiveWallComponent implements OnInit {
     private socketService: SocketsService,
     private speakerService: SmartSpeakerService,
     private votingService: VotingService,
-    private userService: UsersService) {
+    private userService: UsersService,
+    private leapService: LeapService) {
     this.lap = 0;//this is backend
     this.phases_num = 0;
     this.backgroundColor = '#E74C3C';//TODO:this is css 
@@ -65,7 +67,9 @@ export class InteractiveWallComponent implements OnInit {
     this.speakerService.speak('Hi! I am Smart Speaker. I will be your narrator for this game.');
     console.log('welcome speech');
   }
+  swipeWrapperUp(){
 
+  }
   async changeRound() {
     this.lap++;
     let tmp: any = (await this.votingService.votesOfRound('day1').toPromise());
@@ -143,6 +147,11 @@ export class InteractiveWallComponent implements OnInit {
 
 
   async ngOnInit() {
+    this.leapService.gestureRecognizer().subscribe(gesture =>{
+      if(gesture==Gestures.SWIPE_DOWN){
+        this.swipeWrapperUp()
+      }
+    })
     this.round = <string>await this.statemachineService.getRound().toPromise();
     this.round = "Open Ballot";
     console.log("Number of rounds: " + this.round_histroy);

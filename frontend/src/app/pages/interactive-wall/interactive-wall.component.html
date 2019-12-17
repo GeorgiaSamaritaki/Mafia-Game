@@ -1,10 +1,10 @@
 <div class="all" [style.background-color]="backgroundColor">
-  <div class="wrapper">
+  <div class="wrapper" (click)="swipeWrapperUp()"  >
     <div id="bar" [ngStyle]="{display:(lap > 1)?'block':'none'}">
     </div>
     <div class="column timeline" [ngStyle]="{display:(lap > 1)?'block':'none'}">
       <img class="game_start" src="/assets/interactive-wall/game_start.png" alt="game start">
-      <div *ngFor="let phase of phases; let i=index" style="height: 175px;">
+      <!--<div *ngFor="let phase of phases; let i=index" style="height: 175px;">
         <div class="timelineRow">
           <div class="circleAndText">
             <img class="circle"
@@ -19,6 +19,76 @@
                 <img class="voter" src="/assets/interactive-wall/{{voter}}" alt="avatar of suspect">
               </div>
             </div>
+          </div>
+        </div>
+      </div>-->
+      <div style="height: 175px;">
+        <div class="timelineRow">
+          <div class="circleAndText">
+            <img class="circle"
+              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+              alt="circle">
+            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
+          </div>
+        </div>
+      </div>
+      <div style="height: 175px;">
+        <div class="timelineRow">
+          <div class="circleAndText">
+            <img class="circle"
+              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+              alt="circle">
+            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
+          </div>
+        </div>
+      </div>
+      <div style="height: 175px;">
+        <div class="timelineRow">
+          <div class="circleAndText">
+            <img class="circle"
+              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+              alt="circle">
+            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
+          </div>
+        </div>
+      </div>
+      <div style="height: 175px;">
+        <div class="timelineRow">
+          <div class="circleAndText">
+            <img class="circle"
+              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+              alt="circle">
+            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
+          </div>
+        </div>
+      </div>
+      <div style="height: 175px;">
+        <div class="timelineRow">
+          <div class="circleAndText">
+            <img class="circle"
+              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+              alt="circle">
+            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
+          </div>
+        </div>
+      </div>
+      <div style="height: 175px;">
+        <div class="timelineRow">
+          <div class="circleAndText">
+            <img class="circle"
+              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+              alt="circle">
+            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
+          </div>
+        </div>
+      </div>
+      <div style="height: 175px;">
+        <div class="timelineRow">
+          <div class="circleAndText">
+            <img class="circle"
+              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
+              alt="circle">
+            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
           </div>
         </div>
       </div>
