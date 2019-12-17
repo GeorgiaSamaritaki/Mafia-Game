@@ -66,12 +66,12 @@
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
                 <div class="knives">
-                    <img class="knife" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
-                    <img class="knife" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
-                    <img class="knife" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
-                    <img class="knife" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
-                    <img class="knife" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
-                    <img class="knife" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 4" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 5" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 6" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
                 </div>
             </div>
         </div>
@@ -82,12 +82,12 @@
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
                 <div class="knives">
-                    <img class="knife" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
-                    <img class="knife" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
-                    <img class="knife" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
-                    <img class="knife" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
-                    <img class="knife" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
-                    <img class="knife" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 4" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 5" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 6" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
                 </div>
             </div>
         </div>
@@ -98,12 +98,12 @@
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
                 <div class="knives">
-                    <img class="knife" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
-                    <img class="knife" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
-                    <img class="knife" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
-                    <img class="knife" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
-                    <img class="knife" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
-                    <img class="knife" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 4" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 5" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 6" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
                 </div>
             </div>
         </div>

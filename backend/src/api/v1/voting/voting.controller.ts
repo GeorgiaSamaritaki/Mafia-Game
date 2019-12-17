@@ -34,7 +34,7 @@ export class VotingController {
             .get('/getSuspects', this.getSuspectsFront);
         return router;
     }
- 
+
     /**
      *  Vote somebody 
      *  
@@ -66,14 +66,15 @@ export class VotingController {
             case "Mafia Voting":
             case "Waiting":
                 votingcontroller.voteToDie(newVote);
-                if (!votingcontroller.everyoneVoted())
+                if (!votingcontroller.everyoneVoted()) {
+                    res.json(newVote);
                     return;
+                }
                 break;
             default:
                 console.log("what is wrong");
         }
         if (votingcontroller.everyoneVoted()) smcontroller.changeRound();
-        res.json(newVote);
     }
 
     public everyoneVoted() {
