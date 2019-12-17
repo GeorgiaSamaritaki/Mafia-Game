@@ -12,21 +12,18 @@ import { Router } from '@angular/router';
 export class SmartTvComponent implements OnInit {
   round: string;
   initialized: boolean = false;
-  phase_title: string;
-  next_title: string;
-  day: string;
   count: number;
   winner: string = '';
-  next_up_icon: string;
-  round_title_path: string;
-  background_rect: string;
   players: UserModel[] = [];
   votesOfPlayers: Map<string, number>;
   suspects: UserModel[] = null; //can change
-  index_of_killed: number;
   shouldDie: UserModel;
-  @Input() player_count: number;
-  suspect_count: number;
+  
+  phase_title: string; // html stuff that are for some reason here
+  next_title: string;
+  next_up_icon: string;
+  round_title_path: string;
+  background_rect: string;
 
   constructor(private statemachineService: StateMachineService,
     private userService: UsersService,
@@ -44,10 +41,10 @@ export class SmartTvComponent implements OnInit {
           this.votesOfPlayers.set(user.name, 0));
       }
     );
-  }  
+  } 
 
   async ngOnInit() {
-    this.count = 1;
+    this.count = <number>await this.statemachineService.getCounter().toPromise();
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
     if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']); //FIXME: this needs to be active
@@ -74,7 +71,8 @@ export class SmartTvComponent implements OnInit {
       console.log("User Died");
       this.aPlayerWasKilled(msg.message);
     });
-    this.socketService.syncMessages("gameEnded").subscribe( msg => {
+    
+    this.socketService.syncMessages("gameEnded").subscribe(msg => {
       console.log(`${msg.message} won`);
       this.winner = msg.message;
     });
@@ -107,7 +105,7 @@ export class SmartTvComponent implements OnInit {
 
     this.players[this.players.length - 1] = dead_player;
 
-  }
+  } 
 
   getPlayer(player_name: string) {
     for (var user of this.players)
@@ -163,7 +161,6 @@ export class SmartTvComponent implements OnInit {
         this.phase_title = "Mafia Voting";
         this.next_title = "Doctor";
         this.next_up_icon = "nu_doctor";
-        this.count++;
         break;
       case 'Doctor': //Mafia Voting -> Doctor
         this.round_title_path = "doctor";

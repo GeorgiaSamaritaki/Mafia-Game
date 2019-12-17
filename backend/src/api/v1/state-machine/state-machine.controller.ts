@@ -62,12 +62,13 @@ export class StateMachineController {
                 round = Round.Mafia_Voting;
                 break;
             case Round.Mafia_Voting:
+                await votingcontroller.setVictim();
                 round = Round.Doctor;
                 break;
             case Round.Doctor:
                 round = Round.Detective;
                 break;
-            case Round.Detective:
+            case Round.Detective: 
                 round = Round.Barman;
                 break;
             case Round.Barman:
@@ -78,14 +79,12 @@ export class StateMachineController {
                 break;
         }
 
-        await votingcontroller.setPlayers().then(() => {
-            console.log("players set");
-            const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("roundChange", round);
-            if (res != null) res.json(`Round changed to ${round}`);
-        });
+        await votingcontroller.setPlayers().then(() => { console.log("players set");});
+        const SocketService = DIContainer.get(SocketsService);
+        SocketService.broadcast("roundChange", round);
+        if (res != null) res.json(`Round changed to ${round}`);
     }
-    
+
 
     public selectNarrator(req: Request, res: Response) {
         const SocketService = DIContainer.get(SocketsService);
