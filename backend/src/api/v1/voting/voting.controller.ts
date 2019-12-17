@@ -3,11 +3,7 @@ import { DIContainer, MinioService, SocketsService } from '@app/services';
 import { Vote, roundSum, roundVotes, voteHistory } from './voting.interface'
 import { User, users } from '../users/user.interface'
 import { round } from '../state-machine/state-machine.controller'
-
 import { smcontroller, usercontroller, votingcontroller } from '../index';
-import { UsersController } from '../users/users.controller';
-import { resolve } from 'dns';
-
 
 interface Player {
     canVote: boolean,
@@ -76,7 +72,8 @@ export class VotingController {
             default:
                 console.log("what is wrong");
         }
-        smcontroller.changeRound();
+        if (votingcontroller.everyoneVoted()) smcontroller.changeRound();
+        res.json(newVote);
     }
 
     public everyoneVoted() {

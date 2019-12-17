@@ -24,11 +24,10 @@ export class AugmentedTableComponent implements OnInit {
     private statemachineService: StateMachineService,
     private socketService: SocketsService,
     private router: Router
-  ) {
-    this.backgroundSVG = 'backgroundDay'
-  }
-
+  ) {}
+  
   async ngOnInit() {
+    this.backgroundSVG = 'backgroundDay'
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
     this.changeRound();
@@ -46,7 +45,8 @@ export class AugmentedTableComponent implements OnInit {
       this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
     });
     this.socketService.syncMessages("died").subscribe(msg => {
-      console.log(msg.message);
+      console.log(`${msg.message.name} died`);
+      this.aPlayerDied(msg.message);
     });
     this.socketService.syncMessages("gameEnded").subscribe( msg => {
       console.log(`${msg.message} won`);
@@ -55,16 +55,16 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   private async initializePlayers() {
-    this.left_players = [];
-    this.right_players = [];
-    this.middle_players = [];
     this.votesOfPlayers = new Map();
     this.players = await this.usersService.getAllUsers().toPromise();
     for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
     this.arrangePlayers();
   }
-
+  
   private arrangePlayers() {
+    this.left_players = [];
+    this.right_players = [];
+    this.middle_players = [];
     if (this.players.length <= 7) {
       this.players.forEach(player => {
         switch (player.position) {
@@ -108,7 +108,6 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   public changeRound() {
-    console.log(this.round);
     switch (this.round) {
       case 'Secret Voting':
       case 'Open Ballot':
@@ -128,7 +127,10 @@ export class AugmentedTableComponent implements OnInit {
   public aPlayerDied(dead: UserModel) {
     dead.avatar_path = `/graveyard/${dead.role}.png`;
     let index = this.players.findIndex(user => user.name == dead.name);
+    this.players[index] = null;
     this.players[index] = dead;
+    console.log(this.players);
+    this.arrangePlayers();
   }
 
   gameEnded() {

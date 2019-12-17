@@ -69,7 +69,6 @@ export class SigninTableComponent implements OnInit {
     });
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
-      console.log('Starting game!');
       if (msg.message != 'Waiting') {
         this.router.navigate(['/augmented-table']);
       }
