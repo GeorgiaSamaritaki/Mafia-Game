@@ -1,16 +1,16 @@
 <div class="all" [style.background-color]="backgroundColor">
-  <div class="wrapper" (click)="swipeWrapperUp()"  >
+  <div class="wrapper">
     <div id="bar" [ngStyle]="{display:(lap > 1)?'block':'none'}">
     </div>
-    <div class="column timeline" [ngStyle]="{display:(lap > 1)?'block':'none'}">
-      <img class="game_start" src="/assets/interactive-wall/game_start.png" alt="game start">
-      <!--<div *ngFor="let phase of phases; let i=index" style="height: 175px;">
+    <div class="column" id="timeline" [ngStyle]="{display:(lap > 1)?'block':'none'}" (click)="swipeTimelineDown();">
+      <img class="game_start" src="/assets/interactive-wall/game_start.png" [ngStyle]="{display:(lap > 1)?'inherit':'none'}"alt="game start">
+      <div *ngFor="let phase of phases; let i=index" style="height: 175px;">
         <div class="timelineRow">
           <div class="circleAndText">
             <img class="circle"
               [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
               alt="circle">
-            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">{{phases[i]}} {{phases_num}}</div>
+            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">{{phases[i]}} {{phases_num_array[i]}}</div>
           </div>
           <div *ngFor="let suspect of suspects_pngs; let i=index" class="suspects">
             <img class="suspect" src="/assets/interactive-wall/{{suspect}}" alt="avatar of suspect">
@@ -21,81 +21,11 @@
             </div>
           </div>
         </div>
-      </div>-->
-      <div style="height: 175px;">
-        <div class="timelineRow">
-          <div class="circleAndText">
-            <img class="circle"
-              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
-              alt="circle">
-            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
-          </div>
-        </div>
-      </div>
-      <div style="height: 175px;">
-        <div class="timelineRow">
-          <div class="circleAndText">
-            <img class="circle"
-              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
-              alt="circle">
-            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
-          </div>
-        </div>
-      </div>
-      <div style="height: 175px;">
-        <div class="timelineRow">
-          <div class="circleAndText">
-            <img class="circle"
-              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
-              alt="circle">
-            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
-          </div>
-        </div>
-      </div>
-      <div style="height: 175px;">
-        <div class="timelineRow">
-          <div class="circleAndText">
-            <img class="circle"
-              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
-              alt="circle">
-            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
-          </div>
-        </div>
-      </div>
-      <div style="height: 175px;">
-        <div class="timelineRow">
-          <div class="circleAndText">
-            <img class="circle"
-              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
-              alt="circle">
-            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
-          </div>
-        </div>
-      </div>
-      <div style="height: 175px;">
-        <div class="timelineRow">
-          <div class="circleAndText">
-            <img class="circle"
-              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
-              alt="circle">
-            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
-          </div>
-        </div>
-      </div>
-      <div style="height: 175px;">
-        <div class="timelineRow">
-          <div class="circleAndText">
-            <img class="circle"
-              [attr.src]="(phases[i] == 'Day')? '/assets/interactive-wall/circle_day.png' : '/assets/interactive-wall/circle_night.png'"
-              alt="circle">
-            <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">phases</div>
-          </div>
-        </div>
       </div>
     </div>
-    <div id="narrator_title" [ngStyle]="{display:(playersJoined == true)?'block':'none'}">Select Narrator:</div>
+    <div id="narrator_title" [ngStyle]="{display:(lap == 0)?'block':'none'}">Select Narrator:</div>
   </div>
-  <div class="button_container row" *ngIf="(playersJoined == true)" [ngStyle]="{'margin-top':(lap != 0)?'6%':'0%'}">
+  <div class="button_container row" [ngStyle]="{'margin-top':(lap != 0)?'6%':'0%'}">
     <div class="butt plyr_butt" [ngStyle]="{display:(lap == 0)?'block':'none'}">
       <img id="player_icon" src="/assets/interactive-wall/player_icon.png" alt="player icon">
       <p>Player</p>

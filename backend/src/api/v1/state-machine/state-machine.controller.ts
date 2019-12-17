@@ -75,6 +75,9 @@ export class StateMachineController {
                 await votingcontroller.gameEnded();
                 round = Round.Open_Ballot
                 roundCounter++;
+                console.log(roundCounter);
+                const SocketService = DIContainer.get(SocketsService);
+                SocketService.broadcast("dayCounter", roundCounter);
                 break;
         }
 
@@ -85,7 +88,7 @@ export class StateMachineController {
             if (res != null) res.json(`Round changed to ${round}`);
         });
     }
-    
+
 
     public selectNarrator(req: Request, res: Response) {
         const SocketService = DIContainer.get(SocketsService);
@@ -94,8 +97,6 @@ export class StateMachineController {
     }
 
     public getCounter(req: Request, res: Response) {
-        const SocketService = DIContainer.get(SocketsService);
-        SocketService.broadcast("dayCounter", roundCounter);
         res.json(roundCounter);
     }
 }

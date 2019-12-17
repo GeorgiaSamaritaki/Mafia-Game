@@ -6,3 +6,5 @@ integration/logs/
 backend/node_modules/
 
 frontend/src/environments/environment.ts
+
+frontend/src/environments/
