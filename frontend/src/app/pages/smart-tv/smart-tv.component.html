@@ -3,8 +3,8 @@
     <img class="tv_upper_icon" [attr.src]="isDay()? '/assets/smart_tv/Sun.png' : '/assets/smart_tv/moon.png'"
       alt="Background icon">
 
-    <span *ngIf="isDay" class="count">Day {{count}}</span>
-    <span *ngIf="!isDay" class="count">Night {{count}}</span>
+    <span *ngIf="isDay()" class="count">Day {{count}}</span>
+    <span *ngIf="!isDay()" class="count">Night {{count}}</span>
 
     <img [style.height]="!isSecretVoting()? '210px':'375px'" id="tv-rectangle"
       src="/assets/smart_tv/{{background_rect}}.png" alt="Background vector">
