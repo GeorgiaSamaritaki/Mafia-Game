@@ -124,6 +124,7 @@
   box-shadow: none;
   transform: translate(2px,3px);
 }
+
 .flip-card-back:active {
   filter:none;
   box-shadow: none;
@@ -153,6 +154,99 @@
   transform: translate(0,4px);
 }
 
-.dead{
-  opacity: 0.7;
+.dead {
+  opacity: .7;
+}
+
+//bottom card
+#popcard {
+  width: 90%;
+  height: 80%;
+  max-width: 330px;
+  min-height: auto;
+  max-height: 650px;
+  border-radius: 5%;
+  background-color: #f5f7fa;
+  position: fixed;
+  top: calc(100% - 68px);
+  box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px 3% 0;
+}
+
+.move {
+  transform: translate(0, -100%) !important;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+.role_title {
+  font-size: 20px;
+  line-height: 30px;
+  margin: 15px 0;
+}
+
+#role_image {
+  background: #E74C3C;
+  border-radius: 10px;
+  width: 90%;
+  height: 45%;
+  display: flex;
+  justify-content: center;
+}
+
+#role_image img {
+  margin-top: -10px;
+  height: calc(100% + 11px);
+  width: auto;
+}
+
+#role_description_title {
+  font-size: 18px;
+  line-height: 29px;
+  color: #C82E2E;
+  align-self: flex-start;
+  margin: 10px 0 5px;
+}
+
+#role_description {
+  font-size: 16px;
+}
+
+.accomplices {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.accomplice_image {
+  width: 50px;
+  height: auto;
+  align-self: flex-end;
+}
+
+.accomplice_image img {
+  width: 100%;
+  height: auto;
+}
+
+.accomplice_role {
+  width: 30px;
+  height: auto;
+  align-self: flex-end;
+  margin-left: -8px;
+}
+
+.accomplice_role img {
+  width: 100%;
+  height: auto;
+}
+
+.accomplices_description {
+  font-size: 14px;
+  line-height: 17px;
+  margin-left: 10px;
 }

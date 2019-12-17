@@ -13,20 +13,20 @@ import { SelectMultipleControlValueAccessor } from '@angular/forms';
 export class MainpageComponent implements OnInit {
   round: string;
   initialized: boolean = false;
-
+  dead: boolean = false;
   canVote: boolean = false;
   role: string;
   username: string;
   selectedTab: number = 1;
   players: UserModel[] = [];
- 
+
   private async initializePlayers() {
     // this.players = 
     await this.usersService.getAllUsers().toPromise().then(
       (e) => {
         this.players = e;
         let from: number;
-        this.players.forEach((user: UserModel, index: number) => { if (user.name == this.username) { from = index; this.role = user.role; } });
+        this.players.forEach((user: UserModel, index: number) => { if (user.name == this.username) { from = index; this.role = user.role; this.dead = user.dead != "alive"; } });
         this.players.forEach((user: UserModel, index: number) => { if (user.name != this.username && user.dead != "day") user.role = this.knowRole(user.role) });
         this.players.splice(0, 0, this.players.splice(from, 1)[0]);
         if (this.role == "" || this.role == undefined) {//FIXME: Should exit not patch
@@ -60,14 +60,16 @@ export class MainpageComponent implements OnInit {
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
       console.log("Mobile: Round changing");
+      var game_init = false;
       if (this.round == "Waiting") { //first round only
         this.initialized = false;
         this.initializePlayers().then(() => this.initialized = true);
+        game_init = true;
       }
       this.round = msg.message;
 
       this.canVote = this.checkCanVote();
-      if (this.isVoting())
+      if (this.isVoting() && !game_init)
         this.selectedTab = 2;
       else if (this.selectedTab == 2) this.selectedTab = 1;
 
@@ -81,6 +83,7 @@ export class MainpageComponent implements OnInit {
           if (this.players[i].role == "hidden" && died.dead == 'night') died.role = "hidden";
           console.log("User died: " + died.name + " " + died.role);
           this.players[i] = died;
+          if (died.name == this.username) this.dead = true;
         }
 
     });
@@ -109,13 +112,11 @@ export class MainpageComponent implements OnInit {
 
   public submitVote(suspects_name: string) { //called from subcomponent
     console.log("Submiting vote to " + suspects_name);
-
     if (this.selectedTab == 2) this.selectedTab = 1;
     this.canVote = false;
     let from = this.username, to = suspects_name;
     this.votingService.vote(from, to).toPromise();
   }
-
 
   goBack() {
     console.log("Going back to login no logged in user");
@@ -139,7 +140,7 @@ export class MainpageComponent implements OnInit {
   }
 
   public checkCanVote() {
-    // if(this.players.find((user:UserModel)=>user.name == this.username).dead !="alive") return false;
+    if (this.dead) return false;
     switch (this.round) {
       case 'Waiting':
         return false;

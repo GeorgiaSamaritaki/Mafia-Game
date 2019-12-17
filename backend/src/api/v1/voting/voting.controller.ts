@@ -18,11 +18,9 @@ let players: Map<string, Player> = new Map();
 let suspects: User[] = [];
 let doctor_vote: string = null;
 let detective_vote: string = null;
-let barman_vote: string = null;
+var todie_night: string;
 
 export class VotingController {
-
-
     /**
      * Apply all routes for example
      *
@@ -40,7 +38,7 @@ export class VotingController {
             .get('/getSuspects', this.getSuspectsFront);
         return router;
     }
-
+ 
     /**
      *  Vote somebody 
      *  
@@ -71,13 +69,14 @@ export class VotingController {
             case "Secret Voting":
             case "Mafia Voting":
             case "Waiting":
-                console.log("here?");
                 votingcontroller.voteToDie(newVote);
+                if (!votingcontroller.everyoneVoted())
+                    return;
                 break;
             default:
                 console.log("what is wrong");
         }
-        if (votingcontroller.everyoneVoted()) smcontroller.changeRound();
+        smcontroller.changeRound();
     }
 
     public everyoneVoted() {
@@ -93,7 +92,8 @@ export class VotingController {
             " to: " + newVote.toWho);
 
         //Fix stuff for voter
-        let p = players.get(newVote.fromWho)
+        let p = players.get(newVote.fromWho);
+        if (p == null) { console.log("someone dead voting"); return; }
         if (!p.canVote)
             console.log("error voted somehow");
         if (p.whotheyvoted != "")
@@ -110,7 +110,7 @@ export class VotingController {
         SocketService.broadcast("vote", newVote);
     }
 
-    /**
+    /** 
      *  Calculate the votes of a player
      * 
      * @param req.body.name player to count the votes 
@@ -126,7 +126,7 @@ export class VotingController {
     }
 
     /**
-     *  Get votes of a round from history
+     *  Get votes of a round from history 
      * 
      * @param req.body.round the desired round 
      * @param res 
@@ -207,11 +207,12 @@ export class VotingController {
     }
 
     public isMafia(username: string) {
-        let role = usercontroller.getRole(username)
-        return role == 'Mafioso' || role == 'Barman' || role == 'Doctor';
+        let role: string = users.find((user) => user.name == username).role;
+        return role == 'Mafioso' || role == 'Barman' || role == 'Godfather';
     }
 
     public canVote(username: string) {
+        // console.log("       round: " + round + "  username: " + username + " role: " + users.find((user) => user.name == username).role);
         switch (round) {
             case 'Waiting':
                 return false;
@@ -221,11 +222,11 @@ export class VotingController {
             case 'Mafia Voting':
                 return votingcontroller.isMafia(username);
             case 'Doctor':
-                return usercontroller.getRole(username) == 'Doctor';
+                return users.find((user) => user.name == username).role == 'Doctor';
             case 'Detective':
-                return usercontroller.getRole(username) == 'Detective';
+                return users.find((user) => user.name == username).role == 'Detective';
             case 'Barman':
-                return usercontroller.getRole(username) == 'Barman';
+                return users.find((user) => user.name == username).role == 'Barman';
             default:
                 console.log("Voting Controller:Error");
         }
@@ -249,7 +250,7 @@ export class VotingController {
         SocketService.broadcast("died", users.find((user) => user.name == todie));
     }
 
-    public whoToKillNight() {
+    public setVictim() {
         let suspects: Map<string, number> = new Map();
         players.forEach((p: Player, username: string) => {
             suspects.set(username, p.votes);
@@ -257,20 +258,22 @@ export class VotingController {
         suspects[Symbol.iterator] = function* () {
             yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
         }
-        var todie: string;
-        for (let [key, value] of suspects) {     // print data sorted
-            // console.log("Day sorted " + key + ' ' + value);
-            todie = key; break;
+
+        for (let [key, value] of suspects) {
+            todie_night = key; break;
         }
-        console.log("Day:brodcasting todie " + todie);
-        if (todie == doctor_vote) {
+        console.log("Night: victim " + todie_night);
+    }
+
+    public whoToKillNight() {
+        if (todie_night == doctor_vote) {
             console.log("The deceased was saved by the doctor");
-            todie = null;
+            todie_night = null;
         }
-        if (todie != null) {
-            usercontroller.changePathOfUser(todie);
+        if (todie_night != null) {
+            usercontroller.changePathOfUser(todie_night);
             const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("died", users.find((user) => user.name == todie));//FIXME:kill that guy and let everyone know
+            SocketService.broadcast("died", users.find((user) => user.name == todie_night));//FIXME:kill that guy and let everyone know
         } else { //TODO:Smart Speaker -> this is the case the player was saved by the doctor
             //an event can be added so that the speaker says that nobody died todat
 
@@ -281,7 +284,7 @@ export class VotingController {
             //TODO: make sure detective learns what he asked for
         }
     }
-    
+
     getalive() {
         var tmp: User[] = [];
         users.forEach(
@@ -295,12 +298,6 @@ export class VotingController {
 
             console.log("Init voting with players:");
 
-            let p: Player = {
-                canVote: true,
-                whotheyvoted: "",
-                votes: 0,
-            };
-
             suspects = (round == 'Secret Voting') ? this.getSuspects() : this.getalive();
             players.clear();
             users.forEach(
@@ -311,16 +308,16 @@ export class VotingController {
                             whotheyvoted: "",
                             votes: 0,
                         });
-                        console.log("Player " + user.name);
+                        console.log("    Player " + user.name + " can vote: " + players.get(user.name).canVote);
                     } else {
-                        console.log("Dead Player " + user.name);
+                        console.log("    Dead Player " + user.name);
                     }
                 }
             );
             suspects.forEach((user: User) => {
-                console.log("Suspect " + user.name);
+                console.log("    Suspect " + user.name);
             });
-            console.log("Broadcasting suspects!!");
+            console.log("    Broadcasting suspects!!");
             const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("suspects", suspects);
             resolve();
@@ -329,17 +326,9 @@ export class VotingController {
 
     public async setPlayers() {
         return new Promise(async (resolve, reject) => {
-
-            let p: Player = {
-                canVote: false,
-                whotheyvoted: "",
-                votes: 0,
-            };
-
-            await this.initVoting();
+            await votingcontroller.initVoting();
             detective_vote = null;
             doctor_vote = null;
-            barman_vote = null;
             resolve();
         });
     }
