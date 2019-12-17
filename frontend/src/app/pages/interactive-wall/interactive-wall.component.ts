@@ -1,7 +1,7 @@
+import { UserModel } from './../../global/models/users/user.model';
 import { Component, OnInit } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { SmartSpeakerService } from 'src/app/smart-speaker.service';
-import { UserModel } from 'src/app/global/models';
 import { LeapService, Gestures } from '../cursor/leap.service';
 
 @Component({
@@ -15,7 +15,6 @@ export class InteractiveWallComponent implements OnInit {
   lap: number = 0;
   phases_num: number = 0;
   phases_num_array: number[] = [];
-  dead_player: string;
   backgroundColor: string = '#E74C3C';;
   background_icon: string = "background_icon_day";
   round_histroy: string[] = [];
@@ -34,6 +33,7 @@ export class InteractiveWallComponent implements OnInit {
   ]);
   margin_for_leap_up: string = "";
   timeline_margin: number = 0;
+  cursorOn: boolean = false; //virtual cursor detected
 
   constructor(private statemachineService: StateMachineService,
     private socketService: SocketsService,
@@ -51,6 +51,7 @@ export class InteractiveWallComponent implements OnInit {
     this.speakerService.addCommand('Repeat', () => {
       this.speakerService.speak(this.responses[this.round]);
     });
+    
   }
 
   isDay() {
@@ -67,13 +68,13 @@ export class InteractiveWallComponent implements OnInit {
     console.log('welcome speech');
   }
   swipeTimelineUp() {
-    document.getElementById("timeline").classList.add("slidedown");
+    document.getElementById("timeline").classList.add("slideInDown");
     console.log("Swiped Up!");
     document.getElementById("timeline").style.marginTop = "-100px";
 
   }
   swipeTimelineDown() {
-    document.getElementById("timeline").classList.add("slideup");
+    document.getElementById("timeline").classList.add("slideInUp");
     console.log("Swiped Down!");
     document.getElementById("timeline").style.marginTop = "0px";
   }
@@ -95,10 +96,6 @@ export class InteractiveWallComponent implements OnInit {
         this.backgroundColor = '#E67E22';
         this.background_icon = "background_icon_day";
         this.phases.push('Day');
-        await this.insert_votes('Maria', 'Kiki').then((e) => console.log("!!!KIKI voted maria"));
-        await this.insert_votes('Maria', 'Manolis').then((e) => console.log("!!!Manolis voted maria"));
-        await this.insert_votes('Maria', 'Kosmas').then((e) => console.log("!!!Kosmas voted maria"));
-        await this.insert_votes('George', 'Renata').then((e) => console.log("!!!George voted Renata"));
         await this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Secret Voting': //Secret Voting 
@@ -108,11 +105,10 @@ export class InteractiveWallComponent implements OnInit {
         break;
       case 'Mafia Voting': //Mafia Voting
         if (this.phases_num == 2) {
-          this.timeline_margin += -100;
+          this.timeline_margin += -150;
           console.log(this.timeline_margin.toString());
           document.getElementById("timeline").style.marginTop = this.timeline_margin.toString() + "px";
         }
-        this.dead_player = tmp.dead + "_killed.png";
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
         this.phases.push('Night');
@@ -132,6 +128,9 @@ export class InteractiveWallComponent implements OnInit {
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
         this.speakerService.speak(this.responses.get(this.round));
+        this.phases_num++;
+        this.phases_num_array.push(this.phases_num);//for day
+        this.phases_num_array.push(this.phases_num);//for night
         break;
     }
     this.round_histroy.push(this.round);
@@ -161,6 +160,13 @@ export class InteractiveWallComponent implements OnInit {
     console.log("suspects_pngs[]: " + this.suspects_pngs);
   }
 
+  async changeImageOfDead(dead: UserModel) {
+    for (let i: number = 0; i < this.suspects_pngs.length; i++) {
+      if(dead.avatar_path == this.suspects_pngs[i]){
+        this.suspects_pngs[i] = "killed_" + this.suspects_pngs[i];
+      }
+    }
+  }
 
   async ngOnInit() {
     this.leapService.gestureRecognizer().subscribe(gesture => {
@@ -172,7 +178,7 @@ export class InteractiveWallComponent implements OnInit {
       }
     })
     this.round = <string>await this.statemachineService.getRound().toPromise();
-    this.phases_num = <number>await this.statemachineService.getCounter().toPromise();
+    this.phases_num = 1;
     console.log("Round Counter: " + this.phases_num);
     this.phases_num_array.push(this.phases_num);//for day
     this.phases_num_array.push(this.phases_num);//for night
@@ -181,13 +187,6 @@ export class InteractiveWallComponent implements OnInit {
     console.log("Round was set to: " + this.round);
     await console.log(this.votingService.votesOfRound(this.round).toPromise());
 
-    this.socketService.syncMessages("dayCounter").subscribe(msg => {
-      console.log("Day Count is Changing");
-      this.phases_num = msg.message;
-      this.phases_num_array.push(this.phases_num);//for day
-      this.phases_num_array.push(this.phases_num);//for night
-      console.log("PHASES array: " + this.phases_num_array);
-    });
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
       console.log("Round is Changing");
@@ -203,12 +202,18 @@ export class InteractiveWallComponent implements OnInit {
     this._leapService.cursorRecognizer().subscribe((cursor) => {
     });
 
+    this.socketService.syncMessages("vote").subscribe(async msg => {
+      if (this.round != "Open Ballot") return;
+      console.log("Player " + msg.message.toWho + " received a vote");
+      this.insert_votes(msg.message.toWho, msg.message.fromWho)
+    });
 
-    // this.socketService.syncMessages("vote").subscribe(async msg => {
-    //   if (this.round != "Open Ballot") return;
-    //   console.log("Player " + msg.message.toWho + " received a vote");
-    //   this.insert_votes(msg.message.toWho, msg.message.fromWho)
-    // });
+    this.socketService.syncMessages("died").subscribe(async msg => {
+      console.log("User Died");
+      this.changeImageOfDead(msg.message);
+    });
   }
+
+  
 
 }
