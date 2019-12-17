@@ -94,6 +94,8 @@ export class StateMachineController {
     }
 
     public getCounter(req: Request, res: Response) {
+        const SocketService = DIContainer.get(SocketsService);
+        SocketService.broadcast("dayCounter", roundCounter);
         res.json(roundCounter);
     }
 }
