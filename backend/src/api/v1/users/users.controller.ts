@@ -79,7 +79,7 @@ export class UsersController {
         } catch (e) {
             if (e !== BreakException) throw e;
         }
-    } 
+    }
 
     public getUser(req: Request, res: Response) {
         try {

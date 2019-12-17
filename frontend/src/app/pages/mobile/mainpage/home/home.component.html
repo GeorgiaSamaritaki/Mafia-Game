@@ -3,8 +3,7 @@
     <div *ngIf="!parent.isWaiting()">
         <div id="cards">
             <div class="flip-card" *ngFor="let player of parent.players; let i = index;">
-                <div class="flip-card-inner" (click)="toggleflip(i)" [ngClass]="flips[i] ? 'flip' : ''"
-                >
+                <div class="flip-card-inner" (click)="toggleflip(i)" [ngClass]="flips[i] ? 'flip' : ''">
                     <div class="flip-card-front" [class.dead]="player.dead !='alive'">
                         <img class="avatar" src="/assets/players/{{getpath(player.avatar_path)}}">
                         <div class="playername">{{player.name}}<span *ngIf="i==0" style="opacity: 0.5;"><br>(You)</span>
