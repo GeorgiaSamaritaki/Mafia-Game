@@ -23,6 +23,8 @@
     "@angular/router": "~8.2.4",
     "artyom.js": "^1.0.6",
     "bootstrap": "^4.3.1",
+    "jquery": "^1.11.3",
+    "jquery-nearest": "^1.4.0",
     "leapjs": "^0.6.4",
     "lodash": "^4.17.15",
     "rxjs": "~6.4.0",
