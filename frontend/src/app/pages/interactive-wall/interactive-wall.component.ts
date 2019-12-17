@@ -13,6 +13,7 @@ export class InteractiveWallComponent implements OnInit {
   round: string;
   playersJoined: boolean = false;
   lap: number = 0;
+  narratorClicked: boolean = false;
   phases_num: number = 0;
   phases_num_array: number[] = [];
   backgroundColor: string = '#E74C3C';;
@@ -59,6 +60,8 @@ export class InteractiveWallComponent implements OnInit {
   }
 
   async speakerSelected() {
+    if( this.narratorClicked ) return;
+    this.narratorClicked = true;
     this.lap++;
     console.log(this.lap);
     this.speakerService.speak('Hi! I am Smart Speaker. I will be your narrator for this game.', async () => {

@@ -82,17 +82,20 @@ export class UsersController {
     }
 
     public getUser(req: Request, res: Response) {
+        let found: boolean = false;
         try {
             users.forEach((user: User) => {
-                if (user.name === req.body.name)
+                if (user.name === req.body.name) {
                     res.json(user);
+                    found = true;
+                }
             })
         } catch (e) {
             console.log(e)
             res.send(e)
         }
-
-        res.json({ "error": 'User does not exist' })
+        if (!found)
+            res.json({ "error": 'User does not exist' })
     }
 
     public getAllUsers(req: Request, res: Response) {

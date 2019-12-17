@@ -27,6 +27,7 @@ export class AugmentedTableComponent implements OnInit {
   ) {}
   
   async ngOnInit() {
+    this.votesOfPlayers = new Map<string, number>();
     this.backgroundSVG = 'backgroundDay'
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
@@ -137,4 +138,7 @@ export class AugmentedTableComponent implements OnInit {
     return this.winner;
   }
 
+  numberOfKnives(username: string) {
+    return this.votesOfPlayers.get(username);
+  }
 }
