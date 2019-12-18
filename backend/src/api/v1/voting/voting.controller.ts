@@ -151,7 +151,6 @@ export class VotingController {
      * @param res 
      */
     public addToHistory(req: Request, res: Response) {
-        console.log("Request!!!: " + req.body);
         let roundSum: roundSum = {
             day: req.body.day,
             votes: [...roundVotes],

@@ -6,7 +6,7 @@
       <div class="column" id="timeline" [ngStyle]="{display:(lap > 1)?'block':'none'}" (click)="swipeTimelineDown();">
         <img class="game_start" src="/assets/interactive-wall/game_start.png"
           [ngStyle]="{display:(lap > 1)?'inherit':'none'}" alt="game start">
-        <div *ngFor="let phase of phases; let i=index" style="height: 175px;">
+        <div *ngFor="let phase of phases; let i=index; let even=even" style="height: 175px;">
           <div class="timelineRow">
             <div class="circleAndText">
               <img class="circle"
@@ -15,10 +15,10 @@
               <div id="day_txt" [ngStyle]="{display:(lap > 1)?'block':'none'}">{{phases[i]}} {{phases_num_array[i]}}
               </div>
             </div>
-            <div *ngFor="let suspect of suspects_pngs; let i=index" class="suspects">
-              <img class="suspect" src="/assets/interactive-wall/{{suspect}}"  alt="avatar of suspect">
+            <div *ngFor="let suspect of suspects_pngs.get(i+1);" class="suspects">
+              <img class="suspect" src="/assets/interactive-wall/{{suspect}}" alt="avatar of suspect">
               <div id="voters" [ngStyle]="{width:(expand_width)?'225px':'170px'}">
-                <div *ngFor="let voter of voters_pngs.get(suspect); let i=index">
+                <div *ngFor="let voter of voters_pngs.get(suspect);">
                   <img class="voter" src="/assets/interactive-wall/{{voter}}" alt="avatar of suspect">
                 </div>
               </div>
