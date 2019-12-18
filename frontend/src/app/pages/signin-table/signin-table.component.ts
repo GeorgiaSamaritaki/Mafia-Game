@@ -53,7 +53,7 @@ export class SigninTableComponent implements OnInit {
     this.players = await this.userService.getAllUsers().toPromise();
 
     for (var i = 0; i < 7; i++) {
-      this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.7:4200/mobile/login?position=${i}`)
+      this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.4:4200/mobile/login?position=${i}`)
     }
     this.socketService.syncMessages("playerJoined").subscribe(msg => {
       let newPlayer = new UserModel;
@@ -66,6 +66,10 @@ export class SigninTableComponent implements OnInit {
       this.hidePhotos(msg.message.position);
       this.arrangePlayers(newPlayer);
       this.joined_players++;
+    });
+    this.socketService.syncMessages("loadingUser").subscribe(msg => {
+      console.log("loading received" + msg.message);
+      this.load(msg.message);
     });
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
@@ -87,6 +91,9 @@ export class SigninTableComponent implements OnInit {
 
   gameStarted(){
     return this._gameStarted; 
+  }
+  private load(position:number){
+    this.qrs[position] = "/assets/augmented_table/signin/loading.gif"; 
   }
 
   private hidePhotos(position: number) {

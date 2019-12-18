@@ -34,6 +34,11 @@ export class UsersService {
         .post<UserModel>(`${this.hostURl}/api/users/addUser`, {name, role, avatar_path, position, dead})
     }
 
+    public loadingUser(position: number): Observable<number> {
+      return this.http
+        .post<number>(`${this.hostURl}/api/users/loadingUser`, {position})
+    }
+
     public changePathOfUser(name: string, avatar_path: string): Observable<UserModel> {
       return this.http
         .post<UserModel>(`${this.hostURl}/api/users/changePathOfUser`, {name, avatar_path})

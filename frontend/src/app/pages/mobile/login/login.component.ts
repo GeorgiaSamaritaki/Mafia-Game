@@ -22,6 +22,8 @@ export class LoginComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {
     this.socketEvents = [];
+    this.activatedRoute.queryParams.subscribe(params => { this.position = params['position']; });
+    console.log("Position " + this.position);
   }
 
   async ngOnInit() {
@@ -30,7 +32,8 @@ export class LoginComponent implements OnInit {
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log(this.round);
     this.selectedavatarindex = 0;
-   
+    console.log("loading user");
+    await this.usersService.loadingUser(this.position).toPromise();
   }
 
   goHome() {
@@ -69,6 +72,7 @@ export class LoginComponent implements OnInit {
     } else {
 
       var index = 1 + this.selectedavatarindex;
+      console.log(this.position);
       console.log(
         await this.usersService.addUser(
           this.myUserID, //username

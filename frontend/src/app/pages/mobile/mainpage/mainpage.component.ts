@@ -104,8 +104,7 @@ export class MainpageComponent implements OnInit {
           if (this.players[i].name == msg.message.name) this.players[i] = msg.message;
       }
     });
-
-
+ 
     this.socketService.syncMessages("gameEnded").subscribe(msg => {
       this.gameEnded = true;
       console.log("Game ended won: " + msg.message)

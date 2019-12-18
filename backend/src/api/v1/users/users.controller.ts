@@ -26,6 +26,7 @@ export class UsersController {
         router
             .post('/changePathOfUser', this.changePathOfUser)
             .post('/addUser', this.addUser)
+            .post('/loadingUser', this.loadingUser)
             .post('/getUser', this.getUser)
             .post('/checkUsername', this.checkUsername)
             .get('/joinedPlayers', this.joinedPlayers)
@@ -57,6 +58,19 @@ export class UsersController {
             const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("playerJoined", newUser);
             res.json("User added");
+        } catch (e) {
+            console.log(e)
+            res.json(e)
+        }
+    }
+    public async loadingUser(req: Request, res: Response) {
+        try {
+            var position = req.body.position;
+            console.log("service :loading user" + position);
+
+            const SocketService = DIContainer.get(SocketsService);
+            SocketService.broadcast("loadingUser", position);
+            res.json("User Loading");
         } catch (e) {
             console.log(e)
             res.json(e)
@@ -155,7 +169,7 @@ export class UsersController {
                         }
                         mafia--;
                     }
-                    rng == users.length - 1 ? rng = 0 : rng++; 
+                    rng == users.length - 1 ? rng = 0 : rng++;
                 }
                 //Masons
                 let masons = 2;
@@ -166,7 +180,7 @@ export class UsersController {
                         masons--;
                         console.log('Mason set');
                     }
-                    rng == users.length - 1 ? rng = 0 : rng++; 
+                    rng == users.length - 1 ? rng = 0 : rng++;
                 }
                 //Detective 
                 let d = true
@@ -178,19 +192,19 @@ export class UsersController {
                         keyPlayers.set(users[rng].name, 'Detective');
                         console.log('Detectice set');
                     }
-                    rng == users.length - 1 ? rng = 0 : rng++; 
+                    rng == users.length - 1 ? rng = 0 : rng++;
                 }
                 //Doctor  
                 let doc = true
                 rng = getRandomInt(users.length);
-                while (doc) { 
+                while (doc) {
                     if (users[rng].role == 'undefined') {
                         users[rng].role = 'Doctor';
                         keyPlayers.set(users[rng].name, 'Doctor');
                         doc = false;
                         console.log('Doctor set');
-                    } 
-                    rng == users.length - 1 ? rng = 0 : rng++; 
+                    }
+                    rng == users.length - 1 ? rng = 0 : rng++;
                 }
                 //Civilians the rest
                 users.forEach((player) => {
