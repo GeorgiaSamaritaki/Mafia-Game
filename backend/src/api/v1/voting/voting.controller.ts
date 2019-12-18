@@ -77,6 +77,7 @@ export class VotingController {
                 console.log("what is wrong");
         }
         if (votingcontroller.everyoneVoted()) smcontroller.changeRound();
+        res.json("Everyone voted");
     }
 
     public everyoneVoted() {
