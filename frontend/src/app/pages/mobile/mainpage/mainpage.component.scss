@@ -3,23 +3,25 @@
   height: 100%;
   margin: 0;
 }
-.mat-tab-body-wrapper{
-  height: calc(100% - 48px);
-  width:100%;
-    position: fixed !important;
-    top: 0;
-}
 
+.mat-tab-body-wrapper {
+  height: calc(100% - 48px);
+  width: 100%;
+  position: fixed !important;
+  top: 0;
+}
 @media (max-width :600px) {
   .mat-tab-label {
     min-width: 33.3% !important;
     background-color: black;
     opacity: 1 !important;
   }
+
   .mat-tab-disabled img {
     opacity: .3 !important;
   }
 }
+
 .mat-tab-label {
   min-width: 33.3% !important;
   background-color: black;
@@ -51,13 +53,33 @@
 }
 
 .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
-  display: none !important; 
+  display: none !important;
 }
 
-.mat-tab-header{
+.mat-tab-header {
   position: fixed !important;
-  bottom:-1px;
-  width:101%;
+  bottom: -1px;
+  width: 101%;
   z-index: 1000;
 }
 
+#endScreen {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 15vw;
+  color: white;
+}
+
+#text_lost,
+#text_won {
+  font-size: 10vw;
+  color: #2ecc71;
+}
+
+#text_lost {
+
+  color: #e74c3c;
+}

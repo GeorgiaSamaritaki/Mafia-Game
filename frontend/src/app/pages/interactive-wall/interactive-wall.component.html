@@ -33,7 +33,7 @@
         <img id="player_icon" src="/assets/interactive-wall/player_icon.png" alt="player icon">
         <p>Player</p>
       </div>
-      <div class="butt spkr_butt" (click)="narratorClicked? '':speakerSelected();" [ngStyle]="{display:(1 >= lap)?'block':'none'}"
+      <div class="butt spkr_butt" (click)="speakerSelected()" [ngStyle]="{display:(1 >= lap)?'block':'none'}"
         [ngStyle]="{opacity:(lap != 0)?'1':'0.6'}"> 
         <img id="speaker" src="/assets/interactive-wall/speaker.png" alt="speaker icon">
         <p>Speaker</p>

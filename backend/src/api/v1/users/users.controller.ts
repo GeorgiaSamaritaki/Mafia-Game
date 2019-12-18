@@ -123,7 +123,7 @@ export class UsersController {
     }
 
     public distributeRoles() {
-        return new Promise( (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
                 //For every 4 people 1 mafia (if its 7 we keep 2 Mafia)
                 //Calculate roles
@@ -180,16 +180,16 @@ export class UsersController {
                     }
                     rng == users.length - 1 ? rng = 0 : rng++; 
                 }
-                //Doctor 
+                //Doctor  
                 let doc = true
                 rng = getRandomInt(users.length);
-                while (doc) {
+                while (doc) { 
                     if (users[rng].role == 'undefined') {
                         users[rng].role = 'Doctor';
                         keyPlayers.set(users[rng].name, 'Doctor');
                         doc = false;
                         console.log('Doctor set');
-                    }
+                    } 
                     rng == users.length - 1 ? rng = 0 : rng++; 
                 }
                 //Civilians the rest

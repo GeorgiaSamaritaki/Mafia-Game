@@ -24,9 +24,6 @@ export class InfoComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    // this.round = <string> await this.stateMachine.getRound().toPromise();
-    this.round = "e";
-    console.log(this.round);
   }
 
 }
