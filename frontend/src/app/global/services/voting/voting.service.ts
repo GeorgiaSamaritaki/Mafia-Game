@@ -19,8 +19,7 @@ export class VotingService {
 
   public vote(from: string, to: string): Observable<VoteModel> {
     return this.http
-      .post<VoteModel>(`${this.hostURl}/api/votes/vote`, { from, to })
-      ;
+      .post<VoteModel>(`${this.hostURl}/api/votes/vote`, { from, to });
   }
 
   public getPlayerVotes(name: string) {
