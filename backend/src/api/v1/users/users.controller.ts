@@ -123,7 +123,7 @@ export class UsersController {
     }
 
     public distributeRoles() {
-        return new Promise((resolve, reject) => {
+        return new Promise( (resolve, reject) => {
             try {
                 //For every 4 people 1 mafia (if its 7 we keep 2 Mafia)
                 //Calculate roles
@@ -136,15 +136,15 @@ export class UsersController {
                 console.log("Distributing roles to " + users.length + " players");
                 //Assign Mafia
                 let rng: number;
+                rng = getRandomInt(users.length);
                 while (mafia != 0) {
-                    rng = getRandomInt(users.length);
                     if (users[rng].role == 'undefined') {
-                        if (rng % 3 == 2) {
+                        if (mafia % 3 == 0) {
                             users[rng].role = 'Mafioso';
                             keyPlayers.set(users[rng].name, 'Mafioso');
                             console.log('Mafioso set');
                         }
-                        else if (rng % 3 == 1) {
+                        else if (mafia % 2 == 0) {
                             users[rng].role = 'Barman';
                             keyPlayers.set(users[rng].name, 'Barman');
                             console.log('Barman set');
@@ -155,38 +155,42 @@ export class UsersController {
                         }
                         mafia--;
                     }
+                    rng == users.length - 1 ? rng = 0 : rng++; 
                 }
                 //Masons
                 let masons = 2;
+                rng = getRandomInt(users.length);
                 while (masons != 0) {
-                    rng = getRandomInt(users.length);
                     if (users[rng].role == 'undefined') {
                         users[rng].role = 'Mason';
                         masons--;
                         console.log('Mason set');
                     }
+                    rng == users.length - 1 ? rng = 0 : rng++; 
                 }
                 //Detective 
                 let d = true
+                rng = getRandomInt(users.length);
                 while (d) {
-                    rng = getRandomInt(users.length);
                     if (users[rng].role == 'undefined') {
                         users[rng].role = 'Detective';
                         d = false;
                         keyPlayers.set(users[rng].name, 'Detective');
                         console.log('Detectice set');
                     }
+                    rng == users.length - 1 ? rng = 0 : rng++; 
                 }
                 //Doctor 
                 let doc = true
+                rng = getRandomInt(users.length);
                 while (doc) {
-                    rng = getRandomInt(users.length);
                     if (users[rng].role == 'undefined') {
                         users[rng].role = 'Doctor';
                         keyPlayers.set(users[rng].name, 'Doctor');
                         doc = false;
                         console.log('Doctor set');
                     }
+                    rng == users.length - 1 ? rng = 0 : rng++; 
                 }
                 //Civilians the rest
                 users.forEach((player) => {
