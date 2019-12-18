@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     private socketService: SocketsService,
     private usersService: UsersService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute 
   ) {
     this.socketEvents = [];
     this.activatedRoute.queryParams.subscribe(params => { this.position = params['position']; });
@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
     console.log(this.round);
     this.selectedavatarindex = 0;
     console.log("loading user");
-    await this.usersService.loadingUser(this.position).toPromise();
+    await this.usersService.loadingUser(this.position).toPromise(); 
   }
 
   goHome() {

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./signin-table.component.scss']
 })
 export class SigninTableComponent implements OnInit {
-  
+
   //For user checking
   private _bot_left: boolean = false;
   private _left: boolean = false;
@@ -27,7 +27,7 @@ export class SigninTableComponent implements OnInit {
 
   joined_players: number = 0;
   qrs: string[];
-  
+
   players: UserModel[];
   private left_players: UserModel[];
   private right_players: UserModel[];
@@ -80,20 +80,20 @@ export class SigninTableComponent implements OnInit {
   }
 
   public async startGame() {
-    if( this.readyToPlay() ){
+    if (this.readyToPlay()) {
       await this.stateMachine.selectNarrator().toPromise(); //Starts the game
       this._gameStarted = true;
       console.log('Select narrator');
     }
-    else 
+    else
       console.log('Not enough players joined');
-  } 
-
-  gameStarted(){
-    return this._gameStarted; 
   }
-  private load(position:number){
-    this.qrs[position] = "/assets/augmented_table/signin/loading.gif"; 
+
+  gameStarted() {
+    return this._gameStarted;
+  }
+  private load(position: number) {
+    this.qrs[position] = "/assets/augmented_table/signin/loading.gif";
   }
 
   private hidePhotos(position: number) {
@@ -106,9 +106,9 @@ export class SigninTableComponent implements OnInit {
         this._qr1 = true;
         this._bot_left = true;
         break;
-        case 2:
-          this._qr2 = true;
-          this._bot_left = true;
+      case 2:
+        this._qr2 = true;
+        this._bot_left = true;
         break;
       case 3:
         this._qr3 = true;
@@ -178,25 +178,25 @@ export class SigninTableComponent implements OnInit {
     return this._bot_right;
   }
 
-  public qr0(){
+  public qr0() {
     return this._qr0;
   }
-  public qr1(){
+  public qr1() {
     return this._qr1;
   }
-  public qr2(){
+  public qr2() {
     return this._qr2;
   }
-  public qr3(){
+  public qr3() {
     return this._qr3;
   }
-  public qr4(){
+  public qr4() {
     return this._qr4;
   }
-  public qr5(){
+  public qr5() {
     return this._qr5;
   }
-  public qr6(){
+  public qr6() {
     return this._qr6;
   }
 }

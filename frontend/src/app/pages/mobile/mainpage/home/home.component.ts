@@ -18,7 +18,8 @@ export class HomeComponent implements OnInit {
   role: string;
   accomplices: UserModel[] = [];
 
-  card_open: boolean = false;
+  card_open: boolean = true;
+  
   descriptions: Map<string, string> = new Map([
     ['Mafioso', 'A Mafioso is a member of the Mafia who has no special abilities.'],
     ['Godfather', 'A Godfather is a member of the Mafia who will be identified as an innocent by the detectives.'],

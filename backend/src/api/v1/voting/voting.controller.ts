@@ -60,8 +60,8 @@ export class VotingController {
                 detective_vote = newVote.toWho;
                 break;
             case "Barman":
-                if (detective_vote == newVote.toWho) detective_vote = null;
-                if (doctor_vote == newVote.toWho) doctor_vote = null;
+                if (newVote.toWho == users.find((user) => user.role == "Detective").name) detective_vote = null;
+                if (newVote.toWho == users.find((user) => user.role == "Doctor").name) doctor_vote = null;
                 break;
             case "Open Ballot":
             case "Secret Voting":
@@ -279,7 +279,7 @@ export class VotingController {
         } else { //TODO:Smart Speaker -> this is the case the player was saved by the doctor
             //an event can be added so that the speaker says that nobody died todat
             const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("died", "saved");
+            SocketService.broadcast("saved", ""); //FIXME: cant proadcast died when no one died 
         }
         if (detective_vote != null) {
             const SocketService = DIContainer.get(SocketsService);
@@ -288,7 +288,7 @@ export class VotingController {
         }
         detective_vote = null;
         doctor_vote = null;
-    }
+    }  
 
     getalive() {
         var tmp: User[] = [];
@@ -332,7 +332,7 @@ export class VotingController {
     public async setPlayers() {
         return new Promise(async (resolve, reject) => {
             await votingcontroller.initVoting();
-
+            if (votingcontroller.everyoneVoted()) smcontroller.changeRound();
             resolve();
         });
     }

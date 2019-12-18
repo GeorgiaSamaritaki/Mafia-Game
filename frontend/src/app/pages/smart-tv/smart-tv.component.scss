@@ -46,8 +46,10 @@
 }
 
 .cardicon {
-  height: 90%;
-  width: auto;
+  max-height: 90%;
+  max-width: 90%;
+  width:auto; 
+  height:auto;
   margin: auto;
 }
 

@@ -63,6 +63,7 @@ export class UsersController {
             res.json(e)
         }
     }
+    
     public async loadingUser(req: Request, res: Response) {
         try {
             var position = req.body.position;

@@ -104,20 +104,20 @@ export class MainpageComponent implements OnInit {
           if (this.players[i].name == msg.message.name) this.players[i] = msg.message;
       }
     });
- 
+
     this.socketService.syncMessages("gameEnded").subscribe(msg => {
       this.gameEnded = true;
       console.log("Game ended won: " + msg.message)
       if ((msg.message == 'Mafia' && this.isMafia(this.role)) ||
-        (msg.message == 'Town' && !this.isMafia(this.role))) 
-          this.won = true;
-         else 
-          this.won = false;
-      
+        (msg.message == 'Town' && !this.isMafia(this.role)))
+        this.won = true;
+      else
+        this.won = false;
+
     });
   }
 
-  isMafia(role:string) { 
+  isMafia(role: string) {
     return role == "Mafioso" || role == "Barman" || role == "Godfather";
   }
 
@@ -137,7 +137,8 @@ export class MainpageComponent implements OnInit {
 
   public submitVote(suspects_name: string) { //called from subcomponent
     console.log("Submiting vote to " + suspects_name);
-    if (this.selectedTab == 2) this.selectedTab = 1;
+    this.selectedTab = 2;
+    this.selectedTab = 1;
     this.canVote = false;
     let from = this.username, to = suspects_name;
     this.votingService.vote(from, to).toPromise();

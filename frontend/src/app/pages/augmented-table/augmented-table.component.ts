@@ -24,8 +24,8 @@ export class AugmentedTableComponent implements OnInit {
     private statemachineService: StateMachineService,
     private socketService: SocketsService,
     private router: Router
-  ) {}
-  
+  ) { }
+
   async ngOnInit() {
     this.votesOfPlayers = new Map<string, number>();
     this.backgroundSVG = 'backgroundDay'
@@ -34,7 +34,7 @@ export class AugmentedTableComponent implements OnInit {
     this.changeRound();
 
     await this.initializePlayers();
-    
+
     this.socketService.syncMessages("roundChange").subscribe(msg => {
       console.log("Round is Changing");
       this.round = msg.message;
@@ -50,7 +50,7 @@ export class AugmentedTableComponent implements OnInit {
       console.log(`${msg.message.name} died`);
       this.aPlayerDied(msg.message);
     });
-    this.socketService.syncMessages("gameEnded").subscribe( msg => {
+    this.socketService.syncMessages("gameEnded").subscribe(msg => {
       console.log(`${msg.message} won`);
       this.winner = true;
     });
@@ -58,18 +58,19 @@ export class AugmentedTableComponent implements OnInit {
 
   private async initializePlayers() {
     this.votesOfPlayers = new Map();
+
     this.players = await this.usersService.getAllUsers().toPromise();
-    for (let player of this.players) this.votesOfPlayers.set(player.name, 0);
+    for (let player of this.players) { console.log(player.name); this.votesOfPlayers.set(player.name, 0) };
     this.arrangePlayers();
   }
-  
+
   private arrangePlayers() {
     this.left_players = [];
     this.right_players = [];
     this.middle_players = [];
     if (this.players.length <= 7) {
       this.players.forEach(player => {
-        switch (player.position) {
+        switch (+player.position) {
           case 0:
           case 1:
             this.left_players.push(player);
@@ -99,6 +100,9 @@ export class AugmentedTableComponent implements OnInit {
     this.left_players.sort(function (a, b) { return a.position - b.position });
     this.middle_players.sort(function (a, b) { return a.position - b.position });
     this.right_players.sort(function (a, b) { return a.position - b.position });
+    console.log(this.middle_players);
+    console.log(this.left_players);
+    console.log(this.right_players);
   }
 
   public isDay() {
@@ -127,7 +131,7 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   public aPlayerDied(dead: UserModel) {
-    if( dead.dead === 'night') {
+    if (dead.dead === 'night') {
       console.log('dead at night');
       dead.avatar_path = `/graveyard/Hidden.png`;
     } else {
@@ -145,7 +149,9 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   numberOfKnives(username: string) {
-    if( this.round !== 'Open Ballot') return -1;
-    return this.votesOfPlayers.get(username);
+    if (this.round !== 'Open Ballot') return -1;
+    else {
+      return this.votesOfPlayers.get(username);
+    }
   }
 }
