@@ -153,7 +153,7 @@ export class VotingController {
         console.log("Request!!!: " + req.body);
         let roundSum: roundSum = {
             day: req.body.day,
-            votes: roundVotes,
+            votes: [...roundVotes],
             dead: req.body.dead
         }
         voteHistory.push(roundSum);
