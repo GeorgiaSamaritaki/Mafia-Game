@@ -16,7 +16,8 @@ export class InteractiveWallComponent implements OnInit {
   narratorClicked: boolean = false;
   phases_num: number = 0;
   phases_num_array: number[] = [];
-  backgroundColor: string = '#E74C3C';;
+  backgroundColor: string = '#E74C3C';
+
   background_icon: string = "background_icon_day";
   round_histroy: string[] = [];
   voters_pngs: Map<string, Array<string>> = new Map();
@@ -25,6 +26,7 @@ export class InteractiveWallComponent implements OnInit {
   voted_players: Map<string, Array<string>> = new Map();
   expand_width: boolean = false;
   whoDied: string = "";
+  saved: boolean = false;
   whoDiedPng: string = "";
   responses: Map<string, string> = new Map([
     ['Waiting', ''],
@@ -86,7 +88,7 @@ export class InteractiveWallComponent implements OnInit {
   }
 
   async changeRound() {
-    console.log("PHSASES LEN: " +this.phases.length);
+    console.log("PHSASES LEN: " + this.phases.length);
     this.lap++;
     let day: string;
     if (!this.isDay()) {
@@ -117,9 +119,10 @@ export class InteractiveWallComponent implements OnInit {
         this.phases.push('Day');
         this.suspects_pngs.set(this.phases.length, []);
         await this.speakerService.speak(this.responses.get(this.round));
-        if (this.whoDied == "saved") {
+        if (this.saved) {
           this.speakerService.speak("Nobody died tonight. A player was saved by the doctor.");
-        } else if (this.whoDied != "") {
+        }
+        if (this.whoDied != "") {
           this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
         }
         break;
@@ -171,15 +174,14 @@ export class InteractiveWallComponent implements OnInit {
   }
 
   async insert_votes(toWho: string, fromWho: string) {
+    if (this.round != "Open Ballot") {
+      return;
+    }
     if (!this.voted_players.has(toWho)) this.voted_players.set(toWho, []);
     this.voted_players.get(toWho).push(fromWho);
 
     let player: UserModel = await this.userService.getUser(toWho).toPromise();
     // console.log("suspect avatar path: " + player.avatar_path);
-    console.log("!!!phases len: " + this.phases.length);
-    if (this.round != "Open Ballot") {
-      return;
-    }
     if (this.suspects_pngs.get(this.phases.length).includes(player.avatar_path, 0) == false) this.suspects_pngs.get(this.phases.length).push(player.avatar_path); //get the img paths of the suspects
     if (this.isDay()) {
       // console.log("Name of voter: " + fromWho);
@@ -228,13 +230,34 @@ export class InteractiveWallComponent implements OnInit {
     });
 
     this._leapService.cursorRecognizer().subscribe((cursor) => {
-      //cursor.xPos =
+      const left1: number =  document.getElementById('smartSpeaker').getBoundingClientRect().left;
+      const left2: number =  document.getElementById('playernar').getBoundingClientRect().left;
+      const top1: number =  document.getElementById('smartSpeaker').getBoundingClientRect().top;
+      const top2: number =  document.getElementById('playernar').getBoundingClientRect().top;
+      const width1: number =  document.getElementById('smartSpeaker').getBoundingClientRect().width;
+      const width2: number =  document.getElementById('playernar').getBoundingClientRect().width;
+      const height1: number =  document.getElementById('smartSpeaker').getBoundingClientRect().height;
+      const height2: number =  document.getElementById('playernar').getBoundingClientRect().height;
+      if (cursor.xPos >= left1 && cursor.xPos <= (left1 + width1) && cursor.yPos >= top1 && cursor.yPos <= (top1 + height1)) {
+        document.getElementById('smartSpeaker').style.opacity = "1";
+      } else {
+        document.getElementById('smartSpeaker').style.opacity = "0.6";
+      }
+      if (cursor.xPos >= left2 && cursor.xPos <= (left2 + width2) && cursor.yPos >= top2 && cursor.yPos <= (top2 + height2)) {
+        document.getElementById('playernar').style.opacity = "1";
+      } else {
+        document.getElementById('playernar').style.opacity = "0.6";
+      }
     });
 
     this.socketService.syncMessages("vote").subscribe(async msg => {
       if (this.round != "Open Ballot") return;
       console.log("Player " + msg.message.toWho + " received a vote");
-      this.insert_votes(msg.message.toWho, msg.message.fromWho)
+      this.insert_votes(msg.message.toWho, msg.message.fromWho);
+    });
+    this.socketService.syncMessages("saved").subscribe(async msg => {
+      console.log("A Player was saved!");
+      this.saved = true;
     });
 
     this.socketService.syncMessages("died").subscribe(async msg => {

@@ -83,6 +83,7 @@ export class SmartTvComponent implements OnInit {
     this.socketService.syncMessages("gameEnded").subscribe(msg => {
       console.log(`${msg.message} won`);
       this.winner = msg.message;
+      this.playAudio("/assets/sounds/game-over.wav");
     });
 
     this.socketService.syncMessages("suspects").subscribe(msg => {
