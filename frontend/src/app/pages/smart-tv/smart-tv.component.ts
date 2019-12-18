@@ -43,6 +43,13 @@ export class SmartTvComponent implements OnInit {
     );
   } 
 
+  playAudio(path) {
+    let audio = new Audio();
+    audio.src = path;
+    audio.load();
+    audio.play();
+  }
+
   async ngOnInit() {
     this.count = <number>await this.statemachineService.getCounter().toPromise();
     this.round = <string>await this.statemachineService.getRound().toPromise();
@@ -65,6 +72,7 @@ export class SmartTvComponent implements OnInit {
     this.socketService.syncMessages("vote").subscribe(async msg => {
       console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
       this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
+      this.playAudio("/assets/sounds/knife.wav");
     });
 
     this.socketService.syncMessages("died").subscribe(async msg => {

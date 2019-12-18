@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
         }
       )
 
-    this.cardinit = true;
+    this.cardinit = true; 
   }
 
   getpath(path: string) {

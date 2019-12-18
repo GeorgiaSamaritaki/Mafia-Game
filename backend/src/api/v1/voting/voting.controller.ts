@@ -182,7 +182,7 @@ export class VotingController {
         });
         if (suspects.length == 0) console.log("suspects empty");
         res.json(suspects);
-    } 
+    }
 
     public getSuspects() {
         let _suspects: Map<string, number> = new Map();
@@ -288,7 +288,7 @@ export class VotingController {
         }
         detective_vote = null;
         doctor_vote = null;
-    }  
+    }
 
     getalive() {
         var tmp: User[] = [];

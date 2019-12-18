@@ -69,7 +69,7 @@ export class MainpageComponent implements OnInit {
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
       this.playAudio("/assets/sounds/round_change.wav");
-      console.log("Mobile: Round changing");
+      console.log("Mobile: Round changing"); 
       var game_init = false;
       if (this.round == "Waiting") { //first round only
         this.initialized = false;
@@ -204,4 +204,5 @@ export class MainpageComponent implements OnInit {
   isSecretVoting() {
     return this.round == 'Secret Voting';
   }
+
 }

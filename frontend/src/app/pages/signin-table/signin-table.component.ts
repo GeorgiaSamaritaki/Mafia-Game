@@ -158,7 +158,7 @@ export class SigninTableComponent implements OnInit {
     }
     this.left_players.sort(function (a, b) { return a.position - b.position });
     this.middle_players.sort(function (a, b) { return a.position - b.position });
-    this.right_players.sort(function (a, b) { return a.position - b.position });
+    this.right_players.sort(function (a, b) { return b.position - a.position });
   }
 
   readyToPlay() {

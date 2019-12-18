@@ -21,6 +21,7 @@ export class VotingComponent implements OnInit {
   ) { }
 
   selectedavatar(index: number) {
+    this.parent.selectedTab = 2;
     if (!this.voted) this.selectedavatarindex = index;
   }
 
