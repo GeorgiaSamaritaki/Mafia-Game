@@ -39,6 +39,7 @@ export class AugmentedTableComponent implements OnInit {
       console.log("Round is Changing");
       this.round = msg.message;
       this.changeRound();
+      this.votesOfPlayers.clear();
     });
     this.socketService.syncMessages("vote").subscribe(async msg => {
       if (this.round != "Open Ballot") return;
@@ -126,7 +127,12 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   public aPlayerDied(dead: UserModel) {
-    dead.avatar_path = `/graveyard/${dead.role}.png`;
+    if( dead.dead === 'night') {
+      console.log('dead at night');
+      dead.avatar_path = `/graveyard/Hidden.png`;
+    } else {
+      dead.avatar_path = `/graveyard/${dead.role}.png`;
+    }
     let index = this.players.findIndex(user => user.name == dead.name);
     this.players[index] = null;
     this.players[index] = dead;
@@ -139,6 +145,7 @@ export class AugmentedTableComponent implements OnInit {
   }
 
   numberOfKnives(username: string) {
+    if( this.round !== 'Open Ballot') return -1;
     return this.votesOfPlayers.get(username);
   }
 }
