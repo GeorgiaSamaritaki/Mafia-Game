@@ -23,6 +23,9 @@ export class InteractiveWallComponent implements OnInit {
   suspects_pngs: string[] = [];
   phases: string[] = [];
   voted_players: Map<string, Array<string>> = new Map();
+  expand_width: boolean = false;
+  whoDied: string = "";
+  sus
   responses: Map<string, string> = new Map([
     ['Waiting', ''],
     ['Open Ballot', 'The sun rises in Palermo, please, open your eyes.'],
@@ -52,7 +55,7 @@ export class InteractiveWallComponent implements OnInit {
     this.speakerService.addCommand('Repeat', () => {
       this.speakerService.speak(this.responses[this.round]);
     });
-    
+
   }
 
   isDay() {
@@ -60,7 +63,7 @@ export class InteractiveWallComponent implements OnInit {
   }
 
   async speakerSelected() {
-    if( this.narratorClicked ) return;
+    if (this.narratorClicked) return;
     this.narratorClicked = true;
     this.lap++;
     console.log(this.lap);
@@ -82,8 +85,19 @@ export class InteractiveWallComponent implements OnInit {
     document.getElementById("timeline").style.marginTop = "0px";
   }
   async changeRound() {
+    // if (this.round == 'Mafia Voting' || this.round == 'Open Ballot') {
+    //   this.voted_players.clear();
+    //   this.voters_pngs.clear();
+    //   this.suspects_pngs.length = 0;
+    // }
     this.lap++;
-    let tmp: any = (await this.votingService.votesOfRound('day1').toPromise());
+    let day: string;
+    if(!this.isDay()){
+      day = "Day"+ this.phases_num;
+    }else{
+      day = "Night"+ this.phases_num;
+    }
+    let tmp: any = (await this.votingService.votesOfRound(day).toPromise());
     console.log("tmp: " + tmp);
     console.log("VOTES: " + tmp.votes);
     console.log("DEAD: " + tmp.dead);
@@ -93,13 +107,17 @@ export class InteractiveWallComponent implements OnInit {
       console.log(this.timeline_margin.toString());
       document.getElementById("timeline").style.marginTop = this.timeline_margin.toString() + "px";
     }
-    console.log("timeline margin: " + this.timeline_margin);
     switch (this.round) {
       case 'Open Ballot': //Open Ballot
         this.backgroundColor = '#E67E22';
         this.background_icon = "background_icon_day";
         this.phases.push('Day');
         await this.speakerService.speak(this.responses.get(this.round));
+        if (this.whoDied == "saved") {
+          this.speakerService.speak("Nobody died tonight. A player was saved by the doctor.");
+        }else if(this.whoDied != ""){
+          this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
+        }
         break;
       case 'Secret Voting': //Secret Voting 
         this.backgroundColor = '#E67E22';
@@ -134,6 +152,9 @@ export class InteractiveWallComponent implements OnInit {
         this.phases_num++;
         this.phases_num_array.push(this.phases_num);//for day
         this.phases_num_array.push(this.phases_num);//for night
+        if (this.whoDied != "" && this.whoDied != "saved") {
+
+        }
         break;
     }
     this.round_histroy.push(this.round);
@@ -147,27 +168,36 @@ export class InteractiveWallComponent implements OnInit {
     this.voted_players.get(toWho).push(fromWho);
 
     let player: UserModel = await this.userService.getUser(toWho).toPromise();
-    console.log("suspect avatar path: " + player.avatar_path);
+   // console.log("suspect avatar path: " + player.avatar_path);
 
     if (this.suspects_pngs.includes(player.avatar_path, 0) == false) this.suspects_pngs.push(player.avatar_path); //get the img paths of the suspects
 
-    console.log("Name of voter: " + fromWho);
+   // console.log("Name of voter: " + fromWho);
     let voter: UserModel = await this.userService.getUser(fromWho).toPromise();
-    console.log("voter avatar path: " + voter.avatar_path);
+   // console.log("voter avatar path: " + voter.avatar_path);
     if (!this.voters_pngs.has(player.avatar_path)) this.voters_pngs.set(player.avatar_path, []);
     this.voters_pngs.get(player.avatar_path).push(voter.avatar_path);
 
 
     // this.voters_pngs.set(player.avatar_path, this.voters_pngs.get(player.avatar_path));
     console.log("voters_pngs[]: " + this.voters_pngs.get(player.avatar_path));
+    if (this.voters_pngs.get(player.avatar_path).length > 4) this.expand_width = true;
     console.log("suspects_pngs[]: " + this.suspects_pngs);
   }
 
   async changeImageOfDead(dead: UserModel) {
-    for (let i: number = 0; i < this.suspects_pngs.length; i++) {
-      if(dead.avatar_path == this.suspects_pngs[i]){
-        this.suspects_pngs[i] = "killed_" + this.suspects_pngs[i];
+    if (!this.isDay()) {
+      for (let i: number = 0; i < this.suspects_pngs.length; i++) {
+        if (dead.avatar_path == this.suspects_pngs[i]) {
+          this.suspects_pngs[i] = "killed_" + this.suspects_pngs[i];
+          console.log("Png of Killed:" + this.suspects_pngs[i]);
+          this.whoDied = dead.name;
+        }
       }
+      await this.votingService.addToHistory("Day" + this.phases_num, this.whoDied).toPromise();
+    } else {
+      this.whoDied = dead.name;
+      await this.votingService.addToHistory("Night" + this.phases_num, this.whoDied).toPromise();
     }
   }
 
@@ -217,6 +247,6 @@ export class InteractiveWallComponent implements OnInit {
     });
   }
 
-  
+
 
 }

@@ -148,6 +148,7 @@ export class VotingController {
      * @param res 
      */
     public addToHistory(req: Request, res: Response) {
+        console.log("Request!!!: " + req);
         let roundSum: roundSum = {
             day: req.body.day,
             votes: roundVotes,
@@ -274,7 +275,8 @@ export class VotingController {
             SocketService.broadcast("died", users.find((user) => user.name == todie_night));//FIXME:kill that guy and let everyone know
         } else { //TODO:Smart Speaker -> this is the case the player was saved by the doctor
             //an event can be added so that the speaker says that nobody died todat
-
+            const SocketService = DIContainer.get(SocketsService);
+            SocketService.broadcast("died", "saved");
         }
         if (detective_vote != null) {
             const SocketService = DIContainer.get(SocketsService);

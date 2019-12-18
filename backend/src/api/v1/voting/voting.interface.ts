@@ -17,49 +17,49 @@ export interface roundSum {
 
 
 var roundVotes: Array<Vote> = [
-    {
-        fromWho: 'Alice',
-        toWho: 'Maria',
-        round: ''
-    },
-    {
-        fromWho: 'George',
-        toWho: 'Maria',
-        round: ''
-    },
-    {
-        fromWho: 'Maria',
-        toWho: 'George',
-        round: ''
-    },
-    {
-        fromWho: 'Kiki',
-        toWho: 'Maria',
-        round: ''
-    },
-    {
-        fromWho: 'Manolis',
-        toWho: 'Renata',
-        round: ''
-    },
-    {
-        fromWho: 'Kosmas',
-        toWho: 'George',
-        round: ''
-    },
-    {
-        fromWho: 'Renata',
-        toWho: 'Maria',
-        round: ''
-    },
+    // {
+    //     fromWho: 'Alice',
+    //     toWho: 'Maria',
+    //     round: ''
+    // },
+    // {
+    //     fromWho: 'George',
+    //     toWho: 'Maria',
+    //     round: ''
+    // },
+    // {
+    //     fromWho: 'Maria',
+    //     toWho: 'George',
+    //     round: ''
+    // },
+    // {
+    //     fromWho: 'Kiki',
+    //     toWho: 'Maria',
+    //     round: ''
+    // },
+    // {
+    //     fromWho: 'Manolis',
+    //     toWho: 'Renata',
+    //     round: ''
+    // },
+    // {
+    //     fromWho: 'Kosmas',
+    //     toWho: 'George',
+    //     round: ''
+    // },
+    // {
+    //     fromWho: 'Renata',
+    //     toWho: 'Maria',
+    //     round: ''
+    // },
 ]
 
 var voteHistory: Array<roundSum> = [
-    {
-        day: 'day1',
-        votes: roundVotes,
-        dead: 'Maria'
-    }
+    // {
+    //     day: 'day1',
+    //     votes: roundVotes,
+    //     dead: 'Maria'
+    // }
 ];
 
 export {roundVotes, voteHistory};
