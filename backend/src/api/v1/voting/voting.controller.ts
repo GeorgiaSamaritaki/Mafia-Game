@@ -50,6 +50,8 @@ export class VotingController {
         };
         console.log("Vote received from: " + newVote.fromWho + " to: " +
             newVote.toWho + " round: " + round);
+        roundVotes.push(newVote);
+        console.log("ROUND VOTES: " + roundVotes.length);
         switch (round) {
             case "Doctor":
                 doctor_vote = newVote.toWho;
@@ -148,10 +150,10 @@ export class VotingController {
      * @param res 
      */
     public addToHistory(req: Request, res: Response) {
-        console.log("Request!!!: " + req);
+        console.log("Request!!!: " + req.body);
         let roundSum: roundSum = {
             day: req.body.day,
-            votes: roundVotes,
+            votes: [...roundVotes],
             dead: req.body.dead
         }
         voteHistory.push(roundSum);
