@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Optional } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { UserModel } from 'src/app/global/models';
 import { MainpageComponent } from '../mainpage.component';
+import { htmlAstToRender3Ast } from '@angular/compiler/src/render3/r3_template_transform';
 
 // import {DragDropModule} from '@angular/cdk/drag-drop';
 @Component({
@@ -16,9 +17,9 @@ export class HomeComponent implements OnInit {
   cardinit: boolean = false;
   role: string;
   accomplices: UserModel[] = [];
-  
-  card_open:boolean = false;
-  descriptions: Map<string,string> = new Map([
+
+  card_open: boolean = false;
+  descriptions: Map<string, string> = new Map([
     ['Mafioso', 'A Mafioso is a member of the Mafia who has no special abilities.'],
     ['Godfather', 'A Godfather is a member of the Mafia who will be identified as an innocent by the detectives.'],
     ['Barman', 'A Barman is a member of the Mafia who may anonymously cancel the effect of another role\'s ability every night.'],
@@ -36,15 +37,18 @@ export class HomeComponent implements OnInit {
     let tmp: boolean = this.flips.filter(current => current).length != 0 ? false : true;
     this.flips.forEach((item, index) => { this.flips[index] = tmp; });
   }
-  public toggleCard(){
+  public toggleCard() {
     this.card_open = !this.card_open;
+    if (this.card_open) {
+      this.addAnimation('move_up');
+    } else {
+      this.addAnimation('move_down');
+    }
   }
 
   constructor(
     @Optional() private parent: MainpageComponent) {
-
   }
-
   async ngOnInit() {
     await this.parent.ngOnInit
     this.initCard();
@@ -69,7 +73,7 @@ export class HomeComponent implements OnInit {
     if (this.parent.role == "Mason" || this.isMafia(this.parent.role))
       this.parent.players.forEach(
         (user: UserModel) => {
-          if(user.name!=this.parent.username){
+          if (user.name != this.parent.username) {
             if (this.isMafia(this.parent.role) && this.isMafia(user.role)) this.accomplices.push(user);
             if (this.parent.role == "Mason" && user.role == "Mason") this.accomplices.push(user);
           }
@@ -77,7 +81,6 @@ export class HomeComponent implements OnInit {
       )
 
     this.cardinit = true;
-    this.toggleCard();
   }
 
   getpath(path: string) {
@@ -86,4 +89,9 @@ export class HomeComponent implements OnInit {
 
   }
 
+  public async addAnimation(move) {
+    document.getElementById('popcard').classList.add(move);
+    await this.delay(500);
+    document.getElementById('popcard').classList.remove(move);
+  }
 }

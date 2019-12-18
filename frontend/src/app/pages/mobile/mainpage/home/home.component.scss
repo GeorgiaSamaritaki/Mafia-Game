@@ -177,8 +177,26 @@
   padding: 10px 3% 0;
 }
 
-.move {
-  transform: translate(0, -100%) !important;
+@keyframes pop-up {
+  0% {top: calc(100% - 68px);}
+  100% {top: 10%;}
+}
+
+@keyframes pop-down {
+  0% {top: 10%;}
+  100% {top: calc(100% - 68px);}
+}
+
+.move_up {
+  animation: pop-down 0.5s linear;
+}
+.move_down {
+  animation: pop-up 0.5s linear;
+}
+.move{
+
+  // transform: translate(0, -100%) !important;
+  top: 10% !important;
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2) !important;
 }
 

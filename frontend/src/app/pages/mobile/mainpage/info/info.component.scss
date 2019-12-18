@@ -29,7 +29,7 @@
 }
 
 .roles {
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -38,14 +38,14 @@
 
 .role {
   width: 90%;
-  height: 78px;
+  height: auto;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   border: white;
   border-radius: 10px;
   background-color: white;
   overflow: hidden;
-  margin: auto;
+  margin: 5px auto;
   padding: 12px;
 }
 

@@ -1,4 +1,4 @@
-<div class="background">
+<div class="background" (focus)="focusFunction()">
     <img *ngIf="parent.isWaiting()" id="waiting" src="/assets/mobile/hourglass.png" alt="waitingscreen">
     <div *ngIf="!parent.isWaiting()">
         <div id="cards">
@@ -33,7 +33,7 @@
         </button>
     </div>
 
-    <div id="popcard" (click)="toggleCard()"  [class.move] ="card_open" *ngIf="cardinit">
+    <div id="popcard" (click)="toggleCard()"  [class.move] ="!card_open" *ngIf="cardinit">
         <svg width="79" height="3" viewBox="0 0 79 3" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="79" height="3" rx="1.5" fill="#C4C4C4" />
         </svg>
@@ -42,24 +42,24 @@
             You are a {{parent.role}}!</div>
         <div class="role_title" *ngIf="parent.role != 'Civilian'">
             You are the {{parent.role}}!</div>
-        
+
         <div id="role_image">
-            <img src= "/assets/smart_tv/card_{{parent.role}}.png">
+            <img src="/assets/smart_tv/card_{{parent.role}}.png">
         </div>
-        
+
         <div id="role_description_title">Role description:</div>
         <div id="role_description">{{descriptions.get(parent.role)}}</div>
         <div *ngFor="let player of accomplices" class="accomplices">
             <div class="accomplice_image">
-                <img src= "/assets/players/mobile_{{player.avatar_path}}">
+                <img src="/assets/players/mobile_{{player.avatar_path}}">
             </div>
             <div class="accomplice_role">
-                <img src= "/assets/roles/{{player.role}}.png">
+                <img src="/assets/roles/{{player.role}}.png">
             </div>
-            <div class ="accomplices_description" *ngIf="player.role == 'Mason'">
+            <div class="accomplices_description" *ngIf="player.role == 'Mason'">
                 {{player.name}} is the other Mason
             </div>
-            <div class ="accomplices_description" *ngIf="player.role != 'Mason'">
+            <div class="accomplices_description" *ngIf="player.role != 'Mason'">
                 {{player.name}} is the {{player.role}}
             </div>
         </div>
