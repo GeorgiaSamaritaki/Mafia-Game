@@ -40,12 +40,12 @@ export class HomeComponent implements OnInit {
   public toggleCard() {
     this.card_open = !this.card_open;
     if (this.card_open) {
-      this.addAnimation('move_up');
-    } else {
       this.addAnimation('move_down');
+    } else {
+      this.addAnimation('move_up');
     }
   }
-
+ 
   constructor(
     @Optional() private parent: MainpageComponent) {
   }
@@ -68,8 +68,6 @@ export class HomeComponent implements OnInit {
       this.flips[index] = false;
     });;
 
-    console.log(this.parent.username);
-    console.log(this.parent.role);
     if (this.parent.role == "Mason" || this.isMafia(this.parent.role))
       this.parent.players.forEach(
         (user: UserModel) => {

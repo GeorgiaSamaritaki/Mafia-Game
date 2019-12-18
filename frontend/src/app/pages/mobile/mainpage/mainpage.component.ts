@@ -19,6 +19,8 @@ export class MainpageComponent implements OnInit {
   username: string;
   selectedTab: number = 1;
   players: UserModel[] = [];
+  gameEnded: boolean = false;
+  won: boolean = false;
 
   private async initializePlayers() {
     // this.players = 
@@ -33,8 +35,7 @@ export class MainpageComponent implements OnInit {
           console.log("ERROR: Player has not been assigned a role");
           this.role = "Civilian"
         }
-        console.log(this.players);
-
+        console.log("Players Role: " + this.role);
       }
     ); //this shouldnt be kept here but for the sake of this demo
   }
@@ -49,6 +50,14 @@ export class MainpageComponent implements OnInit {
   async usernameExists(username: string) {
     return await this.usersService.checkUsername(username).toPromise();
   }
+
+  playAudio(path) {
+    let audio = new Audio();
+    audio.src = path;
+    audio.load();
+    audio.play();
+  }
+
   async ngOnInit() {
     this.username = localStorage.getItem("username");
     if (this.username == null || !await this.usernameExists(this.username)) this.goBack();
@@ -59,6 +68,7 @@ export class MainpageComponent implements OnInit {
     }
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
+      this.playAudio("/assets/sounds/round_change.wav");
       console.log("Mobile: Round changing");
       var game_init = false;
       if (this.round == "Waiting") { //first round only
@@ -94,6 +104,22 @@ export class MainpageComponent implements OnInit {
           if (this.players[i].name == msg.message.name) this.players[i] = msg.message;
       }
     });
+
+
+    this.socketService.syncMessages("gameEnded").subscribe(msg => {
+      this.gameEnded = true;
+      console.log("Game ended won: " + msg.message)
+      if ((msg.message == 'Mafia' && this.isMafia(this.role)) ||
+        (msg.message == 'Town' && !this.isMafia(this.role))) 
+          this.won = true;
+         else 
+          this.won = false;
+      
+    });
+  }
+
+  isMafia(role:string) { 
+    return role == "Mafioso" || role == "Barman" || role == "Godfather";
   }
 
   public async RetriveInfoonReload() {
@@ -128,7 +154,7 @@ export class MainpageComponent implements OnInit {
       case "Mafioso":
       case "Barman":
       case "Godfather":
-        return (other_role == "Mafioso" || other_role == "Barman" || other_role == "Godfather") ? other_role : "hidden";
+        return this.isMafia(other_role) ? other_role : "hidden";
       case "Mason":
         return (other_role == "Mason") ? other_role : "hidden";
       default:
@@ -152,7 +178,7 @@ export class MainpageComponent implements OnInit {
       case 'Doctor':
         return this.role == 'Doctor';
       case 'Detective':
-        return this.role == 'Doctor';
+        return this.role == 'Detective';
       case 'Barman':
         return this.role == 'Barman';
       default:

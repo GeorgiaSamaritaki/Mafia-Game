@@ -76,7 +76,8 @@ export class VotingController {
             default:
                 console.log("what is wrong");
         }
-        if (votingcontroller.everyoneVoted()) smcontroller.changeRound();
+        smcontroller.changeRound();
+        res.json(newVote);
     }
 
     public everyoneVoted() {
@@ -285,6 +286,8 @@ export class VotingController {
             SocketService.broadcast("detective_findings", users.find((user) => user.name == detective_vote));
             //TODO: make sure detective learns what he asked for
         }
+        detective_vote = null;
+        doctor_vote = null;
     }
 
     getalive() {
@@ -329,8 +332,7 @@ export class VotingController {
     public async setPlayers() {
         return new Promise(async (resolve, reject) => {
             await votingcontroller.initVoting();
-            detective_vote = null;
-            doctor_vote = null;
+
             resolve();
         });
     }
