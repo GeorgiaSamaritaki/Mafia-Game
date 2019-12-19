@@ -100,9 +100,6 @@ export class AugmentedTableComponent implements OnInit {
     this.left_players.sort(function (a, b) { return a.position - b.position });
     this.middle_players.sort(function (a, b) { return a.position - b.position });
     this.right_players.sort(function (a, b) { return b.position - a.position });
-    console.log(this.middle_players);
-    console.log(this.left_players);
-    console.log(this.right_players);
   }
 
   public isDay() {

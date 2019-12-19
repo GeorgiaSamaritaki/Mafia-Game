@@ -122,6 +122,7 @@ export class InteractiveWallComponent implements OnInit {
         }
         if (this.whoDied != "") {
           this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
+          this.whoDied = "";
         }
         break;
       case 'Secret Voting': //Secret Voting 
@@ -130,6 +131,11 @@ export class InteractiveWallComponent implements OnInit {
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Mafia Voting': //Mafia Voting
+        if (this.whoDied != "") {
+          let role: string = (await this.userService.getUser(this.whoDied).toPromise()).role;
+          this.speakerService.speak(this.whoDied + " was killed today! They were a " + role );
+          this.whoDied = "";
+        }
         let tmp: any = (await this.votingService.votesOfRound("Day" + this.phases_num).toPromise());
         //  tmp.votes = Object.values(tmp.votes.reduce((acc, cur) => Object.assign(acc, { [cur.fromWho]: cur }), {}))
 
@@ -226,7 +232,7 @@ export class InteractiveWallComponent implements OnInit {
     this.round = "Open Ballot";
     console.log("Number of rounds: " + this.round_histroy);
     console.log("Round was set to: " + this.round);
-    await console.log(this.votingService.votesOfRound(this.round).toPromise());
+    console.log( await this.votingService.votesOfRound(this.round).toPromise());
 
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {
