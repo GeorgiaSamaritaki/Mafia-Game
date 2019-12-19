@@ -50,7 +50,7 @@ export class VotingController {
         };
         console.log("Vote received from: " + newVote.fromWho + " to: " +
             newVote.toWho + " round: " + round);
-        roundVotes.push(newVote);
+        if (round != "Secret Voting") roundVotes.push(newVote);
         console.log("ROUND VOTES: " + roundVotes.length);
         switch (round) {
             case "Doctor":

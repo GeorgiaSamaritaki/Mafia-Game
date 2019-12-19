@@ -17,10 +17,10 @@ export class InteractiveWallComponent implements OnInit {
   phases_num: number = 0;
   phases_num_array: number[] = [];
   backgroundColor: string = '#E74C3C';
-
+  num: number = 0;
   background_icon: string = "background_icon_day";
   round_histroy: string[] = [];
-  voters_pngs: Map<string, Array<string>> = new Map();
+  voters_pngs: Map<number, Array<string>> = new Map();
   suspects_pngs: Map<number, Array<string>> = new Map();
   phases: string[] = [];
   voted_players: Map<string, Array<string>> = new Map();
@@ -88,24 +88,9 @@ export class InteractiveWallComponent implements OnInit {
   }
 
   async changeRound() {
-    console.log("PHSASES LEN: " + this.phases.length);
+    console.log(this.suspects_pngs.get(this.num));
+    console.log("Num: " + this.num);
     this.lap++;
-    let day: string;
-    if (!this.isDay()) {
-      day = "Day" + this.phases_num;
-    } else {
-      day = "Night" + this.phases_num;
-    }
-    let tmp: any = (await this.votingService.votesOfRound(day).toPromise());
-    console.log("tmp: " + tmp.day);
-    console.log("VOTES: " + tmp.votes);
-    console.log("DEAD: " + tmp.dead);
-    if (tmp.votes != undefined && this.round != "Open Ballot") {
-      tmp.votes.forEach(e => {
-        console.log("Inserting: " + e.toWho + " " + e.fromWho);
-        this.insert_votes(e.toWho, e.fromWho);
-      });
-    }
     console.log(this.round);
     if (this.phases_num > 2) {
       this.timeline_margin += -100;
@@ -114,10 +99,23 @@ export class InteractiveWallComponent implements OnInit {
     }
     switch (this.round) {
       case 'Open Ballot': //Open Ballot
+        let temp: any = (await this.votingService.votesOfRound("Night" + this.phases_num).toPromise());
+        if (!this.saved) {
+          if (temp.votes != undefined) {
+            console.log("DEAD: " + temp.dead);
+            console.log("whoDEAD: " + this.whoDied);
+            let player: UserModel = await this.userService.getUser(temp.dead).toPromise();
+            if (this.suspects_pngs.get(this.num).includes(player.avatar_path, 0) == false) this.suspects_pngs.get(this.num).push(player.avatar_path);
+            console.log("Image path: " + this.suspects_pngs.get(this.num));
+          }
+        } else {
+          this.speakerService.speak("Nobody died tonight. A player was saved by the doctor.");
+        }
+        if (this.num != 0) this.num++;
         this.backgroundColor = '#E67E22';
         this.background_icon = "background_icon_day";
         this.phases.push('Day');
-        this.suspects_pngs.set(this.phases.length, []);
+        this.suspects_pngs.set(this.num, []);
         await this.speakerService.speak(this.responses.get(this.round));
         if (this.saved) {
           this.speakerService.speak("Nobody died tonight. A player was saved by the doctor.");
@@ -132,6 +130,21 @@ export class InteractiveWallComponent implements OnInit {
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Mafia Voting': //Mafia Voting
+        let tmp: any = (await this.votingService.votesOfRound("Day" + this.phases_num).toPromise());
+        //  tmp.votes = Object.values(tmp.votes.reduce((acc, cur) => Object.assign(acc, { [cur.fromWho]: cur }), {}))
+
+        if (tmp.votes != undefined) {
+          console.log("tmp: " + tmp.day);
+          console.log("VOTES: " + tmp.votes);
+          console.log("DEAD: " + tmp.dead);
+          tmp.votes.forEach(e => {
+            console.log("Inserting: " + e.toWho + " " + e.fromWho);
+            this.insert_votes(e.toWho, e.fromWho);
+          });
+
+          //map the array here to delete old entry and put new with correct png of killed
+        }
+        this.num++;
         if (this.phases_num == 2) {
           this.timeline_margin += -150;
           console.log(this.timeline_margin.toString());
@@ -140,7 +153,7 @@ export class InteractiveWallComponent implements OnInit {
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
         this.phases.push('Night');
-        this.suspects_pngs.set(this.phases.length, []);
+        this.suspects_pngs.set(this.num, []);
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Doctor': //Doctor 
@@ -160,7 +173,7 @@ export class InteractiveWallComponent implements OnInit {
         if (this.whoDied != "" && this.whoDied != "saved") {
           let player: UserModel = await this.userService.getUser(this.whoDied).toPromise();
           console.log("Died from mafia!!!");
-          this.suspects_pngs.get(this.phases.length).push(player.avatar_path);
+          this.suspects_pngs.get(this.num).push(player.avatar_path);
         }
         this.phases_num++;
         this.phases_num_array.push(this.phases_num);//for day
@@ -174,28 +187,26 @@ export class InteractiveWallComponent implements OnInit {
   }
 
   async insert_votes(toWho: string, fromWho: string) {
-    if (this.round != "Open Ballot") {
-      return;
-    }
+    if (this.round != "Open Ballot") return;
     if (!this.voted_players.has(toWho)) this.voted_players.set(toWho, []);
     this.voted_players.get(toWho).push(fromWho);
 
     let player: UserModel = await this.userService.getUser(toWho).toPromise();
     // console.log("suspect avatar path: " + player.avatar_path);
-    if (this.suspects_pngs.get(this.phases.length).includes(player.avatar_path, 0) == false) this.suspects_pngs.get(this.phases.length).push(player.avatar_path); //get the img paths of the suspects
-    if (this.isDay()) {
-      // console.log("Name of voter: " + fromWho);
-      let voter: UserModel = await this.userService.getUser(fromWho).toPromise();
-      // console.log("voter avatar path: " + voter.avatar_path);
-      if (!this.voters_pngs.has(player.avatar_path)) this.voters_pngs.set(player.avatar_path, []);
-      this.voters_pngs.get(player.avatar_path).push(voter.avatar_path);
+    if (this.suspects_pngs.get(this.num).includes(player.avatar_path, 0) == false) this.suspects_pngs.get(this.num).push(player.avatar_path); //get the img paths of the suspects
+    // console.log("Name of voter: " + fromWho);
+
+    let voter: UserModel = await this.userService.getUser(fromWho).toPromise();
+    // console.log("voter avatar path: " + voter.avatar_path);
+    if (!this.voters_pngs.has(this.suspects_pngs.get(this.num).length)) this.voters_pngs.set(this.suspects_pngs.get(this.num).length, []);
+    this.voters_pngs.get(this.suspects_pngs.get(this.num).length).push(voter.avatar_path);
+
+    // this.voters_pngs.set(player.avatar_path, this.voters_pngs.get(player.avatar_path));
+    // console.log("voters_pngs[]: " + this.voters_pngs.get(player.avatar_path));
+    if (this.voters_pngs.get(this.suspects_pngs.get(this.num).length).length > 4) this.expand_width = true;
+    //console.log("suspects_pngs[]: " + this.suspects_pngs);
 
 
-      // this.voters_pngs.set(player.avatar_path, this.voters_pngs.get(player.avatar_path));
-      // console.log("voters_pngs[]: " + this.voters_pngs.get(player.avatar_path));
-      if (this.voters_pngs.get(player.avatar_path).length > 4) this.expand_width = true;
-      //console.log("suspects_pngs[]: " + this.suspects_pngs);
-    }
   }
 
   async ngOnInit() {
@@ -230,14 +241,14 @@ export class InteractiveWallComponent implements OnInit {
     });
 
     this._leapService.cursorRecognizer().subscribe((cursor) => {
-      const left1: number =  document.getElementById('smartSpeaker').getBoundingClientRect().left;
-      const left2: number =  document.getElementById('playernar').getBoundingClientRect().left;
-      const top1: number =  document.getElementById('smartSpeaker').getBoundingClientRect().top;
-      const top2: number =  document.getElementById('playernar').getBoundingClientRect().top;
-      const width1: number =  document.getElementById('smartSpeaker').getBoundingClientRect().width;
-      const width2: number =  document.getElementById('playernar').getBoundingClientRect().width;
-      const height1: number =  document.getElementById('smartSpeaker').getBoundingClientRect().height;
-      const height2: number =  document.getElementById('playernar').getBoundingClientRect().height;
+      const left1: number = document.getElementById('smartSpeaker').getBoundingClientRect().left;
+      const left2: number = document.getElementById('playernar').getBoundingClientRect().left;
+      const top1: number = document.getElementById('smartSpeaker').getBoundingClientRect().top;
+      const top2: number = document.getElementById('playernar').getBoundingClientRect().top;
+      const width1: number = document.getElementById('smartSpeaker').getBoundingClientRect().width;
+      const width2: number = document.getElementById('playernar').getBoundingClientRect().width;
+      const height1: number = document.getElementById('smartSpeaker').getBoundingClientRect().height;
+      const height2: number = document.getElementById('playernar').getBoundingClientRect().height;
       if (cursor.xPos >= left1 && cursor.xPos <= (left1 + width1) && cursor.yPos >= top1 && cursor.yPos <= (top1 + height1)) {
         document.getElementById('smartSpeaker').style.opacity = "1";
       } else {
@@ -263,24 +274,16 @@ export class InteractiveWallComponent implements OnInit {
     this.socketService.syncMessages("died").subscribe(async msg => {
       console.log("User Died " + msg.message.name);
       if (this.isDay()) {
-        for (let i: number = 0; i < this.suspects_pngs.get(this.phases.length).length; i++) {
-          let player: UserModel = await this.userService.getUser(msg.message.nameWho).toPromise();
-          if (player.avatar_path == this.suspects_pngs.get(this.phases.length)[i]) {
-            this.suspects_pngs.get(this.phases.length)[i] = msg.message.avatar_path;
-            console.log("Png of Killed:" + this.suspects_pngs.get(this.phases.length)[i]);
-          }
-          console.log("edww");
-        }
         this.whoDiedPng = msg.message.avatar_path;
         this.whoDied = msg.message.name;
         await this.votingService.addToHistory("Day" + this.phases_num, this.whoDied).toPromise();
+        console.log("here!");
       } else {
         //this.whoDiedPng =  msg.message.avatar_path;
         this.whoDied = msg.message.name;
         console.log("died hereeeeeeeeeeeeeeeeeeeee");
         await this.votingService.addToHistory("Night" + this.phases_num, this.whoDied).toPromise();
       }
-      // this.changeImageOfDead(msg.message);
     });
   }
 
