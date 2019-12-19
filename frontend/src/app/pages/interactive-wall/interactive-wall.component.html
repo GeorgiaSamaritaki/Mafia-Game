@@ -16,7 +16,7 @@
               </div>
             </div>
             <div *ngFor="let suspect of suspects_pngs.get(i); let j=index;" class="suspects">
-              <img class="suspect" src="/assets/interactive-wall/{{suspect}}" alt="avatar of suspect">
+              <img class="suspect" src="/assets/interactive-wall/{{suspect}}" [class.dead_day]="changePng" alt="avatar of suspect">
               <div id="voters" [ngStyle]="{width:(expand_width)?'225px':'170px'}" [class.hidden]="(i%2!=0)">
                 <div *ngFor="let voter of voters_pngs.get(j+1);">
                   <img class="voter" src="/assets/interactive-wall/{{voter}}" alt="avatar of suspect">

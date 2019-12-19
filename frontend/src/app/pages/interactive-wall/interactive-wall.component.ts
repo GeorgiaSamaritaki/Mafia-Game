@@ -29,6 +29,7 @@ export class InteractiveWallComponent implements OnInit {
   whoDied: string = "";
   saved: boolean = false;
   whoDiedPng: string = "";
+  changePng: boolean = false;
   responses: Map<string, string> = new Map([
     ['Waiting', ''],
     ['Open Ballot', 'The sun rises in Palermo, please, open your eyes.'],
@@ -147,6 +148,7 @@ export class InteractiveWallComponent implements OnInit {
           for (let i = 0; i < this.suspects_pngs.get(this.num).length; i++) {
             if (this.suspects_pngs.get(this.num)[i] == player.avatar_path.substring(7)) {
               this.suspects_pngs.get(this.num)[i] == player.avatar_path;
+              this.changePng = true;
             }
           }
         }
