@@ -110,9 +110,10 @@ export class InteractiveWallComponent implements OnInit {
             console.log("whoDEAD: " + this.whoDied);
             let player: UserModel = await this.userService.getUser(this.whoDied).toPromise();
             this.suspects_pngs.get(this.num).push(player.avatar_path);
-            if (temp.day == "Night" + (this.phases_num - 1)) this.voters_pngs.get(this.suspects_pngs.get(this.num).length).length = 0;
+            
           }
-          this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
+          if (this.whoDied != "")
+            this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
         } else {
           this.speakerService.speak("Nobody died tonight. A player was saved by the doctor.");
         }
@@ -130,7 +131,7 @@ export class InteractiveWallComponent implements OnInit {
       case 'Mafia Voting': //Mafia Voting
         if (this.whoDied != "") {
           let role: string = (await this.userService.getUser(this.whoDied).toPromise()).role;
-          this.speakerService.speak(this.whoDied + " was killed today! They were a " + role );
+          this.speakerService.speak(this.whoDied + " was killed today! They were a " + role);
           this.whoDied = "";
         }
         let tmp: any = (await this.votingService.votesOfRound("Day" + this.phases_num).toPromise());
@@ -148,7 +149,6 @@ export class InteractiveWallComponent implements OnInit {
               this.suspects_pngs.get(this.num)[i] == player.avatar_path;
             }
           }
-
         }
         this.num++;
         if (this.phases_num == 2) {
@@ -227,7 +227,7 @@ export class InteractiveWallComponent implements OnInit {
     this.round = "Open Ballot";
     console.log("Number of rounds: " + this.round_histroy);
     console.log("Round was set to: " + this.round);
-    console.log( await this.votingService.votesOfRound(this.round).toPromise());
+    console.log(await this.votingService.votesOfRound(this.round).toPromise());
 
 
     this.socketService.syncMessages("roundChange").subscribe(msg => {

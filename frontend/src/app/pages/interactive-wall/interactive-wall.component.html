@@ -17,7 +17,7 @@
             </div>
             <div *ngFor="let suspect of suspects_pngs.get(i); let j=index;" class="suspects">
               <img class="suspect" src="/assets/interactive-wall/{{suspect}}" alt="avatar of suspect">
-              <div id="voters" [ngStyle]="{width:(expand_width)?'225px':'170px'}">
+              <div id="voters" [ngStyle]="{width:(expand_width)?'225px':'170px'}" [class.hidden]="(i%2!=0)">
                 <div *ngFor="let voter of voters_pngs.get(j+1);">
                   <img class="voter" src="/assets/interactive-wall/{{voter}}" alt="avatar of suspect">
                 </div>
@@ -29,12 +29,12 @@
       <div id="narrator_title" [ngStyle]="{display:(lap == 0)?'block':'none'}">Select Narrator:</div>
     </div>
     <div class="button_container row" [ngStyle]="{'margin-top':(lap != 0)?'6%':'0%'}">
-      <div class="butt plyr_butt" id="playernar"[ngStyle]="{display:(lap == 0)?'block':'none'}">
+      <div class="butt plyr_butt" id="playernar" [ngStyle]="{display:(lap == 0)?'block':'none'}">
         <img id="player_icon" src="/assets/interactive-wall/player_icon.png" alt="player icon">
         <p>Player</p>
       </div>
-      <div class="butt spkr_butt" id="smartSpeaker" (click)="speakerSelected();" [ngStyle]="{display:(1 >= lap)?'block':'none'}"
-        [ngStyle]="{opacity:(lap != 0)?'1':'0.6'}">
+      <div class="butt spkr_butt" id="smartSpeaker" (click)="speakerSelected();"
+        [ngStyle]="{display:(1 >= lap)?'block':'none'}" [ngStyle]="{opacity:(lap != 0)?'1':'0.6'}">
         <img id="speaker" src="/assets/interactive-wall/speaker.png" alt="speaker icon">
         <p>Speaker</p>
       </div>
