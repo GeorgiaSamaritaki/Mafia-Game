@@ -35,18 +35,24 @@ export class AugmentedTableComponent implements OnInit {
 
     await this.initializePlayers();
 
-    this.socketService.syncMessages("roundChange").subscribe(msg => {
+    this.socketService.syncMessages("roundChange").subscribe(async msg => {
+      await this.timeout(500);
       console.log("Round is Changing");
       this.round = msg.message;
+      console.log(this.round);
       this.changeRound();
-      this.votesOfPlayers.clear();
+      this.votesOfPlayers.forEach((val, key) => {
+        val = 0;
+      });
     });
     this.socketService.syncMessages("vote").subscribe(async msg => {
+      await this.timeout(500);
       if (this.round != "Open Ballot") return;
       console.log("Player " + msg.message.toWho + " received a vote");
       this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
     });
-    this.socketService.syncMessages("died").subscribe(msg => {
+    this.socketService.syncMessages("died").subscribe(async msg => {
+      await this.timeout(500);
       console.log(`${msg.message.name} died`);
       this.aPlayerDied(msg.message);
     });
@@ -54,6 +60,10 @@ export class AugmentedTableComponent implements OnInit {
       console.log(`${msg.message} won`);
       this.winner = true;
     });
+  }
+
+  private timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   private async initializePlayers() {
@@ -150,5 +160,10 @@ export class AugmentedTableComponent implements OnInit {
     else {
       return this.votesOfPlayers.get(username);
     }
+  }
+
+  isAlive(username: string) {
+    let p = this.players.find((user) => user.name == username);
+    return p.dead == 'alive';
   }
 }

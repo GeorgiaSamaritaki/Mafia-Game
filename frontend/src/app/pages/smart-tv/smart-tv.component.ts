@@ -61,6 +61,7 @@ export class SmartTvComponent implements OnInit {
     this.initializePlayers().then(() => this.initialized = true);
 
     this.socketService.syncMessages("roundChange").subscribe(async msg => {
+      await this.timeout(500);
       if (this.round == "Barman") this.count++; // if last round war barman
       console.log("Round is Changing");
       this.initialized = false;
@@ -70,12 +71,14 @@ export class SmartTvComponent implements OnInit {
     });
 
     this.socketService.syncMessages("vote").subscribe(async msg => {
+      await this.timeout(800);
       console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
       this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
       this.playAudio("/assets/sounds/knife.wav");
     });
 
     this.socketService.syncMessages("died").subscribe(async msg => {
+      await this.timeout(500);
       console.log("User Died");
       this.aPlayerWasKilled(msg.message);
     });
@@ -86,12 +89,17 @@ export class SmartTvComponent implements OnInit {
       this.playAudio("/assets/sounds/game-over.wav");
     });
 
-    this.socketService.syncMessages("suspects").subscribe(msg => {
+    this.socketService.syncMessages("suspects").subscribe(async msg => {
+      await this.timeout(500);
       //youcan vote yourself always
       console.log("Suspects Received");
       console.log(msg.message);
       this.suspects = msg.message;
     });
+  }
+
+  private timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   sendToEnd(name: string) {

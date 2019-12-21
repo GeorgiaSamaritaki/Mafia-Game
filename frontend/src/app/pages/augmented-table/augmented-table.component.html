@@ -65,7 +65,7 @@
             <div class="player" *ngFor="let player of left_players; let i=index">
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
-                <div class="knives">
+                <div class="knives" *ngIf="isAlive(player.name)">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
@@ -81,7 +81,7 @@
             <div class="player" *ngFor="let player of right_players; let i=index">
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
-                <div class="knives">
+                <div class="knives" *ngIf="isAlive(player.name)">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
@@ -97,7 +97,7 @@
             <div class="player" *ngFor="let player of middle_players; let i=index">
                 <div class="name_text">{{player.name}}</div>
                 <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
-                <div class="knives">
+                <div class="knives" *ngIf="isAlive(player.name)">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
                     <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
