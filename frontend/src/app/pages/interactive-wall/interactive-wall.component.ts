@@ -19,6 +19,7 @@ export class InteractiveWallComponent implements OnInit {
   phases_num_array: number[] = [];
   backgroundColor: string = '#E74C3C';
   num: number = 0;
+  n: number = 0;
   background_icon: string = "background_icon_day";
   round_histroy: string[] = [];
   voters_pngs: Map<number, Array<string>> = new Map();
@@ -195,17 +196,21 @@ export class InteractiveWallComponent implements OnInit {
 
     let player: UserModel = await this.userService.getUser(toWho).toPromise();
     // console.log("suspect avatar path: " + player.avatar_path);
-    if (this.suspects_pngs.get(this.num).includes(player.avatar_path, 0) == false){
+    if (this.suspects_pngs.get(this.num).includes(player.avatar_path, 0) == false) {
       this.suspects_pngs.get(this.num).push(player.avatar_path); //get the img paths of the suspects
       this.changePng.push(false);
-    } 
-   
+    }
+
     // console.log("Name of voter: " + fromWho);
     if (this.round == "Mafia Voting" || this.round == "Open Ballot") {
       let voter: UserModel = await this.userService.getUser(fromWho).toPromise();
       // console.log("voter avatar path: " + voter.avatar_path);
       if (!this.voters_pngs.has(this.suspects_pngs.get(this.num).length)) this.voters_pngs.set(this.suspects_pngs.get(this.num).length, []);
-      this.voters_pngs.get(this.suspects_pngs.get(this.num).length).push(voter.avatar_path);
+      if (this.num > 0) {
+        this.n += this.suspects_pngs.get(this.num - 1).length;
+        this.voters_pngs.set(this.suspects_pngs.get(this.num).length + this.n, []);
+      }
+      this.voters_pngs.get(this.suspects_pngs.get(this.num).length + this.n).push(voter.avatar_path);
 
       // this.voters_pngs.set(player.avatar_path, this.voters_pngs.get(player.avatar_path));
       // console.log("voters_pngs[]: " + this.voters_pngs.get(player.avatar_path));
