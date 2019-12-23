@@ -29,7 +29,7 @@ export class InteractiveWallComponent implements OnInit {
   whoDied: string = "";
   saved: boolean = false;
   whoDiedPng: string = "";
-  changePng: boolean = false;
+  changePng: boolean[] = new Array();
   responses: Map<string, string> = new Map([
     ['Waiting', ''],
     ['Open Ballot', 'The sun rises in Palermo, please, open your eyes.'],
@@ -110,8 +110,8 @@ export class InteractiveWallComponent implements OnInit {
             console.log("DEAD: " + temp.dead);
             console.log("whoDEAD: " + this.whoDied);
             let player: UserModel = await this.userService.getUser(this.whoDied).toPromise();
-            this.suspects_pngs.get(this.num).push(player.avatar_path);
-            
+            this.suspects_pngs.get(this.num).push(player.avatar_path.substring(7));
+            this.changePng.push(false);
           }
           if (this.whoDied != "")
             this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
@@ -148,7 +148,7 @@ export class InteractiveWallComponent implements OnInit {
           for (let i = 0; i < this.suspects_pngs.get(this.num).length; i++) {
             if (this.suspects_pngs.get(this.num)[i] == player.avatar_path.substring(7)) {
               this.suspects_pngs.get(this.num)[i] == player.avatar_path;
-              this.changePng = true;
+              this.changePng[i] = true;
             }
           }
         }
@@ -195,7 +195,11 @@ export class InteractiveWallComponent implements OnInit {
 
     let player: UserModel = await this.userService.getUser(toWho).toPromise();
     // console.log("suspect avatar path: " + player.avatar_path);
-    if (this.suspects_pngs.get(this.num).includes(player.avatar_path, 0) == false) this.suspects_pngs.get(this.num).push(player.avatar_path); //get the img paths of the suspects
+    if (this.suspects_pngs.get(this.num).includes(player.avatar_path, 0) == false){
+      this.suspects_pngs.get(this.num).push(player.avatar_path); //get the img paths of the suspects
+      this.changePng.push(false);
+    } 
+   
     // console.log("Name of voter: " + fromWho);
     if (this.round == "Mafia Voting" || this.round == "Open Ballot") {
       let voter: UserModel = await this.userService.getUser(fromWho).toPromise();

@@ -17,6 +17,10 @@
   opacity: 0.4;
 }
 
+.noDisplay{
+  display:none;
+}
+
 .hidden{
   display: none;
   visibility: hidden;
@@ -246,6 +250,7 @@
   width: 104px;
   height: 104px;
   z-index: 3;
+  background-size: cover;
 }
 
 #voters {
