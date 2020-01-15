@@ -1,5 +1,5 @@
 <div *ngIf="initialized" class="all" [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
-  <div class="wrapper">
+  <div class="wrapper" *ngIf="deathRevealing == 0">
     <img class="tv_upper_icon" [attr.src]="isDay()? '/assets/smart_tv/Sun.png' : '/assets/smart_tv/moon.png'"
       alt="Background icon">
 
@@ -45,6 +45,12 @@
       <img class="down_vector" src="/assets/smart_tv/{{round_title_path}}.png" alt="Title of round">
     </div>
   </div>
+  <div class="deathReveal" *ngIf="deathRevealing != 0">
+    <img *ngIf="deathRevealing == 1" [attr.src]="isDay()? '/assets/smart_tv/deathReveal1Day.png' : '/assets/smart_tv/deathReveal1Night.png'" alt="">
+    <div class="deathReveal2" *ngIf="deathRevealing == 2">
+      <img [attr.src]="isDay()? '/assets/smart_tv/deathReveal2Day.png' : '/assets/smart_tv/deathReveal1Night.png'" alt="">
+    </div>
+  </div>
   <div class="gameEnd" *ngIf="gameEnded()">
     <div *ngIf="isDay()">
       <img src="/assets/smart_tv/gameOverDay.png" alt="">
@@ -54,7 +60,7 @@
     </div>
     <div class="winner">The {{winner}} won</div>
     <div class="winnerImg">
-        <img src="/assets/smart_tv/winner{{winner}}.png" alt="">
+      <img src="/assets/smart_tv/winner{{winner}}.png" alt="">
     </div>
   </div>
 </div>

@@ -22,7 +22,17 @@ var phase = Phase.Day;
 var round: string = Round.Waiting;
 var roundCounter: number = 1;
 
+const SocketService = DIContainer.get(SocketsService);
+
 export { round }
+
+function delay(ms: number) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, ms);
+    })
+}
 
 export class StateMachineController {
 
@@ -58,6 +68,7 @@ export class StateMachineController {
                 break;
             case Round.Secret_Voting:
                 await votingcontroller.whoToKillDay(); //who the players killed
+                await delay(10000); // delay to show the "animation" 
                 await votingcontroller.gameEnded();
                 round = Round.Mafia_Voting;
                 break;
@@ -68,29 +79,27 @@ export class StateMachineController {
             case Round.Doctor:
                 round = Round.Detective;
                 break;
-            case Round.Detective: 
+            case Round.Detective:
                 round = Round.Barman;
                 break;
             case Round.Barman:
                 await votingcontroller.whoToKillNight(); // who the mafia killed
                 await votingcontroller.gameEnded();
+                await delay(10000); // delay to show the "animation" 
                 round = Round.Open_Ballot
                 roundCounter++;
                 console.log(roundCounter);
-                const SocketService = DIContainer.get(SocketsService);
                 SocketService.broadcast("dayCounter", roundCounter);
                 break;
         }
 
-        await votingcontroller.setPlayers().then(() => { console.log("players set");});
-        const SocketService = DIContainer.get(SocketsService);
+        await votingcontroller.setPlayers().then(() => { console.log("players set"); });
         SocketService.broadcast("roundChange", round);
         if (res != null) res.json(`Round changed to ${round}`);
     }
 
 
     public selectNarrator(req: Request, res: Response) {
-        const SocketService = DIContainer.get(SocketsService);
         SocketService.broadcast("selectNarrator", '');
         res.json('OK');
     }

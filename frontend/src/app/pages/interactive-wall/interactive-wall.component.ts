@@ -67,6 +67,10 @@ export class InteractiveWallComponent implements OnInit {
     return (this.round == 'Open Ballot' || this.round == 'Secret Voting');
   }
 
+  private timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   async speakerSelected() {
     if (this.narratorClicked) return;
     this.narratorClicked = true;
@@ -114,8 +118,10 @@ export class InteractiveWallComponent implements OnInit {
             this.suspects_pngs.get(this.num).push(player.avatar_path.substring(7));
             this.changePng.push(false);
           }
-          if (this.whoDied != "")
-            this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
+          if (this.whoDied != "") {
+            // await this.timeout(1500);
+            // this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
+          }
         } else {
           this.speakerService.speak("Nobody died tonight. A player was saved by the doctor.");
         }
@@ -132,8 +138,9 @@ export class InteractiveWallComponent implements OnInit {
         break;
       case 'Mafia Voting': //Mafia Voting
         if (this.whoDied != "") {
-          let role: string = (await this.userService.getUser(this.whoDied).toPromise()).role;
-          this.speakerService.speak(this.whoDied + " was killed today! They were a " + role);
+          // let role: string = (await this.userService.getUser(this.whoDied).toPromise()).role;
+          // // await this.timeout(1500);
+          // this.speakerService.speak(this.whoDied + " was killed today! They were a " + role);
           this.whoDied = "";
         }
         let tmp: any = (await this.votingService.votesOfRound("Day" + this.phases_num).toPromise());
@@ -290,11 +297,15 @@ export class InteractiveWallComponent implements OnInit {
         this.whoDied = msg.message.name;
         await this.votingService.addToHistory("Day" + this.phases_num, this.whoDied).toPromise();
         console.log("here!");
+        await this.timeout(5500);
+        this.speakerService.speak(msg.message.name + " was killed today! They were a " + msg.message.role);
       } else {
         this.whoDiedPng = msg.message.avatar_path;
         this.whoDied = msg.message.name;
         console.log("died hereeeeeeeeeeeeeeeeeeeee");
         await this.votingService.addToHistory("Night" + this.phases_num, this.whoDied).toPromise();
+        await this.timeout(5500);
+        this.speakerService.speak(msg.message.name + " was killed tonight by the Mafia! They are now out of the game.");
       }
     });
   }

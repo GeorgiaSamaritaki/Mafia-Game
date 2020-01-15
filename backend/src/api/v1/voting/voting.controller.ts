@@ -4,6 +4,7 @@ import { Vote, roundSum, roundVotes, voteHistory } from './voting.interface'
 import { User, users } from '../users/user.interface'
 import { round } from '../state-machine/state-machine.controller'
 import { smcontroller, usercontroller, votingcontroller } from '../index';
+import { resolve } from 'dns';
 
 interface Player {
     canVote: boolean,
@@ -233,22 +234,25 @@ export class VotingController {
         }
     }
     public whoToKillDay() {
-        let suspects: Map<string, number> = new Map();
-        players.forEach((p: Player, username: string) => {
-            suspects.set(username, p.votes);
+        return new Promise((resolve, reject) => {
+            let suspects: Map<string, number> = new Map();
+            players.forEach((p: Player, username: string) => {
+                suspects.set(username, p.votes);
+            });
+            suspects[Symbol.iterator] = function* () {
+                yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
+            }
+            var todie: string;
+            for (let [key, value] of suspects) {     // print data sorted
+                // console.log("Day sorted " + key + ' ' + value);
+                todie = key; break;
+            }
+            console.log("Day:brodcasting todie " + todie);
+            usercontroller.changePathOfUser(todie);
+            const SocketService = DIContainer.get(SocketsService);
+            SocketService.broadcast("died", users.find((user) => user.name == todie));
+            resolve();
         });
-        suspects[Symbol.iterator] = function* () {
-            yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
-        }
-        var todie: string;
-        for (let [key, value] of suspects) {     // print data sorted
-            // console.log("Day sorted " + key + ' ' + value);
-            todie = key; break;
-        }
-        console.log("Day:brodcasting todie " + todie);
-        usercontroller.changePathOfUser(todie);
-        const SocketService = DIContainer.get(SocketsService);
-        SocketService.broadcast("died", users.find((user) => user.name == todie));
     }
 
     public setVictim() {
@@ -267,26 +271,29 @@ export class VotingController {
     }
 
     public whoToKillNight() {
-        if (todie_night == doctor_vote) {
-            console.log("The deceased was saved by the doctor");
-            todie_night = null;
-        }
-        if (todie_night != null) {
-            usercontroller.changePathOfUser(todie_night);
-            const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("died", users.find((user) => user.name == todie_night));//FIXME:kill that guy and let everyone know
-        } else { //TODO:Smart Speaker -> this is the case the player was saved by the doctor
-            //an event can be added so that the speaker says that nobody died todat
-            const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("saved", ""); //FIXME: cant proadcast died when no one died 
-        }
-        if (detective_vote != null) {
-            const SocketService = DIContainer.get(SocketsService);
-            SocketService.broadcast("detective_findings", users.find((user) => user.name == detective_vote));
-            //TODO: make sure detective learns what he asked for
-        }
-        detective_vote = null;
-        doctor_vote = null;
+        return new Promise((resolve, reject) => {
+            if (todie_night == doctor_vote) {
+                console.log("The deceased was saved by the doctor");
+                todie_night = null;
+            }
+            if (todie_night != null) {
+                usercontroller.changePathOfUser(todie_night);
+                const SocketService = DIContainer.get(SocketsService);
+                SocketService.broadcast("died", users.find((user) => user.name == todie_night));//FIXME:kill that guy and let everyone know
+            } else { //TODO:Smart Speaker -> this is the case the player was saved by the doctor
+                //an event can be added so that the speaker says that nobody died todat
+                const SocketService = DIContainer.get(SocketsService);
+                SocketService.broadcast("saved", ""); //FIXME: cant proadcast died when no one died 
+            }
+            if (detective_vote != null) {
+                const SocketService = DIContainer.get(SocketsService);
+                SocketService.broadcast("detective_findings", users.find((user) => user.name == detective_vote));
+                //TODO: make sure detective learns what he asked for
+            }
+            detective_vote = null;
+            doctor_vote = null;
+            resolve();
+        });
     }
 
     getalive() {

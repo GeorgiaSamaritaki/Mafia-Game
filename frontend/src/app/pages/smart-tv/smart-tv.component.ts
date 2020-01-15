@@ -18,12 +18,14 @@ export class SmartTvComponent implements OnInit {
   votesOfPlayers: Map<string, number>;
   suspects: UserModel[] = null; //can change
   shouldDie: UserModel;
-  
+  deathRevealing: number = 0;
+
   phase_title: string; // html stuff that are for some reason here
   next_title: string;
   next_up_icon: string;
   round_title_path: string;
   background_rect: string;
+  eventable: boolean = true;
 
   constructor(private statemachineService: StateMachineService,
     private userService: UsersService,
@@ -41,7 +43,11 @@ export class SmartTvComponent implements OnInit {
           this.votesOfPlayers.set(user.name, 0));
       }
     );
-  } 
+  }
+
+  private timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   playAudio(path) {
     let audio = new Audio();
@@ -50,11 +56,31 @@ export class SmartTvComponent implements OnInit {
     audio.play();
   }
 
+  playAudioPromise(path) {
+    return new Promise((resolve, reject) => {
+      let audio = new Audio();
+      audio.src = path;
+      audio.load();
+      audio.onended = resolve;
+      audio.play();
+    });
+  }
+
+  async revealDeath(player: UserModel) {
+    this.deathRevealing = 1;
+    console.log('Drumrolls trtrtrttr')
+    await this.playAudioPromise('/assets/sounds/drumroll.wav');
+    // await this.timeout(2000);
+    this.deathRevealing = 2;
+    await this.timeout(4000);
+    this.deathRevealing = 0;
+  }
+
   async ngOnInit() {
     this.count = <number>await this.statemachineService.getCounter().toPromise();
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);
-    if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']); //FIXME: this needs to be active
+    if (this.round == "Waiting") this.router.navigate(['/homescreen-tv']);
     this.round = "Open Ballot";
     this.changeRound();
 
@@ -71,18 +97,34 @@ export class SmartTvComponent implements OnInit {
     });
 
     this.socketService.syncMessages("vote").subscribe(async msg => {
-      await this.timeout(800);
+      if (!this.eventable) {
+        console.log('oopsie');
+        console.log(msg);
+        return;
+      }
+      this.eventable = false;
       console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
       this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
-      this.playAudio("/assets/sounds/knife.wav");
+      if (this.isDay())
+        this.playAudio("/assets/sounds/knife.wav");
+      await this.timeout(800);
+      this.eventable = true;
     });
 
     this.socketService.syncMessages("died").subscribe(async msg => {
-      await this.timeout(500);
+      // if( !this.eventable ) {
+      //   console.log('oopsie');
+      //   console.log(msg);
+      //   return;
+      // } 
+      this.eventable = false;
       console.log("User Died");
       this.aPlayerWasKilled(msg.message);
+      this.revealDeath(msg.message);
+      await this.timeout(800);
+      // this.eventable = true;
     });
-    
+
     this.socketService.syncMessages("gameEnded").subscribe(msg => {
       console.log(`${msg.message} won`);
       this.winner = msg.message;
@@ -96,10 +138,6 @@ export class SmartTvComponent implements OnInit {
       console.log(msg.message);
       this.suspects = msg.message;
     });
-  }
-
-  private timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   sendToEnd(name: string) {
@@ -122,7 +160,7 @@ export class SmartTvComponent implements OnInit {
 
     this.players[this.players.length - 1] = dead_player;
 
-  } 
+  }
 
   getPlayer(player_name: string) {
     for (var user of this.players)
