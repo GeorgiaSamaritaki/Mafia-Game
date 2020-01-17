@@ -68,7 +68,8 @@ export class StateMachineController {
                 break;
             case Round.Secret_Voting:
                 await votingcontroller.whoToKillDay(); //who the players killed
-                await delay(10000); // delay to show the "animation" 
+               // await delay(100000000); // delay to show the "animation" 
+               await delay(10000);
                 await votingcontroller.gameEnded();
                 round = Round.Mafia_Voting;
                 break;
@@ -85,7 +86,7 @@ export class StateMachineController {
             case Round.Barman:
                 await votingcontroller.whoToKillNight(); // who the mafia killed
                 await votingcontroller.gameEnded();
-                await delay(10000); // delay to show the "animation" 
+                // await delay(15000); // delay to show the "animation" 
                 round = Round.Open_Ballot
                 roundCounter++;
                 console.log(roundCounter);

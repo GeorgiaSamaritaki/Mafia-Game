@@ -19,6 +19,10 @@ export class SmartTvComponent implements OnInit {
   suspects: UserModel[] = null; //can change
   shouldDie: UserModel;
   deathRevealing: number = 0;
+  dead: string;
+  dead_path: string;
+  role_of_dead: string;
+  card_of_dead: string;
 
   phase_title: string; // html stuff that are for some reason here
   next_title: string;
@@ -72,6 +76,7 @@ export class SmartTvComponent implements OnInit {
     await this.playAudioPromise('/assets/sounds/drumroll.wav');
     // await this.timeout(2000);
     this.deathRevealing = 2;
+    //await this.timeout(100000000);
     await this.timeout(4000);
     this.deathRevealing = 0;
   }
@@ -120,6 +125,15 @@ export class SmartTvComponent implements OnInit {
       this.eventable = false;
       console.log("User Died");
       this.aPlayerWasKilled(msg.message);
+      this.dead = msg.message.name;
+      console.log(msg.message.avatar_path);
+      this.dead_path = msg.message.avatar_path.substring(7);
+      this.role_of_dead = msg.message.role;
+      if(!this.isDay()){
+        await this.timeout(5000);
+        this.revealDeath(msg.message);
+        return;
+      }
       this.revealDeath(msg.message);
       await this.timeout(800);
       // this.eventable = true;

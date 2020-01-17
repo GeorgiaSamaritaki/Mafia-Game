@@ -48,8 +48,8 @@
 .cardicon {
   max-height: 90%;
   max-width: 90%;
-  width:auto; 
-  height:auto;
+  width: auto;
+  height: auto;
   margin: auto;
 }
 
@@ -307,7 +307,66 @@
 }
 
 .deathReveal {
-  position: absolute;
   bottom: 0;
   right: 0;
+  color: #F5F7FA;
+}
+
+#death_background {
+  z-index: 1;
+}
+
+.dead_container {
+  z-index: 2;
+}
+
+.deadIcon {
+  position: absolute;
+  left: 102px;
+  top: 100px;
+}
+
+.deadReveal {
+  position: absolute;
+  left: 392px;
+  top: 115px;
+
+  font-style: normal;
+  font-weight: normal;
+  font-size: 96px;
+  line-height: 100px;
+}
+
+.deadReveal2 {
+  z-index: 2;
+  position: absolute;
+  width: 741px;
+  height: 151px;
+  left: 156px;
+  top: 464px;
+  font-size: 85px;
+}
+
+.roleDead {
+  text-transform: uppercase;
+  color: #E74C3C;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 144px;
+
+  font-size: 85px;
+  position: absolute;
+  width: 790px;
+  text-align: center;
+  left: 511px;
+  top: 785px;
+}
+
+.cardOfDead {
+  position: absolute;
+  width: 320px;
+  height: 350px;
+  z-index: 2;
+  left: 1313px;
+  top: 545px;
 }

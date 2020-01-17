@@ -45,10 +45,28 @@
       <img class="down_vector" src="/assets/smart_tv/{{round_title_path}}.png" alt="Title of round">
     </div>
   </div>
-  <div class="deathReveal" *ngIf="deathRevealing != 0">
-    <img *ngIf="deathRevealing == 1" [attr.src]="isDay()? '/assets/smart_tv/deathReveal1Day.png' : '/assets/smart_tv/deathReveal1Night.png'" alt="">
-    <div class="deathReveal2" *ngIf="deathRevealing == 2">
-      <img [attr.src]="isDay()? '/assets/smart_tv/deathReveal2Day.png' : '/assets/smart_tv/deathReveal1Night.png'" alt="">
+  <div class="deathReveal" *ngIf="deathRevealing != 0"
+    [style.position]="(deathRevealing == 1) ? 'absolute' : 'relative'">
+    <img *ngIf="deathRevealing == 1"
+      [attr.src]="isSecretVoting() ? '/assets/smart_tv/deathReveal1Day.png' : '/assets/smart_tv/deathReveal1Night.png'"
+      alt="">
+    <div *ngIf="deathRevealing == 2" style="position:relative;">
+      <img
+        [attr.src]="isSecretVoting() ? '/assets/smart_tv/deathReveal2Day.png' : '/assets/smart_tv/deathReveal2Night.png'"
+        id="death_background" alt="">
+      <div class="dead_container">
+        <img class="deadIcon" src="/assets/smart_tv/{{dead_path}}" alt="Icon of dead player">
+        <div class="deadReveal">{{dead}}<br />is out of the game</div>
+      </div>
+      <div [ngClass]="{hide: !isSecretVoting()}">
+        <div class="deadReveal2">{{dead}} was...</div>
+        <div class="row">
+          <div class="roleDead">A {{role_of_dead}}</div>
+          <div class="cardDead">
+            <img class="cardOfDead" src="/assets/smart_tv/card_{{role_of_dead}}.png" alt="Card Of Dead">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="gameEnd" *ngIf="gameEnded()">
