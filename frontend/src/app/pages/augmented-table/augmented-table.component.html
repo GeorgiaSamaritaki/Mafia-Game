@@ -1,6 +1,6 @@
 <div class=all [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
     <div class=phases>
-        <div class=f (click)="changeRound()">
+        <div class=f (click)="restart()">
             <div *ngIf="isDay()" [className]="isSelected('Open Ballot') ? 'selectedPhase' : 'phase' ">
                 <div [className]="isSelected('Open Ballot') ? 'selectedPhaseWrapper' : 'phaseWrapper'">
                     <img [className]="isSelected('Open Ballot') ? 'selectedIcon' : 'icon' "

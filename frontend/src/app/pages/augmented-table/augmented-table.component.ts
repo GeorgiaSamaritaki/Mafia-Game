@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UsersService, StateMachineService, SocketsService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ami-fullstack-augmented-table',
@@ -18,6 +19,7 @@ export class AugmentedTableComponent implements OnInit {
   private middle_players: UserModel[];
   votesOfPlayers: Map<string, number>;
   private backgroundSVG: string;
+  sub: Subscription = new Subscription;
 
   constructor(
     private usersService: UsersService,
@@ -35,31 +37,46 @@ export class AugmentedTableComponent implements OnInit {
 
     await this.initializePlayers();
 
-    this.socketService.syncMessages("roundChange").subscribe(async msg => {
-      await this.timeout(500);
-      console.log("Round is Changing");
-      this.round = msg.message;
-      console.log(this.round);
-      this.changeRound();
-      this.votesOfPlayers.forEach((val, key) => {
-        val = 0;
-      });
-    });
-    this.socketService.syncMessages("vote").subscribe(async msg => {
-      await this.timeout(500);
-      if (this.round != "Open Ballot") return;
-      console.log("Player " + msg.message.toWho + " received a vote");
-      this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
-    });
-    this.socketService.syncMessages("died").subscribe(async msg => {
-      await this.timeout(500);
-      console.log(`${msg.message.name} died`);
-      this.aPlayerDied(msg.message);
-    });
-    this.socketService.syncMessages("gameEnded").subscribe(msg => {
-      console.log(`${msg.message} won`);
-      this.winner = true;
-    });
+    this.sub.add(
+      this.socketService.syncMessages("roundChange").subscribe(async msg => {
+        await this.timeout(500);
+        console.log("Round is Changing");
+        this.round = msg.message;
+        console.log(this.round);
+        this.changeRound();
+        this.votesOfPlayers.forEach((val, key) => {
+          val = 0;
+        });
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("vote").subscribe(async msg => {
+        await this.timeout(500);
+        if (this.round != "Open Ballot") return;
+        console.log("Player " + msg.message.toWho + " received a vote");
+        this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("died").subscribe(async msg => {
+        await this.timeout(500);
+        console.log(`${msg.message.name} died`);
+        this.aPlayerDied(msg.message);
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("gameEnded").subscribe(msg => {
+        console.log(`${msg.message} won`);
+        this.winner = true;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("restart").subscribe(msg => {
+        this.sub.unsubscribe();
+        console.log('unsubscribed');
+        this.ngOnInit();
+      })
+    )
   }
 
   private timeout(ms) {
@@ -166,4 +183,5 @@ export class AugmentedTableComponent implements OnInit {
     let p = this.players.find((user) => user.name == username);
     return p.dead == 'alive';
   }
+
 }

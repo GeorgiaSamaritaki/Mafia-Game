@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ami-fullstack-signin-table',
@@ -24,7 +25,7 @@ export class SigninTableComponent implements OnInit {
   private _qr6: boolean = false;
   private _gameStarted: boolean = false;
 
-
+  sub: Subscription = new Subscription();
   joined_players: number = 0;
   qrs: string[];
 
@@ -55,28 +56,40 @@ export class SigninTableComponent implements OnInit {
     for (var i = 0; i < 7; i++) {
       this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.4:4200/mobile/login?position=${i}`)
     }
-    this.socketService.syncMessages("playerJoined").subscribe(msg => {
-      let newPlayer = new UserModel;
-      newPlayer.name = msg.message.name;
-      newPlayer.role = msg.message.role;
-      newPlayer.avatar_path = msg.message.avatar_path;
-      newPlayer.position = msg.message.position;
-      newPlayer.dead = msg.message.dead;
-      this.players.push(newPlayer);
-      this.hidePhotos(msg.message.position);
-      this.arrangePlayers(newPlayer);
-      this.joined_players++;
-    });
-    this.socketService.syncMessages("loadingUser").subscribe(msg => {
-      console.log("loading received" + msg.message);
-      this.load(msg.message);
-    });
 
-    this.socketService.syncMessages("roundChange").subscribe(msg => {
-      if (msg.message != 'Waiting') {
-        this.router.navigate(['/augmented-table']);
-      }
+    this.players.forEach(user => {
+        this.arrangePlayers(user);
     });
+    
+    this.sub.add(
+      this.socketService.syncMessages("playerJoined").subscribe(msg => {
+        let newPlayer = new UserModel;
+        newPlayer.name = msg.message.name;
+        newPlayer.role = msg.message.role;
+        newPlayer.avatar_path = msg.message.avatar_path;
+        newPlayer.position = msg.message.position;
+        newPlayer.dead = msg.message.dead;
+        this.players.push(newPlayer);
+        this.hidePhotos(msg.message.position);
+        this.arrangePlayers(newPlayer);
+        this.joined_players++;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("loadingUser").subscribe(msg => {
+        console.log("loading received" + msg.message);
+        this.load(msg.message);
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("roundChange").subscribe(msg => {
+        if (msg.message != 'Waiting') {
+          this.sub.unsubscribe();
+          console.log('unsubscribed');
+          this.router.navigate(['/augmented-table']);
+        }
+      })
+    )
   }
 
   public async startGame() {
@@ -128,6 +141,7 @@ export class SigninTableComponent implements OnInit {
     }
   }
 
+
   private arrangePlayers(newUser: UserModel) {
     if (this.joined_players <= 7) {
       switch (+newUser.position) {
@@ -145,6 +159,7 @@ export class SigninTableComponent implements OnInit {
           this.right_players.push(newUser);
           break;
       }
+      this.hidePhotos(newUser.position);
     } else {
       this.players.forEach(player => {
         if (player.position < (this.players.length / 3) - 1) {

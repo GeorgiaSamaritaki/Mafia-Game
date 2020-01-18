@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { UsersService, SocketsService, StateMachineService, VotingService } from 'src/app/global/services';
 import { UserModel } from 'src/app/global/models';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class SmartTvComponent implements OnInit {
   next_up_icon: string;
   round_title_path: string;
   background_rect: string;
-  eventable: boolean = true;
+  sub: Subscription = new Subscription();
 
   constructor(private statemachineService: StateMachineService,
     private userService: UsersService,
@@ -91,67 +92,57 @@ export class SmartTvComponent implements OnInit {
 
     this.initializePlayers().then(() => this.initialized = true);
 
-    this.socketService.syncMessages("roundChange").subscribe(async msg => {
-      await this.timeout(500);
-      if (this.round == "Barman") this.count++; // if last round war barman
-      console.log("Round is Changing");
-      this.initialized = false;
-      this.round = msg.message;
-      await this.changeRound();
-      this.initialized = true;
-    });
-
-    this.socketService.syncMessages("vote").subscribe(async msg => {
-      if (!this.eventable) {
-        console.log('oopsie');
-        console.log(msg);
-        return;
-      }
-      this.eventable = false;
-      console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
-      this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
-      if (this.isDay())
-        this.playAudio("/assets/sounds/knife.wav");
-      await this.timeout(800);
-      this.eventable = true;
-    });
-
-    this.socketService.syncMessages("died").subscribe(async msg => {
-      // if( !this.eventable ) {
-      //   console.log('oopsie');
-      //   console.log(msg);
-      //   return;
-      // } 
-      this.eventable = false;
-      console.log("User Died");
-      this.aPlayerWasKilled(msg.message);
-      this.dead = msg.message.name;
-      console.log(msg.message.avatar_path);
-      this.dead_path = msg.message.avatar_path.substring(7);
-      this.role_of_dead = msg.message.role;
-      if(!this.isDay()){
-        await this.timeout(5000);
+    this.sub.add(
+      this.socketService.syncMessages("roundChange").subscribe(async msg => {
+        await this.timeout(500);
+        if (this.round == "Barman") this.count++; // if last round war barman
+        console.log("Round is Changing");
+        this.initialized = false;
+        this.round = msg.message;
+        await this.changeRound();
+        this.initialized = true;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("vote").subscribe(async msg => {
+        console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
+        this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
+        if (this.isDay())
+          this.playAudio("/assets/sounds/knife.wav");
+        await this.timeout(800);
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("died").subscribe(async msg => {
+        console.log("User Died");
+        this.aPlayerWasKilled(msg.message);
         this.revealDeath(msg.message);
-        return;
-      }
-      this.revealDeath(msg.message);
-      await this.timeout(800);
-      // this.eventable = true;
-    });
-
-    this.socketService.syncMessages("gameEnded").subscribe(msg => {
-      console.log(`${msg.message} won`);
-      this.winner = msg.message;
-      this.playAudio("/assets/sounds/game-over.wav");
-    });
-
-    this.socketService.syncMessages("suspects").subscribe(async msg => {
-      await this.timeout(500);
-      //youcan vote yourself always
-      console.log("Suspects Received");
-      console.log(msg.message);
-      this.suspects = msg.message;
-    });
+        await this.timeout(800);
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("gameEnded").subscribe(msg => {
+        console.log(`${msg.message} won`);
+        this.winner = msg.message;
+        this.playAudio("/assets/sounds/game-over.wav");
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("suspects").subscribe(async msg => {
+        await this.timeout(500);
+        //youcan vote yourself always
+        console.log("Suspects Received");
+        console.log(msg.message);
+        this.suspects = msg.message;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("restart").subscribe(msg => {
+        this.sub.unsubscribe();
+        console.log('unsubscribed');
+        this.router.navigate(['/homescreen-tv']);
+      })
+    )
   }
 
   sendToEnd(name: string) {

@@ -49,7 +49,8 @@ export class StateMachineController {
             .get('/getRound', this.getRound)
             .get('/changeRound', this.changeRound)
             .get('/selectNarrator', this.selectNarrator)
-            .get('/getCounter', this.getCounter);
+            .get('/getCounter', this.getCounter)
+            .get('/restart', this.restartGame);
         return router;
     }
 
@@ -99,7 +100,6 @@ export class StateMachineController {
         if (res != null) res.json(`Round changed to ${round}`);
     }
 
-
     public selectNarrator(req: Request, res: Response) {
         SocketService.broadcast("selectNarrator", '');
         res.json('OK');
@@ -107,5 +107,21 @@ export class StateMachineController {
 
     public getCounter(req: Request, res: Response) {
         res.json(roundCounter);
+    }
+
+    public async restartGame(req: Request, res: Response) {
+        console.log('Restarting game');
+        //State machine restart
+        phase = Phase.Day;
+        round = Round.Waiting;
+        roundCounter = 1;
+
+        //Users restart
+        await usercontroller.restartUsers();
+        //Votes restart
+        await votingcontroller.restartVotes();
+
+        SocketService.broadcast("restart", '');
+        res.json('OK');
     }
 }

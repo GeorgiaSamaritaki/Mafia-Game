@@ -33,4 +33,9 @@ export class StateMachineService {
     return this.http
       .get(`${this.hostURl}/api/stateMachine/getCounter`);
   }
+  
+  public restartGame() {
+    return this.http
+      .get(`${this.hostURl}/api/stateMachine/restart`);
+  }
 }

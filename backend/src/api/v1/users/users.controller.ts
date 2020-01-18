@@ -7,11 +7,14 @@ import { json } from 'body-parser';
 import { resolve } from 'dns';
 import { rejects } from 'assert';
 import { round } from '../state-machine/state-machine.controller';
+import { usercontroller } from '..';
 
 function getRandomInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 var keyPlayers: Map<string, string> = new Map();
+var bots: boolean = false;
+
 export class UsersController {
 
 
@@ -29,6 +32,7 @@ export class UsersController {
             .post('/loadingUser', this.loadingUser)
             .post('/getUser', this.getUser)
             .post('/checkUsername', this.checkUsername)
+            .get('/addBots', this.addBots)
             .get('/joinedPlayers', this.joinedPlayers)
             .get('/getAllUsers', this.getAllUsers)
             .get('/distributeRoles', this.distributeRoles);
@@ -63,7 +67,7 @@ export class UsersController {
             res.json(e)
         }
     }
-    
+
     public async loadingUser(req: Request, res: Response) {
         try {
             var position = req.body.position;
@@ -137,9 +141,21 @@ export class UsersController {
         res.json(users.length);
     }
 
+    private distributeBots() {
+        return new Promise( (resolve, reject) =>{
+            console.log('botakia')
+            resolve();
+        })
+    }
+
     public distributeRoles() {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
+                if( bots ) {
+                    await usercontroller.distributeBots();
+                    resolve();
+                    return;
+                }
                 //For every 4 people 1 mafia (if its 7 we keep 2 Mafia)
                 //Calculate roles
                 let mafia: number;
@@ -170,7 +186,7 @@ export class UsersController {
                         }
                         mafia--;
                     }
-                    rng == users.length - 1 ? rng = 0 : rng++;
+                    rng = (rng == users.length - 1) ? 0 : rng + 1;
                 }
                 //Masons
                 let masons = 2;
@@ -181,7 +197,7 @@ export class UsersController {
                         masons--;
                         console.log('Mason set');
                     }
-                    rng == users.length - 1 ? rng = 0 : rng++;
+                    rng = (rng == users.length - 1) ? 0 : rng + 1;
                 }
                 //Detective 
                 let d = true
@@ -193,7 +209,7 @@ export class UsersController {
                         keyPlayers.set(users[rng].name, 'Detective');
                         console.log('Detectice set');
                     }
-                    rng == users.length - 1 ? rng = 0 : rng++;
+                    rng = (rng == users.length - 1) ? 0 : rng + 1;
                 }
                 //Doctor  
                 let doc = true
@@ -205,7 +221,7 @@ export class UsersController {
                         doc = false;
                         console.log('Doctor set');
                     }
-                    rng == users.length - 1 ? rng = 0 : rng++;
+                    rng = (rng == users.length - 1) ? 0 : rng + 1;
                 }
                 //Civilians the rest
                 users.forEach((player) => {
@@ -228,5 +244,21 @@ export class UsersController {
         return [...users.entries()]
             .filter(({ 1: v }) => v.role === role)
             .map(([k]) => k);;
+    }
+
+    public addBots(req: Request, res: Response) {
+        bots = true;
+        res.json(bots);
+    }
+
+    public restartUsers() {
+        return new Promise((resolve, reject) => {
+            keyPlayers.clear();
+            users.findIndex(user => {
+                user.role = 'undefined';
+            })
+            //Clear the array not just the roles TODO:
+            resolve();
+        });
     }
 }

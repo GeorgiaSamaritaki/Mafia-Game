@@ -54,4 +54,9 @@ export class UsersService {
     return this.http
       .get(`${this.hostURl}/api/users/joinedPlayers`);
   }
+
+  public botify() {
+    return this.http
+      .get(`${this.hostURl}/api/users/addBots`);
+  }
 }

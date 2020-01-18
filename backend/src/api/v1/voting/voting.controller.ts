@@ -5,6 +5,7 @@ import { User, users } from '../users/user.interface'
 import { round } from '../state-machine/state-machine.controller'
 import { smcontroller, usercontroller, votingcontroller } from '../index';
 import { resolve } from 'dns';
+import { rejects } from 'assert';
 
 interface Player {
     canVote: boolean,
@@ -369,6 +370,22 @@ export class VotingController {
                 const SocketService = DIContainer.get(SocketsService);
                 SocketService.broadcast("mafiaWin", 'Mafia');
             }
+            resolve();
+        })
+    }
+
+    public restartVotes() {
+        return new Promise((resolve, reject) => {
+            //Clear players
+            players.clear();
+            //Clear suspects and votes
+            suspects.splice(0, suspects.length);
+            doctor_vote = null;
+            detective_vote = null;
+            todie_night = null;
+            //Clear history
+            voteHistory.splice(0, voteHistory.length);
+            roundVotes.splice(0, roundVotes.length);
             resolve();
         })
     }

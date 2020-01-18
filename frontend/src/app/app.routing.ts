@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'smart-tv', loadChildren: () => import('./pages/smart-tv/smart-tv.module').then(m => m.SmartTvModule) },
   { path: 'homescreen-tv', loadChildren: () => import('./pages/homescreen-tv/homescreen-tv.module').then(m => m.HomescreenTvModule) },
   { path: 'signin-table', loadChildren: () => import('./pages/signin-table/signin-table.module').then(m => m.SigninTableModule) },
+  { path: 'bots', loadChildren: () => import('./pages/bots/bots.module').then(m => m.BotsModule) },
   { path: '**', redirectTo: 'mobile', pathMatch: 'full' },
   
 ];
