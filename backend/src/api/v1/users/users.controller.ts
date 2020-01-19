@@ -15,6 +15,8 @@ function getRandomInt(max: number) {
 var keyPlayers: Map<string, string> = new Map();
 var bots: boolean = false;
 
+const SocketService = DIContainer.get(SocketsService);
+
 export class UsersController {
 
 
@@ -59,7 +61,6 @@ export class UsersController {
                 "dead": req.body.dead
             }
             users.push(newUser);
-            const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("playerJoined", newUser);
             res.json("User added");
         } catch (e) {
@@ -73,7 +74,6 @@ export class UsersController {
             var position = req.body.position;
             console.log("service :loading user" + position);
 
-            const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("loadingUser", position);
             res.json("User Loading");
         } catch (e) {
@@ -141,18 +141,13 @@ export class UsersController {
         res.json(users.length);
     }
 
-    private distributeBots() {
-        return new Promise( (resolve, reject) =>{
-            console.log('botakia')
-            resolve();
-        })
-    }
-
     public distributeRoles() {
         return new Promise(async (resolve, reject) => {
             try {
-                if( bots ) {
-                    await usercontroller.distributeBots();
+                if (bots) {
+                    //Find the joined user and give him the role of Detective
+                    let index = users.findIndex(user => user.role == 'undefined')
+                    users[index].role = 'Detective';
                     resolve();
                     return;
                 }
@@ -246,18 +241,83 @@ export class UsersController {
             .map(([k]) => k);;
     }
 
-    public addBots(req: Request, res: Response) {
+    private distributeBots() {
+        return new Promise((resolve, reject) => {
+            console.log('botakia')
+            //6 Botakia
+            //Masons, Barman, Godfather, Civillian, Doctor
+            let BarmanBot: User = {
+                name: 'Barman',
+                role: 'Barman',
+                avatar_path: 'player6.png',
+                position: 1,
+                dead: 'alive'
+            }
+            users.push(BarmanBot);
+            console.log('Barman bot set')
+            let GodfatherBot: User = {
+                name: 'Godfather',
+                role: 'Godfather',
+                avatar_path: 'player3.png',
+                position: 2,
+                dead: 'alive'
+            }
+            users.push(GodfatherBot);
+            console.log('Godfather bot set')
+            let MasonBot1: User = {
+                name: 'MasonA',
+                role: 'Mason',
+                avatar_path: 'player2.png',
+                position: 3,
+                dead: 'alive'
+            }
+            users.push(MasonBot1);
+            let MasonBot2: User = {
+                name: 'MasonB',
+                role: 'Mason',
+                avatar_path: 'player8.png',
+                position: 4,
+                dead: 'alive'
+            }
+            users.push(MasonBot2);
+            console.log('Mason bots set')
+            let DoctorBot: User = {
+                name: 'Doctor',
+                role: 'Doctor',
+                avatar_path: 'player4.png',
+                position: 5,
+                dead: 'alive'
+            }
+            users.push(DoctorBot);
+            console.log('Doctor bot set')
+            let CivilliaBot: User = {
+                name: 'Civilian',
+                role: 'Civilian',
+                avatar_path: 'player1.png',
+                position: 6,
+                dead: 'alive'
+            }
+            users.push(CivilliaBot);
+            console.log('Civillian bot set')
+            resolve();
+        })
+    }
+
+    public async addBots(req: Request, res: Response) {
         bots = true;
-        res.json(bots);
+        await usercontroller.distributeBots();
+        SocketService.broadcast("bots", users);
+        res.json('Bots set');
     }
 
     public restartUsers() {
         return new Promise((resolve, reject) => {
             keyPlayers.clear();
-            users.findIndex(user => {
-                user.role = 'undefined';
-            })
+            // users.findIndex(user => {
+            //     user.role = 'undefined';
+            // })
             //Clear the array not just the roles TODO:
+            users.splice(0, users.length);
             resolve();
         });
     }

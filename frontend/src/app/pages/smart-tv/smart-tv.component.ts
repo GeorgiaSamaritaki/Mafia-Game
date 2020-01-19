@@ -116,6 +116,15 @@ export class SmartTvComponent implements OnInit {
       this.socketService.syncMessages("died").subscribe(async msg => {
         console.log("User Died");
         this.aPlayerWasKilled(msg.message);
+        this.dead = msg.message.name;
+        console.log(msg.message.avatar_path);
+        this.dead_path = msg.message.avatar_path.substring(7);
+        this.role_of_dead = msg.message.role;
+        if(!this.isDay()){
+          await this.timeout(5000);
+          this.revealDeath(msg.message);
+          return;
+        }
         this.revealDeath(msg.message);
         await this.timeout(800);
       })

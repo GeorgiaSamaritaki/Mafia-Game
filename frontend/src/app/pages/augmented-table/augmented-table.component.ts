@@ -62,6 +62,7 @@ export class AugmentedTableComponent implements OnInit {
         await this.timeout(500);
         console.log(`${msg.message.name} died`);
         this.aPlayerDied(msg.message);
+        // TODO: delay for the graveyard ?
       })
     )
     this.sub.add(

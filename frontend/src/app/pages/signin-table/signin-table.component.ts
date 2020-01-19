@@ -51,12 +51,12 @@ export class SigninTableComponent implements OnInit {
     this.joined_players = <number>(await this.userService.joinedPlayers().toPromise());
     console.log(this.joined_players);
 
-    this.players = await this.userService.getAllUsers().toPromise();
-
     for (var i = 0; i < 7; i++) {
-      this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.4:4200/mobile/login?position=${i}`)
+      this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.5:4200/mobile/login?position=${i}`)
     }
 
+    this.players = await this.userService.getAllUsers().toPromise();
+    
     this.players.forEach(user => {
         this.arrangePlayers(user);
     });
@@ -88,6 +88,22 @@ export class SigninTableComponent implements OnInit {
           console.log('unsubscribed');
           this.router.navigate(['/augmented-table']);
         }
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("restart").subscribe(msg => {
+        this.sub.unsubscribe();
+        console.log('unsubscribed');
+        this.ngOnInit();
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("bots").subscribe(msg => {
+        this.players = [...msg.message];
+        this.players.forEach( player => {
+          this.arrangePlayers(player);
+        })
+        this.joined_players += msg.message.length
       })
     )
   }
