@@ -30,7 +30,7 @@ export class SmartTvComponent implements OnInit {
   next_up_icon: string;
   round_title_path: string;
   background_rect: string;
-  sub: Subscription = new Subscription();
+  sub: Subscription;
 
   constructor(private statemachineService: StateMachineService,
     private userService: UsersService,
@@ -83,6 +83,8 @@ export class SmartTvComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.sub = new Subscription();
+
     this.count = <number>await this.statemachineService.getCounter().toPromise();
     this.round = <string>await this.statemachineService.getRound().toPromise();
     console.log("Round was set to: " + this.round);

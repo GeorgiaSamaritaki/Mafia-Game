@@ -4,6 +4,7 @@ import { UsersService, SocketsService, StateMachineService, VotingService } from
 import { SmartSpeakerService } from 'src/app/smart-speaker.service';
 import { LeapService, Gestures } from '../cursor/leap.service';
 import { FocusTrap } from '@angular/cdk/a11y';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ami-fullstack-interactive-wall',
@@ -43,6 +44,7 @@ export class InteractiveWallComponent implements OnInit {
   margin_for_leap_up: string = "";
   timeline_margin: number = 0;
   cursorOn: boolean = false; //virtual cursor detected
+  sub: Subscription;
 
   constructor(private statemachineService: StateMachineService,
     private socketService: SocketsService,
@@ -229,6 +231,7 @@ export class InteractiveWallComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.sub = new Subscription();
     this.leapService.gestureRecognizer().subscribe(gesture => {
       if (gesture == Gestures.SWIPE_DOWN) {
         this.swipeTimelineDown();
@@ -247,17 +250,18 @@ export class InteractiveWallComponent implements OnInit {
     console.log("Round was set to: " + this.round);
     console.log(await this.votingService.votesOfRound(this.round).toPromise());
 
-
-    this.socketService.syncMessages("roundChange").subscribe(msg => {
-      console.log("Round is Changing");
-      this.round = msg.message;
-      this.changeRound();
-    });
-
-    this.socketService.syncMessages("selectNarrator").subscribe(msg => {
-      this.playersJoined = true;
-      console.log('Select a Narrator');
-    });
+    this.sub.add(
+      this.socketService.syncMessages("roundChange").subscribe(msg => {
+        console.log("Round is Changing");
+        this.round = msg.message;
+        this.changeRound();
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("selectNarrator").subscribe(msg => {
+        this.playersJoined = true;
+        console.log('Select a Narrator');
+      }))
 
     this._leapService.cursorRecognizer().subscribe((cursor) => {
       const left1: number = document.getElementById('smartSpeaker').getBoundingClientRect().left;
@@ -279,37 +283,38 @@ export class InteractiveWallComponent implements OnInit {
         document.getElementById('playernar').style.opacity = "0.6";
       }
     });
-
-    this.socketService.syncMessages("vote").subscribe(async msg => {
-      if (this.round != "Open Ballot") return;
-      console.log("Player " + msg.message.toWho + " received a vote");
-      this.insert_votes(msg.message.toWho, msg.message.fromWho);
-    });
-    this.socketService.syncMessages("saved").subscribe(async msg => {
-      console.log("A Player was saved!");
-      this.saved = true;
-    });
-
-    this.socketService.syncMessages("died").subscribe(async msg => {
-      console.log("User Died " + msg.message.name);
-      if (this.isDay()) {
-        this.whoDiedPng = msg.message.avatar_path;
-        this.whoDied = msg.message.name;
-        await this.votingService.addToHistory("Day" + this.phases_num, this.whoDied).toPromise();
-        console.log("here!");
-        await this.timeout(5500);
-        this.speakerService.speak(msg.message.name + " was killed today! They were a " + msg.message.role);
-      } else {
-        this.whoDiedPng = msg.message.avatar_path;
-        this.whoDied = msg.message.name;
-        console.log("died hereeeeeeeeeeeeeeeeeeeee");
-        await this.votingService.addToHistory("Night" + this.phases_num, this.whoDied).toPromise();
-        await this.timeout(5500);
-        this.speakerService.speak(msg.message.name + " was killed tonight by the Mafia! They are now out of the game.");
-      }
-    });
+    this.sub.add(
+      this.socketService.syncMessages("vote").subscribe(async msg => {
+        if (this.round != "Open Ballot") return;
+        console.log("Player " + msg.message.toWho + " received a vote");
+        this.insert_votes(msg.message.toWho, msg.message.fromWho);
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("saved").subscribe(async msg => {
+        console.log("A Player was saved!");
+        this.saved = true;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("died").subscribe(async msg => {
+        console.log("User Died " + msg.message.name);
+        if (this.isDay()) {
+          this.whoDiedPng = msg.message.avatar_path;
+          this.whoDied = msg.message.name;
+          await this.votingService.addToHistory("Day" + this.phases_num, this.whoDied).toPromise();
+          console.log("here!");
+          await this.timeout(5500);
+          this.speakerService.speak(msg.message.name + " was killed today! They were a " + msg.message.role);
+        } else {
+          this.whoDiedPng = msg.message.avatar_path;
+          this.whoDied = msg.message.name;
+          console.log("died hereeeeeeeeeeeeeeeeeeeee");
+          await this.votingService.addToHistory("Night" + this.phases_num, this.whoDied).toPromise();
+          await this.timeout(5500);
+          this.speakerService.speak(msg.message.name + " was killed tonight by the Mafia! They are now out of the game.");
+        }
+      })
+    )
   }
-
-
-
 }

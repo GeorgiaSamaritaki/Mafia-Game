@@ -243,6 +243,10 @@ export class UsersController {
 
     private distributeBots() {
         return new Promise((resolve, reject) => {
+            if (bots) {
+                resolve();
+                return; //already added
+            }
             console.log('botakia')
             //6 Botakia
             //Masons, Barman, Godfather, Civillian, Doctor
@@ -304,8 +308,8 @@ export class UsersController {
     }
 
     public async addBots(req: Request, res: Response) {
-        bots = true;
         await usercontroller.distributeBots();
+        bots = true;
         SocketService.broadcast("bots", users);
         res.json('Bots set');
     }
@@ -313,11 +317,8 @@ export class UsersController {
     public restartUsers() {
         return new Promise((resolve, reject) => {
             keyPlayers.clear();
-            // users.findIndex(user => {
-            //     user.role = 'undefined';
-            // })
-            //Clear the array not just the roles TODO:
             users.splice(0, users.length);
+            bots = false;
             resolve();
         });
     }

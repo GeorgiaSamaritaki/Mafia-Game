@@ -3,6 +3,7 @@ import { StateMachineService, UsersService, SocketsService, VotingService } from
 import { Router } from '@angular/router';
 import { UserModel } from 'src/app/global/models';
 import { SelectMultipleControlValueAccessor } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ami-fullstack-mainpage',
@@ -21,6 +22,7 @@ export class MainpageComponent implements OnInit {
   players: UserModel[] = [];
   gameEnded: boolean = false;
   won: boolean = false;
+  sub: Subscription;
 
   private async initializePlayers() {
     // this.players = 
@@ -59,6 +61,8 @@ export class MainpageComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.sub = new Subscription();
+
     this.username = localStorage.getItem("username");
     if (this.username == null || !await this.usernameExists(this.username)) this.goBack();
     this.round = <string>await this.statemachineService.getRound().toPromise();
@@ -66,55 +70,64 @@ export class MainpageComponent implements OnInit {
     if (this.round != "Waiting") {
       this.RetriveInfoonReload();
     }
-
-    this.socketService.syncMessages("roundChange").subscribe(msg => {
-      this.playAudio("/assets/sounds/round_change.wav");
-      console.log("Mobile: Round changing"); 
-      var game_init = false;
-      if (this.round == "Waiting") { //first round only
-        this.initialized = false;
-        this.initializePlayers().then(() => this.initialized = true);
-        game_init = true;
-      }
-      this.round = msg.message;
-
-      this.canVote = this.checkCanVote();
-      if (this.isVoting() && !game_init)
-        this.selectedTab = 2;
-      else if (this.selectedTab == 2) this.selectedTab = 1;
-
-    });
-
-    this.socketService.syncMessages("died").subscribe(msg => {
-      console.log("User Died");
-      let died: UserModel = msg.message;
-      for (let i = 0; i < this.players.length; i++)
-        if (this.players[i].name == died.name) {
-          if (this.players[i].role == "hidden" && died.dead == 'night') died.role = "hidden";
-          console.log("User died: " + died.name + " " + died.role);
-          this.players[i] = died;
-          if (died.name == this.username) this.dead = true;
+    this.sub.add(
+      this.socketService.syncMessages("roundChange").subscribe(msg => {
+        this.playAudio("/assets/sounds/round_change.wav");
+        console.log("Mobile: Round changing");
+        var game_init = false;
+        if (this.round == "Waiting") { //first round only
+          this.initialized = false;
+          this.initializePlayers().then(() => this.initialized = true);
+          game_init = true;
         }
+        this.round = msg.message;
 
-    });
-    this.socketService.syncMessages("detective_findings").subscribe(msg => {
-      if (this.role == "Detective") {
-        console.log("Detective action");
+        this.canVote = this.checkCanVote();
+        if (this.isVoting() && !game_init)
+          this.selectedTab = 2;
+        else if (this.selectedTab == 2) this.selectedTab = 1;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("died").subscribe(msg => {
+        console.log("User Died");
+        let died: UserModel = msg.message;
         for (let i = 0; i < this.players.length; i++)
-          if (this.players[i].name == msg.message.name) this.players[i] = msg.message;
-      }
-    });
-
-    this.socketService.syncMessages("gameEnded").subscribe(msg => {
-      this.gameEnded = true;
-      console.log("Game ended won: " + msg.message)
-      if ((msg.message == 'Mafia' && this.isMafia(this.role)) ||
-        (msg.message == 'Town' && !this.isMafia(this.role)))
-        this.won = true;
-      else
-        this.won = false;
-
-    });
+          if (this.players[i].name == died.name) {
+            if (this.players[i].role == "hidden" && died.dead == 'night') died.role = "hidden";
+            console.log("User died: " + died.name + " " + died.role);
+            this.players[i] = died;
+            if (died.name == this.username) this.dead = true;
+          }
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("detective_findings").subscribe(msg => {
+        if (this.role == "Detective") {
+          console.log("Detective action");
+          for (let i = 0; i < this.players.length; i++)
+            if (this.players[i].name == msg.message.name) this.players[i] = msg.message;
+        }
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("gameEnded").subscribe(msg => {
+        this.gameEnded = true;
+        console.log("Game ended won: " + msg.message)
+        if ((msg.message == 'Mafia' && this.isMafia(this.role)) ||
+          (msg.message == 'Town' && !this.isMafia(this.role)))
+          this.won = true;
+        else
+          this.won = false;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("restart").subscribe(msg => {
+        this.sub.unsubscribe();
+        console.log('unsubscribed');
+        this.ngOnInit();
+      })
+    )
   }
 
   isMafia(role: string) {

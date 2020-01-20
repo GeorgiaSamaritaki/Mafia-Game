@@ -25,7 +25,7 @@ export class SigninTableComponent implements OnInit {
   private _qr6: boolean = false;
   private _gameStarted: boolean = false;
 
-  sub: Subscription = new Subscription();
+  sub: Subscription;
   joined_players: number = 0;
   qrs: string[];
 
@@ -48,14 +48,16 @@ export class SigninTableComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.sub = new Subscription();
+
     this.joined_players = <number>(await this.userService.joinedPlayers().toPromise());
-    console.log(this.joined_players);
 
     for (var i = 0; i < 7; i++) {
       this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.5:4200/mobile/login?position=${i}`)
     }
 
     this.players = await this.userService.getAllUsers().toPromise();
+    console.log(this.players.length);
     
     this.players.forEach(user => {
         this.arrangePlayers(user);
@@ -94,11 +96,17 @@ export class SigninTableComponent implements OnInit {
       this.socketService.syncMessages("restart").subscribe(msg => {
         this.sub.unsubscribe();
         console.log('unsubscribed');
+        this.left_players.splice(0, this.left_players.length);
+        this.right_players.splice(0, this.right_players.length);
+        this.middle_players.splice(0, this.middle_players.length);
+        this.qrs.splice(0, this.qrs.length);
+        this.showPhotos();
         this.ngOnInit();
       })
     )
     this.sub.add(
       this.socketService.syncMessages("bots").subscribe(msg => {
+        console.log('Botakia received')
         this.players = [...msg.message];
         this.players.forEach( player => {
           this.arrangePlayers(player);
@@ -157,6 +165,19 @@ export class SigninTableComponent implements OnInit {
     }
   }
 
+  private showPhotos() {
+    this._qr0 = false;
+    this._qr1 = false;
+    this._qr2 = false;
+    this._qr3 = false;
+    this._qr4 = false;
+    this._qr5 = false;
+    this._qr6 = false;
+    this._right = false;
+    this._bot_right = false;
+    this._bot_left = false;
+    this._left = false;
+  }
 
   private arrangePlayers(newUser: UserModel) {
     if (this.joined_players <= 7) {

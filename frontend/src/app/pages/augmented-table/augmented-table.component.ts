@@ -19,7 +19,7 @@ export class AugmentedTableComponent implements OnInit {
   private middle_players: UserModel[];
   votesOfPlayers: Map<string, number>;
   private backgroundSVG: string;
-  sub: Subscription = new Subscription;
+  sub: Subscription;
 
   constructor(
     private usersService: UsersService,
@@ -29,6 +29,8 @@ export class AugmentedTableComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.sub = new Subscription();
+
     this.votesOfPlayers = new Map<string, number>();
     this.backgroundSVG = 'backgroundDay'
     this.round = <string>await this.statemachineService.getRound().toPromise();
@@ -45,16 +47,23 @@ export class AugmentedTableComponent implements OnInit {
         console.log(this.round);
         this.changeRound();
         this.votesOfPlayers.forEach((val, key) => {
-          val = 0;
+          this.votesOfPlayers.set(key, 0);
+        });
+        
+        this.votesOfPlayers.forEach((val, key) => {
+          console.log(`rc ${key}, ${val}`);
         });
       })
     )
     this.sub.add(
       this.socketService.syncMessages("vote").subscribe(async msg => {
-        await this.timeout(500);
+        // await this.timeout(500);
         if (this.round != "Open Ballot") return;
         console.log("Player " + msg.message.toWho + " received a vote");
         this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
+        this.votesOfPlayers.forEach((val, key) => {
+          console.log(`v ${key}, ${val}`);
+        });
       })
     )
     this.sub.add(

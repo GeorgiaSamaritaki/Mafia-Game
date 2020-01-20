@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class HomescreenTvComponent implements OnInit {
   public playersjoined: number;
-  sub: Subscription = new Subscription;
+  sub: Subscription;
 
   constructor(
     private socketService: SocketsService,
@@ -22,6 +22,7 @@ export class HomescreenTvComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.sub = new Subscription();
     this.playersjoined = <number>(await this.userService.joinedPlayers().toPromise());
 
     this.sub.add(
@@ -37,6 +38,18 @@ export class HomescreenTvComponent implements OnInit {
     this.sub.add(
       this.socketService.syncMessages("playerJoined").subscribe(msg => {
         this.playersjoined++;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("bots").subscribe(msg => {
+        this.playersjoined+=msg.message.length;
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("restart").subscribe(msg => {
+        this.sub.unsubscribe();
+        console.log('unsubscribed');
+        this.ngOnInit();
       })
     )
   }
