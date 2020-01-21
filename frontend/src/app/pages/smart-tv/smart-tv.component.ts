@@ -23,6 +23,7 @@ export class SmartTvComponent implements OnInit {
   dead_path: string;
   role_of_dead: string;
   card_of_dead: string;
+  diedAtNight: UserModel = null;
 
   phase_title: string; // html stuff that are for some reason here
   next_title: string;
@@ -76,8 +77,7 @@ export class SmartTvComponent implements OnInit {
     await this.playAudioPromise('/assets/sounds/drumroll.wav');
     // await this.timeout(2000);
     this.deathRevealing = 2;
-    //await this.timeout(100000000);
-    await this.timeout(4000);
+    await this.timeout(3450);
     this.deathRevealing = 0;
   }
 
@@ -129,9 +129,10 @@ export class SmartTvComponent implements OnInit {
       console.log(msg.message.avatar_path);
       this.dead_path = msg.message.avatar_path.substring(7);
       this.role_of_dead = msg.message.role;
-      if(!this.isDay()){
+      if (!this.isDay()) {
+        this.diedAtNight = msg.message;
         await this.timeout(5000);
-        this.revealDeath(msg.message);
+        this.revealDeath(this.diedAtNight);
         return;
       }
       this.revealDeath(msg.message);
@@ -251,6 +252,10 @@ export class SmartTvComponent implements OnInit {
         this.next_title = "Open Ballot";
         this.next_up_icon = "nu_open_ballot";
         this.background_rect = "tv-rectangle-night";
+        if (this.diedAtNight != null){
+          await this.timeout(3000);
+          this.revealDeath(this.diedAtNight);
+        }
         break;
       case 'Open Ballot': //Barman -> Open Ballot
         this.background_rect = "tv-rectangle-day";
