@@ -2,6 +2,12 @@
   width: 1560px;
   height: 1080px;
   background-image: url("/assets/augmented_table/signin/background.png");
+  position: relative;
+}
+@media only screen and (min-width: 1919px) {
+  .all {
+    margin: 0 180px;
+  }
 }
 
 .center {

@@ -5,6 +5,12 @@
   overflow: hidden;
   text-align: center;
   overflow: hidden;
+  position: relative;
+}
+@media only screen and (min-width: 1919px) {
+  .all {
+    margin: 0 180px;
+  }
 }
 
 .wrapper {
