@@ -198,6 +198,7 @@ export class InteractiveWallComponent implements OnInit {
     console.log("Number of rounds: " + this.round_histroy);
     return;
   }
+  
 
   async insert_votes(toWho: string, fromWho: string) {
     if (!this.voted_players.has(toWho)) this.voted_players.set(toWho, []);

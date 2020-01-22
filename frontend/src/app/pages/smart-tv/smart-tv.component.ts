@@ -24,6 +24,7 @@ export class SmartTvComponent implements OnInit {
   dead_path: string;
   role_of_dead: string;
   card_of_dead: string;
+  diedAtNight: UserModel = null;
 
   phase_title: string; // html stuff that are for some reason here
   next_title: string;
@@ -77,8 +78,7 @@ export class SmartTvComponent implements OnInit {
     await this.playAudioPromise('/assets/sounds/drumroll.wav');
     // await this.timeout(2000);
     this.deathRevealing = 2;
-    //await this.timeout(100000000);
-    await this.timeout(4000);
+    await this.timeout(3450);
     this.deathRevealing = 0;
   }
 
@@ -96,8 +96,8 @@ export class SmartTvComponent implements OnInit {
 
     this.sub.add(
       this.socketService.syncMessages("roundChange").subscribe(async msg => {
-        await this.timeout(500);
         if (this.round == "Barman") this.count++; // if last round war barman
+        await this.timeout(500);
         console.log("Round is Changing");
         this.initialized = false;
         this.round = msg.message;
@@ -105,28 +105,23 @@ export class SmartTvComponent implements OnInit {
         this.initialized = true;
       })
     )
-    this.sub.add(
       this.socketService.syncMessages("vote").subscribe(async msg => {
+    this.sub.add(
         console.log("Player " + msg.message.toWho + " received a vote from:" + msg.message.fromWho);
+          this.playAudio("/assets/sounds/knife.wav");
         this.votesOfPlayers.set(msg.message.toWho, this.votesOfPlayers.get(msg.message.toWho) + 1);
         if (this.isDay())
-          this.playAudio("/assets/sounds/knife.wav");
         await this.timeout(800);
-      })
     )
+      })
     this.sub.add(
       this.socketService.syncMessages("died").subscribe(async msg => {
         console.log("User Died");
         this.aPlayerWasKilled(msg.message);
         this.dead = msg.message.name;
-        console.log(msg.message.avatar_path);
         this.dead_path = msg.message.avatar_path.substring(7);
+        console.log(msg.message.avatar_path);
         this.role_of_dead = msg.message.role;
-        if(!this.isDay()){
-          await this.timeout(5000);
-          this.revealDeath(msg.message);
-          return;
-        }
         this.revealDeath(msg.message);
         await this.timeout(800);
       })
@@ -134,9 +129,9 @@ export class SmartTvComponent implements OnInit {
     this.sub.add(
       this.socketService.syncMessages("gameEnded").subscribe(msg => {
         console.log(`${msg.message} won`);
-        this.winner = msg.message;
-        this.playAudio("/assets/sounds/game-over.wav");
       })
+        this.playAudio("/assets/sounds/game-over.wav");
+        this.winner = msg.message;
     )
     this.sub.add(
       this.socketService.syncMessages("suspects").subscribe(async msg => {
@@ -147,13 +142,18 @@ export class SmartTvComponent implements OnInit {
         this.suspects = msg.message;
       })
     )
-    this.sub.add(
-      this.socketService.syncMessages("restart").subscribe(msg => {
+    )
+      })
+        this.router.navigate(['/homescreen-tv']);
         this.sub.unsubscribe();
         console.log('unsubscribed');
-        this.router.navigate(['/homescreen-tv']);
-      })
-    )
+      this.socketService.syncMessages("restart").subscribe(msg => {
+    this.sub.add(
+        }
+          return;
+          this.revealDeath(msg.message);
+          await this.timeout(5000);
+        if(!this.isDay()){
   }
 
   sendToEnd(name: string) {
@@ -253,6 +253,10 @@ export class SmartTvComponent implements OnInit {
         this.next_title = "Open Ballot";
         this.next_up_icon = "nu_open_ballot";
         this.background_rect = "tv-rectangle-night";
+        if (this.diedAtNight != null){
+          await this.timeout(3000);
+          this.revealDeath(this.diedAtNight);
+        }
         break;
       case 'Open Ballot': //Barman -> Open Ballot
         this.background_rect = "tv-rectangle-day";

@@ -53,10 +53,11 @@
     <div *ngIf="deathRevealing == 2" style="position:relative;">
       <img
         [attr.src]="isSecretVoting() ? '/assets/smart_tv/deathReveal2Day.png' : '/assets/smart_tv/deathReveal2Night.png'"
-        id="death_background" alt="">
+        id="death_background" [ngClass]="{death_backgrNight: !isSecretVoting()}" alt="">
       <div class="dead_container">
-        <img class="deadIcon" src="/assets/smart_tv/{{dead_path}}" alt="Icon of dead player">
-        <div class="deadReveal">{{dead}}<br />is out of the game</div>
+        <img [ngClass]="{hide: !isSecretVoting()}" class="deadIcon" src="/assets/smart_tv/{{dead_path}}" alt="Icon of dead player">
+        <div class="deadRevealDay" [ngClass]="{deadRevealNight: !isSecretVoting()}">{{dead}}<br />is out of the game</div>
+        <img [ngClass]="{hide: isSecretVoting()}" class="deadIcon2" src="/assets/smart_tv/{{dead_path}}" alt="Icon of dead player">
       </div>
       <div [ngClass]="{hide: !isSecretVoting()}">
         <div class="deadReveal2">{{dead}} was...</div>

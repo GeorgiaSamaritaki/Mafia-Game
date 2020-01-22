@@ -69,8 +69,8 @@ export class StateMachineController {
                 break;
             case Round.Secret_Voting:
                 await votingcontroller.whoToKillDay(); //who the players killed
-               // await delay(100000000); // delay to show the "animation" 
-               await delay(10000);
+                //await delay(100000000); // delay to show the "animation" 
+                await delay(10000);
                 await votingcontroller.gameEnded();
                 round = Round.Mafia_Voting;
                 break;
