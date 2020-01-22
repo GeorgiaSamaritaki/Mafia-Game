@@ -77,8 +77,11 @@ export class SmartTvComponent implements OnInit {
     console.log('Drumrolls trtrtrttr')
     await this.playAudioPromise('/assets/sounds/drumroll.wav');
     // await this.timeout(2000);
+    // if(this.isOpenBallot()){
+    //   await this.timeout(5000);
+    // }
     this.deathRevealing = 2;
-    await this.timeout(3450);
+    await this.timeout(7410);
     this.deathRevealing = 0;
   }
 

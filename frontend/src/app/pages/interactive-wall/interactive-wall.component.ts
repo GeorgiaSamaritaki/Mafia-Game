@@ -31,6 +31,8 @@ export class InteractiveWallComponent implements OnInit {
   whoDied: string = "";
   saved: boolean = false;
   whoDiedPng: string = "";
+  diedAtNight: UserModel = null;
+
   changePng: boolean[] = new Array();
   responses: Map<string, string> = new Map([
     ['Waiting', ''],
@@ -108,6 +110,7 @@ export class InteractiveWallComponent implements OnInit {
     }
     switch (this.round) {
       case 'Open Ballot': //Open Ballot
+        await this.timeout(300);
         await this.speakerService.speak(this.responses.get(this.round));
         let temp: any = (await this.votingService.votesOfRound("Night" + this.phases_num).toPromise());
         this.suspects_pngs.delete(this.num);
@@ -125,6 +128,7 @@ export class InteractiveWallComponent implements OnInit {
             // this.speakerService.speak(this.whoDied + " was killed tonight by the Mafia! They are now out of the game.");
           }
         } else {
+          await this.timeout(300);
           this.speakerService.speak("Nobody died tonight. A player was saved by the doctor.");
         }
         if (this.num != 0) this.num++;
@@ -136,6 +140,7 @@ export class InteractiveWallComponent implements OnInit {
       case 'Secret Voting': //Secret Voting 
         this.backgroundColor = '#E67E22';
         this.background_icon = "background_icon_day";
+        await this.timeout(300);
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Mafia Voting': //Mafia Voting
@@ -172,25 +177,32 @@ export class InteractiveWallComponent implements OnInit {
         this.background_icon = "background_icon_night";
         this.phases.push('Night');
         this.suspects_pngs.set(this.num, []);
+        await this.timeout(300);
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Doctor': //Doctor 
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
+        await this.timeout(300);
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Detective':  //Detective 
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
+        await this.timeout(300);
         this.speakerService.speak(this.responses.get(this.round));
         break;
       case 'Barman': //Barman 
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
+        await this.timeout(300);
         this.speakerService.speak(this.responses.get(this.round));
         this.phases_num++;
         this.phases_num_array.push(this.phases_num);//for day
         this.phases_num_array.push(this.phases_num);//for night
+        if (this.diedAtNight != null) {
+          await this.timeout(3000);
+        }
         break;
     }
     this.round_histroy.push(this.round);
@@ -198,7 +210,7 @@ export class InteractiveWallComponent implements OnInit {
     console.log("Number of rounds: " + this.round_histroy);
     return;
   }
-  
+
 
   async insert_votes(toWho: string, fromWho: string) {
     if (!this.voted_players.has(toWho)) this.voted_players.set(toWho, []);
@@ -308,11 +320,12 @@ export class InteractiveWallComponent implements OnInit {
           await this.timeout(5500);
           this.speakerService.speak(msg.message.name + " was killed today! They were a " + msg.message.role);
         } else {
+          this.diedAtNight = msg.message;
           this.whoDiedPng = msg.message.avatar_path;
           this.whoDied = msg.message.name;
           console.log("died hereeeeeeeeeeeeeeeeeeeee");
           await this.votingService.addToHistory("Night" + this.phases_num, this.whoDied).toPromise();
-          await this.timeout(5500);
+          await this.timeout(10500);
           this.speakerService.speak(msg.message.name + " was killed tonight by the Mafia! They are now out of the game.");
         }
       })
