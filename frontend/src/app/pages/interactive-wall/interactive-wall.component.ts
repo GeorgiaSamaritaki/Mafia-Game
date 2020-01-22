@@ -274,7 +274,14 @@ export class InteractiveWallComponent implements OnInit {
       this.socketService.syncMessages("selectNarrator").subscribe(msg => {
         this.playersJoined = true;
         console.log('Select a Narrator');
-      }))
+      })
+    )
+    this.sub.add(
+      this.socketService.syncMessages("gameEnded").subscribe(msg => {
+        this.playersJoined = true;
+        console.log('Select a Narrator');
+      })
+    )
 
     this._leapService.cursorRecognizer().subscribe((cursor) => {
       const left1: number = document.getElementById('smartSpeaker').getBoundingClientRect().left;

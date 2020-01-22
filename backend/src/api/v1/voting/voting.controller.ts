@@ -18,6 +18,8 @@ let doctor_vote: string = null;
 let detective_vote: string = null;
 var todie_night: string;
 
+const SocketService = DIContainer.get(SocketsService);
+
 export class VotingController {
     /**
      * Apply all routes for example
@@ -62,8 +64,10 @@ export class VotingController {
                 detective_vote = newVote.toWho;
                 break;
             case "Barman":
-                if (newVote.toWho == users.find((user) => user.role == "Detective").name) detective_vote = null;
-                if (newVote.toWho == users.find((user) => user.role == "Doctor").name) doctor_vote = null;
+                let tmp = users.find((user) => user.role == "Detective");
+                if (tmp != null && newVote.toWho == tmp.name) detective_vote = null;
+                tmp = users.find((user) => user.role == "Doctor");
+                if (newVote.toWho == tmp.name) doctor_vote = null;
                 break;
             case "Open Ballot":
             case "Secret Voting":
@@ -250,7 +254,6 @@ export class VotingController {
             }
             console.log("Day:brodcasting todie " + todie);
             usercontroller.changePathOfUser(todie);
-            const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("died", users.find((user) => user.name == todie));
             resolve();
         });
@@ -307,7 +310,6 @@ export class VotingController {
 
     public initVoting() {
         return new Promise((resolve, reject) => {
-
             console.log("Init voting with players:");
 
             suspects = (round == 'Secret Voting') ? this.getSuspects() : this.getalive();
@@ -330,7 +332,6 @@ export class VotingController {
                 console.log("    Suspect " + user.name);
             });
             console.log("    Broadcasting suspects!!");
-            const SocketService = DIContainer.get(SocketsService);
             SocketService.broadcast("suspects", suspects);
             resolve();
         });
