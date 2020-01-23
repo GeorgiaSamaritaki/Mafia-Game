@@ -59,6 +59,7 @@ export class StateMachineController {
     }
 
     public async changeRound(req: Request = null, res: Response = null) {
+        let end;
         switch (round) {
             case Round.Waiting:
                 await usercontroller.distributeRoles().then((e) => console.log("Roles Distributed"));
@@ -71,7 +72,10 @@ export class StateMachineController {
                 await votingcontroller.whoToKillDay(); //who the players killed
                 //await delay(100000000); // delay to show the "animation" 
                 await delay(13000);
-                await votingcontroller.gameEnded();
+                await votingcontroller.gameEnded().then( value => {
+                    console.log(`Game ended: ${value}`);
+                    end = value;
+                });
                 round = Round.Mafia_Voting;
                 break;
             case Round.Mafia_Voting:
@@ -86,7 +90,9 @@ export class StateMachineController {
                 break;
             case Round.Barman:
                 await votingcontroller.whoToKillNight(); // who the mafia killed
-                await votingcontroller.gameEnded();
+                await votingcontroller.gameEnded().then( value => {
+                    end = value;
+                });
                 // await delay(15000); // delay to show the "animation" 
                 round = Round.Open_Ballot
                 roundCounter++;
@@ -94,9 +100,10 @@ export class StateMachineController {
                 SocketService.broadcast("dayCounter", roundCounter);
                 break;
         }
-
-        await votingcontroller.setPlayers().then(() => { console.log("players set"); });
-        SocketService.broadcast("roundChange", round);
+        if( !end ){
+            await votingcontroller.setPlayers().then(() => { console.log("players set"); });
+            SocketService.broadcast("roundChange", round);
+        } 
         if (res != null) res.json(`Round changed to ${round}`);
     }
 

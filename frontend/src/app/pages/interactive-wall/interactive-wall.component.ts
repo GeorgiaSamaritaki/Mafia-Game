@@ -111,7 +111,7 @@ export class InteractiveWallComponent implements OnInit {
     switch (this.round) {
       case 'Open Ballot': //Open Ballot
         await this.timeout(300);
-        await this.speakerService.speak(this.responses.get(this.round));
+        this.speakerService.speak(this.responses.get(this.round));
         let temp: any = (await this.votingService.votesOfRound("Night" + this.phases_num).toPromise());
         this.suspects_pngs.delete(this.num);
         this.suspects_pngs.set(this.num, []);

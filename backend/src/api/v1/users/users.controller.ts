@@ -251,16 +251,16 @@ export class UsersController {
             //6 Botakia
             //Masons, Barman, Godfather, Civillian, Doctor
             let BarmanBot: User = {
-                name: 'Barman',
+                name: 'Alice',
                 role: 'Barman',
-                avatar_path: 'player6.png',
+                avatar_path: 'player1.png',
                 position: 1,
                 dead: 'alive'
             }
             users.push(BarmanBot);
             console.log('Barman bot set')
             let GodfatherBot: User = {
-                name: 'Godfather',
+                name: 'Maria',
                 role: 'Godfather',
                 avatar_path: 'player3.png',
                 position: 2,
@@ -269,7 +269,7 @@ export class UsersController {
             users.push(GodfatherBot);
             console.log('Godfather bot set')
             let MasonBot1: User = {
-                name: 'MasonA',
+                name: 'George',
                 role: 'Mason',
                 avatar_path: 'player2.png',
                 position: 3,
@@ -277,27 +277,27 @@ export class UsersController {
             }
             users.push(MasonBot1);
             let MasonBot2: User = {
-                name: 'MasonB',
+                name: 'Kiki',
                 role: 'Mason',
-                avatar_path: 'player8.png',
+                avatar_path: 'player4.png',
                 position: 4,
                 dead: 'alive'
             }
             users.push(MasonBot2);
             console.log('Mason bots set')
             let DoctorBot: User = {
-                name: 'Doctor',
+                name: 'Renata',
                 role: 'Doctor',
-                avatar_path: 'player4.png',
+                avatar_path: 'player7.png',
                 position: 5,
                 dead: 'alive'
             }
             users.push(DoctorBot);
             console.log('Doctor bot set')
             let CivilliaBot: User = {
-                name: 'Civilian',
+                name: 'Manolis',
                 role: 'Civilian',
-                avatar_path: 'player1.png',
+                avatar_path: 'player8.png',
                 position: 6,
                 dead: 'alive'
             }

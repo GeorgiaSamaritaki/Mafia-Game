@@ -366,12 +366,14 @@ export class VotingController {
             if (townWin) {
                 const SocketService = DIContainer.get(SocketsService);
                 SocketService.broadcast("gameEnded", 'Town');
+                resolve(true);
             } else if (mafiaMembersAlive >= townMembersAlive) {
                 //If mafia members are equal or more than thw town members they always win 
                 const SocketService = DIContainer.get(SocketsService);
                 SocketService.broadcast("mafiaWin", 'Mafia');
+                resolve(true);
             }
-            resolve();
+            resolve(false);
         })
     }
 

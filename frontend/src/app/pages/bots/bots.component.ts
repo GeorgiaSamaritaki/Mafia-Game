@@ -6,55 +6,55 @@ import { UserModel, VoteModel } from 'src/app/global/models';
 var dayVotes: VoteModel[][] = [
   [
     {
-      fromWho: 'Barman',
-      toWho: 'MasonA',
+      fromWho: 'Alice',
+      toWho: 'George',
       round: ''
     },
     {
-      fromWho: 'Godfather',
-      toWho: 'MasonA',
+      fromWho: 'Maria',
+      toWho: 'George',
       round: ''
     },
     {
-      fromWho: 'MasonA',
-      toWho: 'Godfather',
+      fromWho: 'George',
+      toWho: 'Maria',
       round: ''
     },
     {
-      fromWho: 'MasonB',
-      toWho: 'Godfather',
+      fromWho: 'Kiki',
+      toWho: 'Maria',
       round: ''
     },
     {
-      fromWho: 'Civilian',
-      toWho: 'Godfather',
+      fromWho: 'Manolis',
+      toWho: 'Maria',
       round: ''
     },
     {
-      fromWho: 'Doctor',
-      toWho: 'MasonB',
+      fromWho: 'Renata',
+      toWho: 'Kiki',
       round: ''
     },
   ],
   [
     {
-      fromWho: 'Barman',
-      toWho: 'MasonA',
+      fromWho: 'Alice',
+      toWho: 'George',
       round: ''
     },
     {
-      fromWho: 'MasonA',
-      toWho: 'Barman',
+      fromWho: 'George',
+      toWho: 'Alice',
       round: ''
     },
     {
-      fromWho: 'Civilian',
-      toWho: 'Barman',
+      fromWho: 'Manolis',
+      toWho: 'Alice',
       round: ''
     },
     {
-      fromWho: 'Doctor',
-      toWho: 'MasonA',
+      fromWho: 'Renata',
+      toWho: 'George',
       round: ''
     },
   ]
