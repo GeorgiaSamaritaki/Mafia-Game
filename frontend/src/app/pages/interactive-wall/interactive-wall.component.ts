@@ -98,6 +98,13 @@ export class InteractiveWallComponent implements OnInit {
     document.getElementById("timeline").style.marginTop = "0px";
   }
 
+  playAudio(path) {
+    let audio = new Audio();
+    audio.src = path;
+    audio.load();
+    audio.play();
+  }
+
   async changeRound() {
     console.log(this.suspects_pngs.get(this.num));
     console.log("Num: " + this.num);
@@ -111,7 +118,8 @@ export class InteractiveWallComponent implements OnInit {
     switch (this.round) {
       case 'Open Ballot': //Open Ballot
         await this.timeout(300);
-        this.speakerService.speak(this.responses.get(this.round));
+        // this.speakerService.speak(this.responses.get(this.round));
+        this.playAudio(`/assets/sounds/${this.round}.mp3`);
         let temp: any = (await this.votingService.votesOfRound("Night" + this.phases_num).toPromise());
         this.suspects_pngs.delete(this.num);
         this.suspects_pngs.set(this.num, []);
@@ -137,13 +145,14 @@ export class InteractiveWallComponent implements OnInit {
         this.phases.push('Day');
         this.suspects_pngs.set(this.num, []);
         break;
-      case 'Secret Voting': //Secret Voting 
+        case 'Secret Voting': //Secret Voting 
         this.backgroundColor = '#E67E22';
         this.background_icon = "background_icon_day";
         await this.timeout(300);
-        this.speakerService.speak(this.responses.get(this.round));
+        this.playAudio(`/assets/sounds/${this.round}.mp3`);
+        // this.speakerService.speak(this.responses.get(this.round));
         break;
-      case 'Mafia Voting': //Mafia Voting
+        case 'Mafia Voting': //Mafia Voting
         if (this.whoDied != "") {
           // let role: string = (await this.userService.getUser(this.whoDied).toPromise()).role;
           // // await this.timeout(1500);
@@ -152,7 +161,7 @@ export class InteractiveWallComponent implements OnInit {
         }
         let tmp: any = (await this.votingService.votesOfRound("Day" + this.phases_num).toPromise());
         //  tmp.votes = Object.values(tmp.votes.reduce((acc, cur) => Object.assign(acc, { [cur.fromWho]: cur }), {}))
-
+        
         if (tmp.votes != undefined) {
           console.log("tmp: " + tmp.day);
           console.log("VOTES: " + tmp.votes);
@@ -178,25 +187,29 @@ export class InteractiveWallComponent implements OnInit {
         this.phases.push('Night');
         this.suspects_pngs.set(this.num, []);
         await this.timeout(300);
-        this.speakerService.speak(this.responses.get(this.round));
+        this.playAudio(`/assets/sounds/${this.round}.mp3`);
+        // this.speakerService.speak(this.responses.get(this.round));
         break;
-      case 'Doctor': //Doctor 
+        case 'Doctor': //Doctor 
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
         await this.timeout(300);
-        this.speakerService.speak(this.responses.get(this.round));
+        this.playAudio(`/assets/sounds/${this.round}.mp3`);
+        // this.speakerService.speak(this.responses.get(this.round));
         break;
-      case 'Detective':  //Detective 
+        case 'Detective':  //Detective 
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
         await this.timeout(300);
-        this.speakerService.speak(this.responses.get(this.round));
+        this.playAudio(`/assets/sounds/${this.round}.mp3`);
+        // this.speakerService.speak(this.responses.get(this.round));
         break;
-      case 'Barman': //Barman 
+        case 'Barman': //Barman 
         this.backgroundColor = '#34495E';
         this.background_icon = "background_icon_night";
         await this.timeout(300);
-        this.speakerService.speak(this.responses.get(this.round));
+        this.playAudio(`/assets/sounds/${this.round}.mp3`);
+        // this.speakerService.speak(this.responses.get(this.round));
         this.phases_num++;
         this.phases_num_array.push(this.phases_num);//for day
         this.phases_num_array.push(this.phases_num);//for night
@@ -325,7 +338,8 @@ export class InteractiveWallComponent implements OnInit {
           await this.votingService.addToHistory("Day" + this.phases_num, this.whoDied).toPromise();
           console.log("here!");
           await this.timeout(5500);
-          this.speakerService.speak(msg.message.name + " was killed today! They were a " + msg.message.role);
+          this.playAudio(`/assets/sounds/${msg.message.name}Killed.mp3`);
+          // this.speakerService.speak(msg.message.name + " was killed today! They were a " + msg.message.role);
         } else {
           this.diedAtNight = msg.message;
           this.whoDiedPng = msg.message.avatar_path;
@@ -333,7 +347,8 @@ export class InteractiveWallComponent implements OnInit {
           console.log("died hereeeeeeeeeeeeeeeeeeeee");
           await this.votingService.addToHistory("Night" + this.phases_num, this.whoDied).toPromise();
           await this.timeout(10500);
-          this.speakerService.speak(msg.message.name + " was killed tonight by the Mafia! They are now out of the game.");
+          this.playAudio(`/assets/sounds/${msg.message.name}Killed.mp3`);
+          // this.speakerService.speak(msg.message.name + " was killed tonight by the Mafia! They are now out of the game.");
         }
       })
     )

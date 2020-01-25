@@ -129,6 +129,6 @@ export class StateMachineController {
         await votingcontroller.restartVotes();
 
         SocketService.broadcast("restart", '');
-        res.json('OK');
+        res.status(200).json('OK');
     }
 }
