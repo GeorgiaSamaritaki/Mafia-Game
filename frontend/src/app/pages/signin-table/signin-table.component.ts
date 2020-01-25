@@ -53,7 +53,8 @@ export class SigninTableComponent implements OnInit {
     this.joined_players = <number>(await this.userService.joinedPlayers().toPromise());
 
     for (var i = 0; i < 7; i++) {
-      this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.5:4200/mobile/login?position=${i}`)
+      // this.qrs.push(`https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=http://192.168.1.5:4200/mobile/login?position=${i}`)
+      this.qrs.push('/assets/augmented_table/signin/qr.png')
     }
 
     this.players = await this.userService.getAllUsers().toPromise();
