@@ -1,0 +1,269 @@
+.background {
+  // background-color: #34495e;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+  min-height: 100%;
+  height: fit-content;
+}
+
+#waiting {
+  max-height: 80vh;
+  max-width: 80%;
+  width: auto;
+  height: auto;
+
+}
+
+#cards {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  max-width: 695px;
+}
+
+.myrow {
+  height: 55px;
+  // width:130px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flip-card {
+  background-color: transparent;
+  border: none;
+  width: 130px;
+  height: 136.45px;
+  perspective: 1000px; //3d
+  margin: 5px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform .8s;
+  transform-style: preserve-3d;
+}
+
+.playername {
+
+  font-size: 14px;
+  line-height: 17px;
+
+  color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.flip-card-front .playername {
+  margin-top: 5px;
+  width: 120px;
+  height: 33px;
+}
+
+.flip-card-back .playername {
+  width: 81px;
+  font-size: 16px;
+  color: #000000;
+  font-family: auto;
+}
+
+.flip-card-front .avatar {
+  width: 80px;
+  height: 83px;
+}
+
+.flip-card-back .avatar {
+  width: 40px;
+  height: 42px;
+  margin: auto 3px auto 7px;
+
+}
+
+.flip-card-inner > * {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  background: #F5F7FA;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.33);
+  border-radius: 26px;
+}
+
+.flip-card-back {
+  background: #F5F7FA;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.33);
+  border-radius: 26px;
+  transform: rotateY(180deg);
+}
+
+.flip-card-front:active {
+  filter:none;
+  box-shadow: none;
+  transform: translate(2px,3px);
+}
+
+.flip-card-back:active {
+  filter:none;
+  box-shadow: none;
+  transform: rotateY(180deg) translate(2px,3px);
+}
+
+#flipbutton {
+  position: absolute;
+  width: 81px;
+  height: 83.7px;
+  right: 0;
+  top: 67%;
+  filter:drop-shadow( 0px 4px 0px rgba(0, 0, 0, 0.39));
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+#flipbutton img {
+  width: 100%;
+  height: 100%;
+}
+
+#flipbutton:active {
+  filter:none;
+  border: none;
+  transform: translate(0,4px);
+}
+
+.dead {
+  opacity: .7;
+}
+
+//bottom card
+#popcard {
+  width: 90%;
+  height: 80%;
+  max-width: 330px;
+  min-height: auto;
+  max-height: 650px;
+  border-radius: 5%;
+  background-color: #f5f7fa;
+  position: fixed;
+  top: calc(100% - 68px);
+  box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px 3% 0;
+}
+
+@keyframes pop-up {
+  0% {top: calc(100% - 68px);}
+  100% {top: 10%;}
+}
+
+@keyframes pop-down {
+  0% {top: 10%;}
+  100% {top: calc(100% - 68px);}
+}
+
+.move_up {
+  animation: pop-down 0.5s linear;
+}
+.move_down {
+  animation: pop-up 0.5s linear;
+}
+.move{
+  top: 10% !important;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+.role_title {
+  font-size: 20px;
+  line-height: 30px;
+  margin: 15px 0;
+}
+
+#role_image {
+  background: #E74C3C;
+  border-radius: 10px;
+  width: 90%;
+  height: 45%;
+  display: flex;
+  justify-content: center;
+}
+
+#role_image img {
+  margin-top: -10px;
+  height: calc(100% + 11px);
+  width: auto;
+}
+
+#role_description_title {
+  font-size: 18px;
+  line-height: 29px;
+  color: #C82E2E;
+  align-self: flex-start;
+  margin: 10px 0 5px;
+}
+
+#role_description {
+  font-size: 16px;
+}
+
+.accomplices {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.accomplice_image {
+  width: 50px;
+  height: auto;
+  align-self: flex-end;
+}
+
+.accomplice_image img {
+  width: 100%;
+  height: auto;
+}
+
+.accomplice_role {
+  width: 30px;
+  height: auto;
+  align-self: flex-end;
+  margin-left: -8px;
+}
+
+.accomplice_role img {
+  width: 100%;
+  height: auto;
+}
+
+.accomplices_description {
+  font-size: 14px;
+  line-height: 17px;
+  margin-left: 10px;
+}

@@ -1,0 +1,69 @@
+#container {
+  position: relative;
+  font-family: Revalia;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  height: 100%;
+  align-items: center;
+  align-self: center;
+  min-height: 400px;
+  margin: auto;
+}
+#info {
+  width: 100%;
+}
+
+#roleDes {
+  width: 100%;
+  margin: 20px;
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 30px;
+  text-align: center;
+
+  color: #ffffff;
+}
+
+.roles {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 0 auto;
+}
+
+.role {
+  width: 90%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  border: white;
+  border-radius: 10px;
+  background-color: white;
+  overflow: hidden;
+  margin: 5px auto;
+  padding: 12px;
+}
+
+.roleText {
+  width: 80%;
+  height: 100%;
+  padding-left: 19px;
+  font-size: 14px;
+  color: #000000;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+.roleImg {
+  width: 16%;
+  float: left;
+}
+
+.arrow {
+  margin: auto;
+}

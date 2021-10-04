@@ -1,0 +1,17 @@
+
+#container {
+  height: 100%;
+  width: 100%;
+  // background-color: black;
+}
+
+@media only screen and (max-width: 325px) {
+  #container {
+    zoom: .8;
+  }
+}
+@media only screen and (max-width: 170px) {
+  #container {
+    zoom: .5;
+  }
+}

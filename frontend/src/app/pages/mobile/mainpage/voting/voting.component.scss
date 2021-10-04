@@ -1,0 +1,98 @@
+#container {
+  font-family: Revalia;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: #FFFFFF;
+  height: fit-content;
+  align-items: center;
+  align-self: center;
+  min-height: 400px;
+  margin: auto;
+}
+
+#avatars {
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 97px;
+  cursor: pointer;
+  filter:drop-shadow( 1px 3px 0px rgba(0, 0, 0, 0.31));
+  margin: 5px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.avatar > img {
+  width: 89px;
+  height: 94px;
+  display: block;
+  margin: 4px auto auto;
+}
+
+.selected {
+  filter:none;
+  background: no-repeat url("/assets/players/avatar_selected.png");
+  background-size: contain;
+  background-origin: padding-box;
+}
+
+.selected .name {
+  color: #2ECC71;
+}
+
+.name {
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 25px;
+  text-align: center;
+}
+
+#prompt {
+  align-self: center;
+  width: 90%;
+  margin-top: 5%;
+  font-family: Revalia;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 37px;
+  text-align: center;
+}
+
+#confirm {
+  cursor: pointer;
+  width: 85px;
+  height: 86px;
+  border: none;
+  background: no-repeat url("/assets/checkbutton.png");
+  filter:drop-shadow(2px 3px 0px #259A56);
+  text-decoration: none;
+  margin: 4%;
+  align-self: flex-end;
+  outline: none;
+}
+
+#confirm:active {
+  filter:none;
+  transform: translate(2px,3px);
+}
+
+#hint {
+  font-size: 12px;
+  line-height: 12px;
+  margin: 10px 0;
+  font-size: 10px;
+  line-height: 12px;
+  text-align: center;
+  text-transform: capitalize;
+  font-weight: lighter;
+}

@@ -1,0 +1,115 @@
+<div class=all [style.background-color]="isDay() ?  '#E67E22' : '#34495E'">
+    <div class=phases>
+        <div class=f (click)="restart()">
+            <div *ngIf="isDay()" [className]="isSelected('Open Ballot') ? 'selectedPhase' : 'phase' ">
+                <div [className]="isSelected('Open Ballot') ? 'selectedPhaseWrapper' : 'phaseWrapper'">
+                    <img [className]="isSelected('Open Ballot') ? 'selectedIcon' : 'icon' "
+                        src="../../../../assets/augmented_table/Open Ballot.png" alt="Ballot">
+                </div>
+                <div [className]="isSelected('Open Ballot') ? 'selectedPhaseText' : 'phaseText'">
+                    Open Ballot
+                </div>
+            </div>
+            <div *ngIf="isDay()" [className]="isSelected('Secret Voting') ? 'selectedPhase' : 'phase' ">
+                <div [className]="isSelected('Secret Voting') ? 'selectedPhaseWrapper' : 'phaseWrapper'">
+                    <img [className]="isSelected('Secret Voting') ? 'selectedIcon' : 'icon' "
+                        src="../../../../assets/augmented_table/Secret Voting.png" alt="Secret Voting">
+                </div>
+                <div [className]="isSelected('Secret Voting') ? 'selectedPhaseText' : 'phaseText'">
+                    Secret Voting
+                </div>
+            </div>
+            <div *ngIf="!isDay()" [className]="isSelected('Mafia Voting') ? 'selectedPhaseNight' : 'phaseNight' ">
+                <div [className]="isSelected('Mafia Voting') ? 'selectedPhaseWrapperNight' : 'phaseWrapperNight'">
+                    <img [className]="isSelected('Mafia Voting') ? 'selectedIcon' : 'icon' "
+                        src="../../../../assets/augmented_table/Mafia.png" alt="Mafia">
+                </div>
+                <div [className]="isSelected('Mafia Voting') ? 'selectedPhaseText' : 'phaseText'">
+                    Mafia
+                </div>
+            </div>
+            <div *ngIf="!isDay()" [className]="isSelected('Doctor') ? 'selectedPhaseNight' : 'phaseNight' ">
+                <div [className]="isSelected('Doctor') ? 'selectedPhaseWrapperNight' : 'phaseWrapperNight'">
+                    <img [className]="isSelected('Doctor') ? 'selectedIcon' : 'icon' "
+                        src="../../../../assets/augmented_table/Doctor.png" alt="Doctor">
+                </div>
+                <div [className]="isSelected('Doctor') ? 'selectedPhaseText' : 'phaseText'">
+                    Doctor
+                </div>
+            </div>
+            <div *ngIf="!isDay()" [className]="isSelected('Detective') ? 'selectedPhaseNight' : 'phaseNight' ">
+                <div [className]="isSelected('Detective') ? 'selectedPhaseWrapperNight' : 'phaseWrapperNight'">
+                    <img [className]="isSelected('Detective') ? 'selectedIcon' : 'icon' "
+                        src="../../../../assets/augmented_table/Detective.png" alt="Detective">
+                </div>
+                <div [className]="isSelected('Detective') ? 'selectedPhaseText' : 'phaseText'">
+                    Detective
+                </div>
+            </div>
+            <div *ngIf="!isDay()" [className]="isSelected('Barman') ? 'selectedPhaseNight' : 'phaseNight' ">
+                <div [className]="isSelected('Barman') ? 'selectedPhaseWrapperNight' : 'phaseWrapperNight'">
+                    <img [className]="isSelected('Barman') ? 'selectedIcon' : 'icon' "
+                        src="../../../../assets/augmented_table/Barman.png" alt="Barman">
+                </div>
+                <div [className]="isSelected('Barman') ? 'selectedPhaseText' : 'phaseText'">
+                    Barman
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=wrapper>
+        <img id=backgroundSVG src="../../../../assets/augmented_table/{{backgroundSVG}}.svg" alt="Background vector">
+    </div>
+    <div class="leftPlayers">
+        <div class="player_container">
+            <div class="player" *ngFor="let player of left_players; let i=index">
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
+                <div class="knives" *ngIf="isAlive(player.name)">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 4" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 5" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 6" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="rightPlayers">
+        <div class="player_container">
+            <div class="player" *ngFor="let player of right_players; let i=index">
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
+                <div class="knives" *ngIf="isAlive(player.name)">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 4" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 5" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 6" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="middlePlayers">
+        <div class="player_container">
+            <div class="player" *ngFor="let player of middle_players; let i=index">
+                <div class="name_text">{{player.name}}</div>
+                <img style="width: 85%;" src="/assets/players/{{player.avatar_path}}">
+                <div class="knives" *ngIf="isAlive(player.name)">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 1" id="knife0" src="/assets/augmented_table/knife0.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 2" id="knife1" src="/assets/augmented_table/knife1.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 3" id="knife2" src="/assets/augmented_table/knife2.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 4" id="knife3" src="/assets/augmented_table/knife3.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 5" id="knife4" src="/assets/augmented_table/knife4.png" alt="">
+                    <img class="knife" *ngIf="numberOfKnives(player.name) >= 6" id="knife5" src="/assets/augmented_table/knife5.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gameEnd" *ngIf="gameEnded()" >
+        <img src="/assets/augmented_table/gameOverDay.png" *ngIf="isDay()" alt="">
+        <img src="/assets/augmented_table/gameOverNight.png" *ngIf="!isDay()" alt="">
+    </div>
+</div>

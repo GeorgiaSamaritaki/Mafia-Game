@@ -1,0 +1,381 @@
+.all {
+  width: 1560px;
+  height: 1080px;
+  background-image: url("/assets/augmented_table/signin/background.png");
+  position: relative;
+}
+@media only screen and (min-width: 1919px) {
+  .all {
+    margin: 0 180px;
+  }
+}
+
+.center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 1145px;
+  height: 799px;
+  text-align: center;
+  z-index: 0;
+}
+
+.table {
+  width: 100%;
+  height: 100%;
+}
+
+.qrCodes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 1em;
+  margin: auto;
+  width: 703px;
+  height: 690px;
+}
+
+.gameStart {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 1em;
+  margin: auto;
+  height: 341px;
+}
+
+#loadingText {
+  font-family: 'Revalia';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 45px;
+  line-height: 60px;
+  color: white;
+  overflow: visible;
+  margin-top: 0.8em;
+
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.addPlayer {
+  position: absolute;
+  width: 115px;
+  height: 115px;
+  bottom: 575px;
+  right: 306px;
+}
+
+.qr {
+  height: 114px;
+  width: 114px;
+  background: #f5f7fa;
+  border-radius: 13px;
+}
+
+#add {
+  height: 114px;
+  width: 114px;
+}
+
+.joinedPlayers {
+  position: absolute;
+  width: 331px;
+  height: 331px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+@font-face {
+  font-family: "Chango";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Chango Regular"), local("Chango-Regular"),
+    url("http://themes.googleusercontent.com/static/fonts/chango/v2/tZuFZQQSznzm1NJDMY53Gg.ttf") format("truetype");
+}
+
+.joinedPlayers p {
+  font-family: "Chango";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 49px;
+  line-height: 59px;
+  color: #ffffff;
+}
+
+#p1 {
+  transform: rotate(180deg);
+}
+
+#p2 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -47%;
+  transform: rotate(90deg);
+}
+
+#p3 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+#p4 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -47%;
+  transform: rotate(270deg);
+}
+
+#tick {
+  position: absolute;
+  width: 96px;
+  height: 70px;
+  left: 34px;
+  right: 31px;
+  top: 47px;
+  bottom: 44px;
+}
+
+.photos {
+  height: 100%;
+  width: 1472px;
+  top: 0;
+  left: 44px;
+  right: 44px;
+  z-index: -1;
+}
+
+#leftBandit {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  left: 0;
+  top: 0;
+}
+
+#gun {
+  position: absolute;
+  width: 243px;
+  height: 243px;
+  left: 38px;
+  bottom: 0;
+}
+
+#rightBandit {
+  position: absolute;
+  width: 229px;
+  height: 300px;
+  right: 0;
+  top: 0;
+}
+
+#hands {
+  position: absolute;
+  width: 266px;
+  height: 266px;
+  right: 0;
+  bottom: 0;
+}
+
+.hide {
+  display: none !important;
+}
+
+.leftPlayers {
+  width: 1080px;
+  position: absolute;
+  top: 40.15%;
+  left: -26%;
+  transform: rotate(90deg);
+}
+
+.rightPlayers {
+  width: 1080px;
+  position: absolute;
+  top: 40.15%;
+  right: -26%;
+  transform: rotate(270deg);
+}
+
+.middlePlayers {
+  width: 1080px;
+  position: absolute;
+  bottom: 1%;
+  left: 15.5%;
+}
+
+.player_container {
+  display: flex;
+  justify-content: space-evenly;
+  z-index: 1;
+}
+
+.player_container * {
+  text-align: center;
+}
+
+.player {
+  display: flex;
+  // margin: 0 30px;
+  flex-direction: column;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
+  // width: 'calc(100% / ' + player_count + ')';
+}
+
+.player img {
+  max-width: 206px;
+  max-height: 243px;
+}
+
+.name_text {
+  font-style: normal;
+  font-weight: normal;
+  text-align: center;
+  color: #656d78;
+  background: #f5f7fa;
+  border-radius: 28px;
+  margin: 0 0 5%;
+  font-size: 2.3vmax;
+  width: 80%;
+  line-height: 50px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#bg {
+  min-height: 100vh;
+  height: auto;
+  width: 100%;
+  background-image: url("/assets/augmented_table/signin/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/// Mixin to put items on a circle
+/// [1] - Allows children to be absolutely positioned
+/// [2] - Allows the mixin to be used on a list
+/// [3] - In case box-sizing: border-box has been enabled
+/// [4] - Allows any type of direct children to be targeted
+///
+/// @param {Integer} $nb-items - Number or items
+/// @param {Length} $circle-size - Container size
+/// @param {Length} $item-size - Item size
+/// @param {String | false} $class-for-IE - Base class name for old IE
+@mixin distribute-on-circle($nb-items, $circle-size, $item-size, $class-for-IE: false) {
+  $half-item: ($item-size / 2);
+  $half-parent: ($circle-size / 2);
+
+  // position: relative;
+  /* 1 */
+  width: $circle-size;
+  height: $circle-size;
+  padding: 0;
+  border-radius: 50%;
+  list-style: none;
+  /* 2 */
+  box-sizing: content-box;
+  /* 3 */
+
+  > * {
+    /* 4 */
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $item-size;
+    height: $item-size;
+    margin: -$half-item;
+  }
+
+  $angle: (360 / $nb-items);
+  $rot: 0;
+  @for $i from 1 through $nb-items {
+    @if not $class-for-IE {
+      > :nth-of-type(#{$i}) {
+        transform: rotate($rot * 1deg) translate($half-parent) rotate($rot * -1deg);
+
+        > div {
+          transform: rotate(($rot - 180) * 1deg);
+        }
+      }
+    } @else {
+      > .#{$class-for-IE}#{$i} {
+        // If CSS transforms are not supported
+        $mt: sin($rot * pi() / 180) * $half-parent - $half-item;
+        $ml: cos($rot * pi() / 180) * $half-parent - $half-item;
+        margin: $mt 0 0 $ml;
+      }
+    }
+
+    $rot: ($rot + $angle);
+  }
+}
+
+.circle-container {
+  @include distribute-on-circle(8, 32em, 6em, false);
+}
+
+ul {
+  margin-bottom: 0;
+}
+
+.circle-container img {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  display: block;
+  width: 80%;
+  height: 80%;
+  filter: grayscale(100%);
+
+  &:hover {
+    filter: grayscale(0);
+  }
+}
+
+#confirm {
+  position: absolute;
+  width: 165px;
+  height: 165px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: #aaaaaa;
+  background-color: #aaaaaa;
+  border-radius: 50%;
+  // background: #2ECC71;
+  box-shadow: 0 0 0;
+  cursor: pointer;
+}
+
+.shadow {
+  filter: drop-shadow(9px 8px 0px #259a56);
+  background-color: #2ecc71 !important;
+}
+
+#confirm:active {
+  filter: none !important;
+  transform: translate(9px, 8px);
+}
